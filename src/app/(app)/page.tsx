@@ -26,8 +26,8 @@ export default function Home() {
       {/* Header / Navigation */}
       <Header />
 
-      {/* Section 1: Modern Luxury Hero Banner */}
-      <HeroBanner onOpenCalculator={() => setIsCalcOpen(true)} />
+      {/* Section 1: Modern Luxury Cinematic Video Hero Banner */}
+      <HeroBanner />
 
       {/* Section 2: Top Stats Bar */}
       <TopStatsBar />

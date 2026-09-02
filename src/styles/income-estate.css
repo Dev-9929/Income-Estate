@@ -33,8 +33,9 @@
   --border-gold: rgba(212, 175, 106, 0.3);
   --danger: #A63A3C;
 
-  --font-serif: var(--font-proza, 'Proza Libre', sans-serif);
-  --font-sans: var(--font-proza, 'Proza Libre', sans-serif);
+  --font-serif: var(--font-serif-display), var(--font-cormorant), 'Playfair Display', Georgia, serif;
+  --font-cormorant: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+  --font-sans: var(--font-proza), 'Proza Libre', -apple-system, sans-serif;
 
   /* Premium Box Shadows */
   --shadow-sm: 0 4px 12px rgba(18, 24, 21, 0.03);
@@ -1068,6 +1069,230 @@ button {
 /* ==========================================================================
    PAGE: HOME (index.html)
    ========================================================================== */
+
+/* ==========================================================================
+   PAGE: HOME — CINEMATIC FULLSCREEN VIDEO HERO BANNER
+   ========================================================================== */
+.cinematic-video-hero {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #061D15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cinematic-video-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.cinematic-bg-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+.cinematic-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 50% 50%, rgba(6, 29, 21, 0.35) 0%, rgba(6, 29, 21, 0.72) 100%),
+    linear-gradient(180deg, rgba(6, 29, 21, 0.7) 0%, rgba(6, 29, 21, 0.2) 35%, rgba(6, 29, 21, 0.2) 65%, rgba(6, 29, 21, 0.95) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cinematic-hero-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 130px 1.5rem 5rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cinematic-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Subtle High-End Eyebrow Tag */
+.cinematic-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  animation: cinematicFadeIn 1s ease forwards;
+}
+
+.eyebrow-line {
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #D4AF6A);
+}
+
+.eyebrow-line.right {
+  background: linear-gradient(90deg, #D4AF6A, transparent);
+}
+
+.eyebrow-text {
+  font-family: var(--font-sans);
+  font-size: clamp(0.68rem, 1vw, 0.8rem);
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #D4AF6A;
+  text-shadow: 0 0 15px rgba(212, 175, 106, 0.4);
+}
+
+/* Masterpiece Luxury Serif Heading */
+.cinematic-hero-title {
+  font-family: var(--font-serif);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 0;
+  text-align: center;
+  animation: cinematicFadeIn 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.title-line-1 {
+  font-size: clamp(2.6rem, 5.8vw, 4.75rem);
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.55));
+}
+
+.title-line-2 {
+  font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.18;
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, #FFF6DF 0%, #E8C88B 35%, #D4AF6A 65%, #F5DEB0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 16px rgba(212, 175, 106, 0.3));
+}
+
+/* Interactive Minimalist Scroll Cue */
+.cinematic-scroll-indicator {
+  position: absolute;
+  bottom: 2.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  user-select: none;
+}
+
+.cinematic-scroll-indicator:hover {
+  opacity: 1;
+  transform: translateX(-50%) translateY(2px);
+}
+
+.scroll-text {
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+}
+
+.scroll-mouse {
+  width: 20px;
+  height: 32px;
+  border: 1.5px solid rgba(212, 175, 106, 0.65);
+  border-radius: 12px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.scroll-wheel {
+  width: 2px;
+  height: 6px;
+  background: #D4AF6A;
+  border-radius: 2px;
+  position: absolute;
+  top: 6px;
+  animation: scrollWheelAnim 1.8s infinite ease-in-out;
+}
+
+@keyframes scrollWheelAnim {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.2;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes cinematicFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .cinematic-hero-container {
+    padding: 100px 1.25rem 4rem;
+  }
+  .cinematic-hero-eyebrow {
+    margin-bottom: 1.25rem;
+    gap: 0.75rem;
+  }
+  .eyebrow-line {
+    width: 20px;
+  }
+  .title-line-1 {
+    font-size: clamp(2rem, 7.8vw, 2.75rem);
+  }
+  .title-line-2 {
+    font-size: clamp(1.85rem, 7.2vw, 2.5rem);
+  }
+  .cinematic-scroll-indicator {
+    bottom: 1.5rem;
+  }
+}
 
 /* ==========================================================================
    PAGE: HOME — MODERN LUXURY HERO BANNER
