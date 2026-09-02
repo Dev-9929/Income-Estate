@@ -97,7 +97,7 @@ export default function PropertiesPage() {
                   </div>
                 </div>
                 <div className="catalog-card-actions">
-                  <Link href={`/properties`} className="btn btn-catalog-invest">
+                  <Link href={`/properties/${item.slug}`} className="btn btn-catalog-invest">
                     START INVEST
                   </Link>
                   <button

@@ -91,7 +91,7 @@ export default function BrandedResidencesPage() {
                   </div>
                 </div>
                 <div className="catalog-card-actions">
-                  <Link href={`/branded-residences`} className="btn btn-catalog-invest">
+                  <Link href={`/properties/${item.slug}`} className="btn btn-catalog-invest">
                     INVEST NOW
                   </Link>
                   <button
