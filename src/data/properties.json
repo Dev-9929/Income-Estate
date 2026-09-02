@@ -1,0 +1,575 @@
+[
+  {
+    "id": "prop-skyline-arcadia",
+    "slug": "skyline-arcadia",
+    "title": "Skyline Arcadia",
+    "titleAccent": "Commercial & Serviced Suites",
+    "tagline": "Institutional Pre-Leased Retail & Hospitality Suites on Fast-Growing Growth Corridor",
+    "category": "commercial",
+    "isFeatured": true,
+    "isNriRecommended": true,
+    "badges": ["Pre-Leased", "FEMA Compliant", "9.2% Guaranteed Yield"],
+    "price": {
+      "inr": 7000000,
+      "usd": 84000,
+      "aed": 308000,
+      "formattedInr": "₹ 70 Lacs",
+      "formattedUsd": "$84,000",
+      "formattedAed": "AED 308,000"
+    },
+    "roi": {
+      "rentalYieldPercent": 9.2,
+      "targetIrrPercent": 14.5,
+      "leaseDurationYears": 5,
+      "estimatedMonthlyPayoutInr": 53660,
+      "tenantName": "Institutional Brands & Co-Working",
+      "tenantProfile": "Corporate Grade Long-Term Leaseback",
+      "lockInPeriod": "3 Years",
+      "payoutFrequency": "monthly"
+    },
+    "specs": {
+      "bhk": 1,
+      "carpetAreaSqFt": 480,
+      "superAreaSqFt": 720,
+      "bathrooms": 1,
+      "floorNumber": "2nd of 9 Floors",
+      "furnishing": "fully-furnished",
+      "possessionStatus": "under-construction",
+      "possessionDate": "Dec 2026",
+      "ownershipType": "fractional-spv",
+      "unitsAvailable": 8,
+      "reraRegistrationNumber": "RAJ/P/2023/2418"
+    },
+    "media": {
+      "heroImage": "/assets/wordpress_media/Project-Photo-9-Skyline-Arcadia-Jaipur-5442983_2000_1226.jpg",
+      "thumbnailImage": "/assets/skyline_arcade.png",
+      "droneVideoUrl": "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+      "virtualTour3dUrl": "https://my.matterport.com/show/?m=sample",
+      "brochurePdfUrl": "/assets/docs/skyline-arcadia-brochure.pdf",
+      "gallery": [
+        {
+          "url": "/assets/wordpress_media/Project-Photo-9-Skyline-Arcadia-Jaipur-5442983_2000_1226.jpg",
+          "title": "Exterior Facade & Atrium",
+          "alt": "Skyline Arcadia modern architectural facade",
+          "category": "exterior"
+        },
+        {
+          "url": "/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp",
+          "title": "Central Courtyard & Piazza",
+          "alt": "Landscaped retail open promenade",
+          "category": "amenity"
+        },
+        {
+          "url": "/assets/wordpress_media/mansion_g5c9re.webp",
+          "title": "Hospitality Suite Living Area",
+          "alt": "Interior view of serviced suite",
+          "category": "interior"
+        },
+        {
+          "url": "/assets/wordpress_media/elegant-music-lounge-with-comfortable-seating.webp",
+          "title": "Executive Business Lounge",
+          "alt": "Business meeting hub and coffee lounge",
+          "category": "amenity"
+        },
+        {
+          "url": "/assets/wordpress_media/a-modern-living-room-with-a-view-of-the-city-skyline-at-night.webp",
+          "title": "Panoramic City View Deck",
+          "alt": "Skyline view from executive suites",
+          "category": "interior"
+        },
+        {
+          "url": "/assets/wordpress_media/cozy-reading-corner-with-armchair-and-bookshelf.webp",
+          "title": "Private Resident Library",
+          "alt": "Quiet reading lounge corner",
+          "category": "amenity"
+        }
+      ]
+    },
+    "location": {
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "country": "India",
+      "microMarket": "Near Patrakar Colony",
+      "fullAddress": "Skyline Arcadia, 200 Ft Ring Road, Patrakar Colony Ext., Mansarovar, Jaipur, Rajasthan 302020",
+      "latitude": 26.8423,
+      "longitude": 75.7482,
+      "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14234.674843236746!2d75.7482!3d26.8423!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db57f0f679bdf%3A0xb36ef2073998b63e!2sMansarovar%2C%20Jaipur%2C%20Rajasthan!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
+      "nearbyLandmarks": [
+        { "name": "Mansarovar Metro Station", "distance": "8 Mins", "type": "transit" },
+        { "name": "Jaipur International Airport", "distance": "18 Mins", "type": "airport" },
+        { "name": "Dhanwantri Hospital", "distance": "7 Mins", "type": "hospital" },
+        { "name": "Ajmer-Delhi Expressway", "distance": "5 Mins", "type": "highway" }
+      ]
+    },
+    "overview": {
+      "heading": "A Commercial Landmark",
+      "subheading": "Built for High-Yield Cash Flow",
+      "paragraphs": [
+        "Strategically located in one of Jaipur's highest density growth corridors, Skyline Arcadia is an institutional-grade mixed-use commercial destination blending anchor retail, corporate coworking, and boutique hospitality suites.",
+        "Designed to cater to NRI and passive wealth creators, each fractional tranche is structured with a legally enforceable 5-year corporate lease guarantee, providing monthly rental disbursements directly to your NRE/NRO account."
+      ],
+      "keyHighlights": [
+        "Pre-leased to marquee corporate and retail brands",
+        "Quarterly rental escalation clause of 5% built-in",
+        "Clean SPV co-ownership structure registered in Registrar of Companies",
+        "Hassle-free 100% facility and asset maintenance management"
+      ]
+    },
+    "amenities": [
+      { "id": "am-1", "name": "5-Year Lease Guarantee", "iconKey": "lease", "category": "legal" },
+      { "id": "am-2", "name": "Multi-Level Basement Parking", "iconKey": "parking", "category": "convenience" },
+      { "id": "am-3", "name": "24/7 Tier-3 Security & CCTV", "iconKey": "security", "category": "security" },
+      { "id": "am-4", "name": "Skydeck & Rooftop Cafe", "iconKey": "view", "category": "lifestyle" },
+      { "id": "am-5", "name": "Five-Star Hotel Grade Interiors", "iconKey": "interior", "category": "wellness" },
+      { "id": "am-6", "name": "Dedicated Concierge Desk", "iconKey": "managed", "category": "convenience" }
+    ],
+    "paymentPlan": [
+      { "milestone": "Expression of Interest (EOI Token)", "timeline": "At Booking", "percentage": 10, "isHighlighted": true },
+      { "milestone": "Execution of SPV Agreement", "timeline": "Within 30 Days", "percentage": 15, "isHighlighted": false },
+      { "milestone": "Completion of Plinth / Structure", "timeline": "Milestone Linked", "percentage": 25, "isHighlighted": false },
+      { "milestone": "Façade & MEP Works", "timeline": "Milestone Linked", "percentage": 25, "isHighlighted": false },
+      { "milestone": "Registry & Rental Start", "timeline": "At Possession", "percentage": 25, "isHighlighted": true }
+    ],
+    "constructionUpdates": [
+      { "stage": "Stage 1", "title": "Deep Foundation & Piling", "progressPercent": 100, "status": "completed", "imageUrl": "/assets/wordpress_media/Project-Photo-9-Skyline-Arcadia-Jaipur-5442983_2000_1226.jpg", "updateDate": "Jan 2026" },
+      { "stage": "Stage 2", "title": "Superstructure RCC Work", "progressPercent": 75, "status": "in-progress", "imageUrl": "/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp", "updateDate": "March 2026" },
+      { "stage": "Stage 3", "title": "Glass Facade & Cladding", "progressPercent": 30, "status": "in-progress", "imageUrl": "/assets/wordpress_media/mansion_g5c9re.webp", "updateDate": "Scheduled" },
+      { "stage": "Stage 4", "title": "Interior Fitouts & Handover", "progressPercent": 0, "status": "upcoming", "imageUrl": "/assets/wordpress_media/elegant-music-lounge-with-comfortable-seating.webp", "updateDate": "Dec 2026" }
+    ],
+    "faqs": [
+      { "question": "How are monthly payouts credited for NRI investors?", "answer": "All rental payouts are disbursed directly to your designated NRE or NRO bank account on the 5th of every calendar month with complete TDS certificates (Form 16A)." },
+      { "question": "Can I exit or resell my fractional share before 5 years?", "answer": "Yes. Income Estate provides an internal secondary liquidity bulletin where your tranche can be listed for transfer to other vetted investors with 0 lock-in penalty." }
+    ],
+    "similarPropertySlugs": ["turban-resort-chandwaji", "london-street", "aryaville"],
+    "meta": {
+      "seoTitle": "Skyline Arcadia | 9.2% Pre-Leased Commercial Investment Jaipur",
+      "seoDescription": "Invest in pre-leased commercial real estate at Skyline Arcadia, Jaipur. Earn ₹53,600+ monthly passive income with a 5-year lease guarantee."
+    }
+  },
+  {
+    "id": "prop-turban-chandwaji",
+    "slug": "turban-resort-chandwaji",
+    "title": "Turban Resort",
+    "titleAccent": "Chandwaji Eco Retreat",
+    "tagline": "Operational Luxury Eco-Resort on Delhi-Jaipur Highway with Guaranteed SLB Model",
+    "category": "resort-unit",
+    "isFeatured": true,
+    "isNriRecommended": true,
+    "badges": ["Operational Resort", "11.5% Target Yield", "Complimentary 14-Day Stay"],
+    "price": {
+      "inr": 8000000,
+      "usd": 96000,
+      "aed": 352000,
+      "formattedInr": "₹ 80 Lacs",
+      "formattedUsd": "$96,000",
+      "formattedAed": "AED 352,000"
+    },
+    "roi": {
+      "rentalYieldPercent": 10.5,
+      "targetIrrPercent": 16.2,
+      "leaseDurationYears": 9,
+      "estimatedMonthlyPayoutInr": 70000,
+      "tenantName": "Turban Group of Hospitality",
+      "tenantProfile": "Premier Heritage Resort Operator",
+      "lockInPeriod": "5 Years",
+      "payoutFrequency": "monthly"
+    },
+    "specs": {
+      "bhk": 1,
+      "carpetAreaSqFt": 620,
+      "superAreaSqFt": 950,
+      "bathrooms": 1,
+      "floorNumber": "Private Garden Cottage",
+      "furnishing": "fully-furnished",
+      "possessionStatus": "ready-to-move",
+      "possessionDate": "Immediate",
+      "ownershipType": "slb-leased",
+      "unitsAvailable": 5,
+      "reraRegistrationNumber": "RAJ/P/2022/1104"
+    },
+    "media": {
+      "heroImage": "/assets/wordpress_media/Turbun_Group_Resort_Reception_View_10.jpg.jpg",
+      "thumbnailImage": "/assets/turban_resort.png",
+      "droneVideoUrl": "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+      "virtualTour3dUrl": "https://my.matterport.com/show/?m=sample",
+      "brochurePdfUrl": "/assets/docs/turban-resort-chandwaji.pdf",
+      "gallery": [
+        {
+          "url": "/assets/wordpress_media/Turbun_Group_Resort_Reception_View_10.jpg.jpg",
+          "title": "Grand Heritage Reception Lobby",
+          "alt": "Reception lobby at Turban Resort Chandwaji",
+          "category": "interior"
+        },
+        {
+          "url": "/assets/wordpress_media/Turbun_Group_Resort_Reception_View_08.jpg.jpg",
+          "title": "Heritage Suite Courtyard",
+          "alt": "Courtyard view of resort villas",
+          "category": "exterior"
+        },
+        {
+          "url": "/assets/wordpress_media/mansion_g5c9re.webp",
+          "title": "King Bed Heritage Villa",
+          "alt": "Fully furnished luxury resort room",
+          "category": "interior"
+        }
+      ]
+    },
+    "location": {
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "country": "India",
+      "microMarket": "Chandwaji, Delhi-Jaipur Highway",
+      "fullAddress": "NH-48, Chandwaji Institutional Corridor, Jaipur Rural, Rajasthan 303104",
+      "latitude": 27.2185,
+      "longitude": 75.9862,
+      "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14197.643209848!2d75.9862!3d27.2185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396daf345864197f%3A0xc39f993309a47321!2sChandwaji%2C%20Rajasthan!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
+      "nearbyLandmarks": [
+        { "name": "Delhi-Jaipur Tollway", "distance": "3 Mins", "type": "highway" },
+        { "name": "NIMS University Campus", "distance": "5 Mins", "type": "commercial-hub" },
+        { "name": "Amity University Jaipur", "distance": "12 Mins", "type": "commercial-hub" },
+        { "name": "Amer Fort & Heritage Corridor", "distance": "22 Mins", "type": "transit" }
+      ]
+    },
+    "overview": {
+      "heading": "An Established Resort Asset",
+      "subheading": "Generating Immediate Day-1 Cash Flow",
+      "paragraphs": [
+        "Turban Resort Chandwaji is an active, profitable wellness and destination resort nestled along the high-occupancy Delhi-Jaipur weekend highway corridor.",
+        "Under the Sale-and-Leaseback (SLB) model, investors acquire clear title to a luxury cottage unit leased to Turban Hospitality, earning fixed monthly rent alongside 14 days of complimentary annual vacation stays."
+      ],
+      "keyHighlights": [
+        "Day 1 immediate cash flow with 0 development waiting period",
+        "14 complimentary vacation nights per year across Turban resorts",
+        "9-year long-term lease contract with guaranteed minimum returns",
+        "FEMA and RBI repatriation compliant for global NRIs"
+      ]
+    },
+    "amenities": [
+      { "id": "am-tr-1", "name": "Temperature Controlled Pool", "iconKey": "pool", "category": "wellness" },
+      { "id": "am-tr-2", "name": "Ayurvedic Spa & Wellness Hub", "iconKey": "spa", "category": "wellness" },
+      { "id": "am-tr-3", "name": "Multi-Cuisine Organic Dining", "iconKey": "managed", "category": "lifestyle" },
+      { "id": "am-tr-4", "name": "Organic Farm & Walking Trail", "iconKey": "view", "category": "lifestyle" },
+      { "id": "am-tr-5", "name": "24/7 Concierge & Chauffeur", "iconKey": "convenience", "category": "convenience" }
+    ],
+    "paymentPlan": [
+      { "milestone": "Booking Token", "timeline": "At Booking", "percentage": 10, "isHighlighted": true },
+      { "milestone": "Sale Agreement & KYC", "timeline": "15 Days", "percentage": 20, "isHighlighted": false },
+      { "milestone": "Full Registry & Deed Transfer", "timeline": "30 Days", "percentage": 70, "isHighlighted": true }
+    ],
+    "constructionUpdates": [
+      { "stage": "Operational", "title": "Fully Operational Resort", "progressPercent": 100, "status": "completed", "imageUrl": "/assets/wordpress_media/Turbun_Group_Resort_Reception_View_10.jpg.jpg", "updateDate": "Active" }
+    ],
+    "faqs": [
+      { "question": "Can I use my resort unit for family vacations?", "answer": "Yes. Each owner is entitled to 14 complimentary room nights every financial year with full access to all resort amenities." }
+    ],
+    "similarPropertySlugs": ["skyline-arcadia", "aryaville", "london-street"],
+    "meta": {
+      "seoTitle": "Turban Resort Chandwaji | 10.5% Assured SLB Return",
+      "seoDescription": "Own an operational resort cottage at Turban Resort Chandwaji. Earn ₹70,000/month with 14 free vacation nights."
+    }
+  },
+  {
+    "id": "prop-london-street",
+    "slug": "london-street",
+    "title": "London Street",
+    "titleAccent": "Boutique Retail Arcade",
+    "tagline": "Victorian-Themed High-Street Commercial Hub in Prime Urban Catchment",
+    "category": "commercial",
+    "isFeatured": false,
+    "isNriRecommended": true,
+    "badges": ["Prime Commercial", "High Footfall", "8.8% Yield"],
+    "price": {
+      "inr": 10000000,
+      "usd": 120000,
+      "aed": 440000,
+      "formattedInr": "₹ 1.00 Cr",
+      "formattedUsd": "$120,000",
+      "formattedAed": "AED 440,000"
+    },
+    "roi": {
+      "rentalYieldPercent": 8.8,
+      "targetIrrPercent": 15.0,
+      "leaseDurationYears": 9,
+      "estimatedMonthlyPayoutInr": 73330,
+      "tenantName": "National F&B & Fashion Anchors",
+      "tenantProfile": "Grade-A Retail Franchise Tenants",
+      "lockInPeriod": "3 Years",
+      "payoutFrequency": "monthly"
+    },
+    "specs": {
+      "bhk": 0,
+      "carpetAreaSqFt": 550,
+      "superAreaSqFt": 880,
+      "bathrooms": 1,
+      "floorNumber": "Ground Floor Prominade",
+      "furnishing": "bare-shell",
+      "possessionStatus": "ready-to-move",
+      "possessionDate": "Immediate",
+      "ownershipType": "fractional-spv",
+      "unitsAvailable": 4,
+      "reraRegistrationNumber": "RAJ/P/2023/1640"
+    },
+    "media": {
+      "heroImage": "/assets/london_street.png",
+      "thumbnailImage": "/assets/london_street.png",
+      "droneVideoUrl": "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+      "gallery": [
+        { "url": "/assets/london_street.png", "title": "London Street Promenade", "alt": "Victorian storefront arcade", "category": "exterior" },
+        { "url": "/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp", "title": "Alfresco Dining Plaza", "alt": "Open air dining courtyard", "category": "amenity" }
+      ]
+    },
+    "location": {
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "country": "India",
+      "microMarket": "Vaishali Nagar West",
+      "fullAddress": "London Street Promenade, Sirsi Road, Vaishali Nagar, Jaipur 302021",
+      "latitude": 26.9124,
+      "longitude": 75.7289,
+      "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14232.12345!2d75.7289!3d26.9124!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db371234!2sVaishali%20Nagar%2C%20Jaipur!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
+      "nearbyLandmarks": [
+        { "name": "Vaishali Circle", "distance": "5 Mins", "type": "commercial-hub" },
+        { "name": "200 Ft Bypass", "distance": "3 Mins", "type": "highway" },
+        { "name": "Jaipur Railway Junction", "distance": "15 Mins", "type": "transit" }
+      ]
+    },
+    "overview": {
+      "heading": "High-Street Retail",
+      "subheading": "Unmatched Footfalls & Premium Tenancies",
+      "paragraphs": [
+        "London Street brings curated Victorian retail architecture to Vaishali Nagar's prime catchment of 300,000+ affluent residents.",
+        "Positioned for steady capital gains and high-yield commercial rents, shops are backed by 9-year institutional lease agreements."
+      ],
+      "keyHighlights": [
+        "Ground floor high-visibility frontage",
+        "Triple-net lease structure with zero landlord overheads",
+        "Quarterly rental distributions"
+      ]
+    },
+    "amenities": [
+      { "id": "am-ls-1", "name": "Central Cobblestone Plaza", "iconKey": "lifestyle", "category": "lifestyle" },
+      { "id": "am-ls-2", "name": "Valet Parking & EV Stations", "iconKey": "parking", "category": "convenience" },
+      { "id": "am-ls-3", "name": "100% Power Backup", "iconKey": "security", "category": "security" }
+    ],
+    "paymentPlan": [
+      { "milestone": "Token Booking", "timeline": "At Booking", "percentage": 10, "isHighlighted": true },
+      { "milestone": "Full Registry Transfer", "timeline": "Within 30 Days", "percentage": 90, "isHighlighted": true }
+    ],
+    "constructionUpdates": [
+      { "stage": "Ready", "title": "Completed & Fitout Ready", "progressPercent": 100, "status": "completed", "imageUrl": "/assets/london_street.png", "updateDate": "Ready" }
+    ],
+    "faqs": [
+      { "question": "What is the lease escalation frequency?", "answer": "15% rental escalation is locked in every 3 years in the registered lease contract." }
+    ],
+    "similarPropertySlugs": ["skyline-arcadia", "turban-resort-chandwaji"],
+    "meta": {
+      "seoTitle": "London Street Commercial Retail Jaipur | High Yield Investment",
+      "seoDescription": "Invest in prime commercial retail shops at London Street, Vaishali Nagar, Jaipur."
+    }
+  },
+  {
+    "id": "prop-aryaville",
+    "slug": "aryaville",
+    "title": "Aryaville",
+    "titleAccent": "Ultra-Luxury Wellness Villas",
+    "tagline": "Private Gated Villa Estates with 5-Star Resort Amenities and Managed Leisure Rental",
+    "category": "villa",
+    "isFeatured": true,
+    "isNriRecommended": true,
+    "badges": ["Private Pool Villas", "Freehold Land Title", "14.2% Net IRR"],
+    "price": {
+      "inr": 27500000,
+      "usd": 330000,
+      "aed": 1210000,
+      "formattedInr": "₹ 2.75 Cr",
+      "formattedUsd": "$330,000",
+      "formattedAed": "AED 1.21 M"
+    },
+    "roi": {
+      "rentalYieldPercent": 8.5,
+      "targetIrrPercent": 17.5,
+      "leaseDurationYears": 10,
+      "estimatedMonthlyPayoutInr": 194800,
+      "tenantName": "Luxury Boutique Villa Operator",
+      "tenantProfile": "High-Ticket Destination Holiday Rental",
+      "lockInPeriod": "3 Years",
+      "payoutFrequency": "monthly"
+    },
+    "specs": {
+      "bhk": 3,
+      "carpetAreaSqFt": 2400,
+      "superAreaSqFt": 4500,
+      "bathrooms": 4,
+      "floorNumber": "Independent Ground + 1 Villa",
+      "furnishing": "fully-furnished",
+      "possessionStatus": "under-construction",
+      "possessionDate": "March 2027",
+      "ownershipType": "sole-ownership",
+      "unitsAvailable": 6,
+      "reraRegistrationNumber": "RAJ/P/2024/3891"
+    },
+    "media": {
+      "heroImage": "/assets/aryaville_resort.png",
+      "thumbnailImage": "/assets/aryaville_resort.png",
+      "droneVideoUrl": "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+      "gallery": [
+        { "url": "/assets/aryaville_resort.png", "title": "Private Infinity Pool Villa", "alt": "Villa exterior and private pool", "category": "exterior" },
+        { "url": "/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp", "title": "Private Garden Gazebo", "alt": "Landscaped private garden", "category": "amenity" },
+        { "url": "/assets/wordpress_media/mansion_g5c9re.webp", "title": "Grand Double Height Living Room", "alt": "Luxury interior living area", "category": "interior" }
+      ]
+    },
+    "location": {
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "country": "India",
+      "microMarket": "Kukas Luxury Belt",
+      "fullAddress": "Aryaville Estates, Kukas Heritage Corridor, Jaipur 302028",
+      "latitude": 27.0421,
+      "longitude": 75.9012,
+      "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14210.123!2d75.9012!3d27.0421!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396daf789!2sKukas%2C%20Rajasthan!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
+      "nearbyLandmarks": [
+        { "name": "JW Marriott Jaipur Resort", "distance": "4 Mins", "type": "commercial-hub" },
+        { "name": "Fairmont Jaipur", "distance": "6 Mins", "type": "commercial-hub" },
+        { "name": "Amer Heritage Fort", "distance": "12 Mins", "type": "transit" }
+      ]
+    },
+    "overview": {
+      "heading": "Bespoke Villa Ownership",
+      "subheading": "The Ultimate Blend of Luxury & High-Yield Rental",
+      "paragraphs": [
+        "Aryaville offers bespoke 3BHK and 4BHK private pool villas spread over 500 sq.yd freehold land parcels in Kukas, Jaipur's five-star resort capital.",
+        "Owners enjoy 100% freehold land registration while the property is managed as a high-ticket weekend destination villa earning ₹1.94L+ monthly average returns."
+      ],
+      "keyHighlights": [
+        "100% Freehold Land Ownership with independent registry",
+        "Private plunge pool and landscaped deck with every villa",
+        "Professional hospitality management & rental yield pooling"
+      ]
+    },
+    "amenities": [
+      { "id": "am-av-1", "name": "Private Temperature Controlled Pool", "iconKey": "pool", "category": "wellness" },
+      { "id": "am-av-2", "name": "Clubhouse & Tennis Courts", "iconKey": "lifestyle", "category": "lifestyle" },
+      { "id": "am-av-3", "name": "24/7 Security with Gated Entry", "iconKey": "security", "category": "security" }
+    ],
+    "paymentPlan": [
+      { "milestone": "Token Booking", "timeline": "Booking", "percentage": 10, "isHighlighted": true },
+      { "milestone": "Foundation & Plinth", "timeline": "30 Days", "percentage": 25, "isHighlighted": false },
+      { "milestone": "RCC Slab Completion", "timeline": "90 Days", "percentage": 25, "isHighlighted": false },
+      { "milestone": "Finishing & Landscaping", "timeline": "180 Days", "percentage": 20, "isHighlighted": false },
+      { "milestone": "Handover & Registry", "timeline": "Possession", "percentage": 20, "isHighlighted": true }
+    ],
+    "constructionUpdates": [
+      { "stage": "Stage 1", "title": "Land Levelling & Boundary Wall", "progressPercent": 100, "status": "completed", "imageUrl": "/assets/aryaville_resort.png", "updateDate": "Completed" },
+      { "stage": "Stage 2", "title": "Villa RCC Structure", "progressPercent": 60, "status": "in-progress", "imageUrl": "/assets/wordpress_media/mansion_g5c9re.webp", "updateDate": "In Progress" }
+    ],
+    "faqs": [
+      { "question": "Is the land freehold?", "answer": "Yes, each villa comes with an individual registered freehold sale deed for the land and structure." }
+    ],
+    "similarPropertySlugs": ["turban-resort-chandwaji", "skyline-arcadia"],
+    "meta": {
+      "seoTitle": "Aryaville Luxury Villas Kukas Jaipur | High-ROI Resort Estates",
+      "seoDescription": "Buy ultra-luxury private pool villas at Aryaville, Kukas, Jaipur. Freehold land title with 17.5% target IRR."
+    }
+  },
+  {
+    "id": "prop-greenz-danube",
+    "slug": "greenz-by-danube",
+    "title": "Greenz by Danube",
+    "titleAccent": "Prime Dubai Residences",
+    "tagline": "Tax-Free High-Yield Residential Apartments in Global Financial Capital",
+    "category": "apartment",
+    "isFeatured": true,
+    "isNriRecommended": true,
+    "badges": ["100% Tax-Free", "Golden Visa Eligible", "1% Monthly Plan"],
+    "price": {
+      "inr": 79000000,
+      "usd": 950000,
+      "aed": 3500000,
+      "formattedInr": "₹ 7.90 Cr",
+      "formattedUsd": "$950,000",
+      "formattedAed": "AED 3.50 M"
+    },
+    "roi": {
+      "rentalYieldPercent": 8.0,
+      "targetIrrPercent": 15.8,
+      "leaseDurationYears": 3,
+      "estimatedMonthlyPayoutInr": 526600,
+      "tenantName": "Global Expat Corporate Executives",
+      "tenantProfile": "High Net Worth Professional Expats",
+      "lockInPeriod": "1 Year",
+      "payoutFrequency": "quarterly"
+    },
+    "specs": {
+      "bhk": 2,
+      "carpetAreaSqFt": 1150,
+      "superAreaSqFt": 1450,
+      "bathrooms": 2,
+      "floorNumber": "18th of 35 Floors",
+      "furnishing": "fully-furnished",
+      "possessionStatus": "under-construction",
+      "possessionDate": "Q4 2027",
+      "ownershipType": "sole-ownership",
+      "unitsAvailable": 12,
+      "reraRegistrationNumber": "DLD/PERMIT/2024/9812"
+    },
+    "media": {
+      "heroImage": "/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp",
+      "thumbnailImage": "/assets/greenz_danube.png",
+      "droneVideoUrl": "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+      "gallery": [
+        { "url": "/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp", "title": "Podium Garden & Infinity Pool", "alt": "Dubai skyline pool view", "category": "amenity" },
+        { "url": "/assets/wordpress_media/a-modern-living-room-with-a-view-of-the-city-skyline-at-night.webp", "title": "Skyline View Living Room", "alt": "Modern Dubai apartment living room", "category": "interior" }
+      ]
+    },
+    "location": {
+      "city": "Dubai",
+      "state": "Dubai",
+      "country": "United Arab Emirates",
+      "microMarket": "Prime Financial & Retail Hub",
+      "fullAddress": "Greenz by Danube, Business Corridor, Dubai, UAE",
+      "latitude": 25.1972,
+      "longitude": 55.2744,
+      "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115561.7!2d55.2744!3d25.1972!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43496ad9c645%3A0xbde66e5084295162!2sDubai%20-%20United%20Arab%20Emirates!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
+      "nearbyLandmarks": [
+        { "name": "Downtown Dubai & Burj Khalifa", "distance": "10 Mins", "type": "commercial-hub" },
+        { "name": "Dubai International Airport (DXB)", "distance": "15 Mins", "type": "airport" },
+        { "name": "Dubai Canal Promenade", "distance": "5 Mins", "type": "transit" }
+      ]
+    },
+    "overview": {
+      "heading": "Tax-Free Dubai Investment",
+      "subheading": "10-Year UAE Golden Visa Eligible Asset",
+      "paragraphs": [
+        "Greenz by Danube is an elite high-rise residential masterpiece designed with 40+ resort-grade amenities in Dubai's premier urban core.",
+        "Featuring the world-renowned 1% per month post-handover payment plan, investors lock in zero tax on rental income and eligible family UAE Golden Visa residency."
+      ],
+      "keyHighlights": [
+        "0% Personal Income Tax & 0% Capital Gains Tax",
+        "Eligible for 10-Year UAE Golden Visa",
+        "Flexible 1% per month payment schedule"
+      ]
+    },
+    "amenities": [
+      { "id": "am-gz-1", "name": "Infinity Sky Pool", "iconKey": "pool", "category": "wellness" },
+      { "id": "am-gz-2", "name": "Outdoor Cinema & Sky Lounge", "iconKey": "lifestyle", "category": "lifestyle" },
+      { "id": "am-gz-3", "name": "Health Club & Spa", "iconKey": "spa", "category": "wellness" }
+    ],
+    "paymentPlan": [
+      { "milestone": "Down Payment", "timeline": "Booking", "percentage": 20, "isHighlighted": true },
+      { "milestone": "During Construction (1% Monthly)", "timeline": "Monthly", "percentage": 50, "isHighlighted": false },
+      { "milestone": "Post Handover (1% Monthly)", "timeline": "Post Handover", "percentage": 30, "isHighlighted": true }
+    ],
+    "constructionUpdates": [
+      { "stage": "Stage 1", "title": "Substructure & Excavation", "progressPercent": 100, "status": "completed", "imageUrl": "/assets/greenz_danube.png", "updateDate": "Completed" },
+      { "stage": "Stage 2", "title": "Tower Core & Superstructure", "progressPercent": 40, "status": "in-progress", "imageUrl": "/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp", "updateDate": "In Progress" }
+    ],
+    "faqs": [
+      { "question": "Can Indian citizens invest in Dubai real estate?", "answer": "Yes. Under RBI's Liberalised Remittance Scheme (LRS), Indian resident individuals can remit up to $250,000 per financial year for overseas property investments." }
+    ],
+    "similarPropertySlugs": ["aryaville", "skyline-arcadia"],
+    "meta": {
+      "seoTitle": "Greenz by Danube Dubai | 1% Payment Plan Golden Visa",
+      "seoDescription": "Invest in Greenz by Danube, Dubai. Tax-free 8% rental yield with 1% monthly payment plan & UAE Golden Visa."
+    }
+  }
+]
