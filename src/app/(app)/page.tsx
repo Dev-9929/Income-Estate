@@ -10,7 +10,6 @@ import { PropertiesCarousel } from '@/components/home/PropertiesCarousel'
 import { BrandedResidences } from '@/components/home/BrandedResidences'
 import { CalculatorBanner } from '@/components/home/CalculatorBanner'
 import { ComparisonSection } from '@/components/home/ComparisonSection'
-import { InvestmentPlans } from '@/components/home/InvestmentPlans'
 import { ProcessTimeline } from '@/components/home/ProcessTimeline'
 import { TestimonialsSection } from '@/components/home/TestimonialsSection'
 import { FaqSection } from '@/components/home/FaqSection'
@@ -50,10 +49,7 @@ export default function Home() {
       {/* Section 8: Traditional Real Estate vs Income Estate Comparison */}
       <ComparisonSection />
 
-      {/* Section 9: Investment Plans & Portfolio Tiers */}
-      <InvestmentPlans />
-
-      {/* Section 10: Simple Process Timeline */}
+      {/* Section 9: Simple Process Timeline */}
       <ProcessTimeline />
 
       {/* Section 11: Investor Trust & Testimonials */}

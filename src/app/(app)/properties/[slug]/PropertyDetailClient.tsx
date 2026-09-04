@@ -82,7 +82,7 @@ export function PropertyDetailClient({ property }: PropertyDetailClientProps) {
         <Header />
 
         {/* Breadcrumbs Row */}
-        <div className="container" style={{ position: 'relative', zIndex: 20, paddingTop: '1rem' }}>
+        <div className="container pd2-breadcrumb-wrap">
           <nav className="pd2-breadcrumb" aria-label="breadcrumb">
             <Link href="/">Home</Link>
             <span className="sep">›</span>
@@ -202,9 +202,9 @@ export function PropertyDetailClient({ property }: PropertyDetailClientProps) {
         <div className="pd2-gallery-header">
           <div>
             <div className="pd2-tag-line">Visual Tour</div>
-            <h2 className="pd2-gallery-header" style={{ margin: 0, padding: 0 }}>Interiors & Architecture</h2>
+            <h2 className="pd2-gallery-heading">Interiors & Architecture</h2>
           </div>
-          <p>Professionally designed spaces blending hospitality, commerce, and premium modern architecture.</p>
+          <p className="pd2-gallery-desc">Professionally designed spaces blending hospitality, commerce, and premium modern architecture.</p>
         </div>
 
         <div className="pd2-gallery-grid">
@@ -224,7 +224,7 @@ export function PropertyDetailClient({ property }: PropertyDetailClientProps) {
         <div className="pd2-roi-inner">
           <div className="pd2-roi-left">
             <div className="pd2-tag-line">Investment Analysis</div>
-            <h2 className="pd2-intro-heading" style={{ fontSize: '2.5rem' }}>
+            <h2 className="pd2-intro-heading pd2-roi-heading">
               Returns that<br />
               <em>Speak for Themselves</em>
             </h2>
@@ -282,9 +282,9 @@ export function PropertyDetailClient({ property }: PropertyDetailClientProps) {
           <div className="pd2-amenities-header">
             <div>
               <div className="pd2-tag-line">Property Features</div>
-              <h2 className="pd2-amenities-heading">Premium<br />Amenities</h2>
+              <h2 className="pd2-amenities-heading">Premium <span className="pd2-desktop-br"><br /></span>Amenities</h2>
             </div>
-            <p style={{ fontSize: '0.85rem', color: '#8A7A60', maxWidth: '280px', lineHeight: 1.65 }}>
+            <p className="pd2-amenities-desc">
               Hover over any feature to discover what makes this property stand out in its micro-market.
             </p>
           </div>
@@ -439,7 +439,7 @@ export function PropertyDetailClient({ property }: PropertyDetailClientProps) {
               <div className="pd2-tag-line">Live Updates</div>
               <h2 className="pd2-construction-heading">Construction Progress</h2>
             </div>
-            <p style={{ fontSize: '0.82rem', color: '#8A7A60', maxWidth: '260px', lineHeight: 1.6 }}>
+            <p className="pd2-construction-desc">
               Asset developments are inspected regularly with verified third-party site audits and zero development risk.
             </p>
           </div>
