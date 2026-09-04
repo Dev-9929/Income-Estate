@@ -1,30 +1,6 @@
 import type { Metadata } from 'next'
-import { Proza_Libre, Playfair_Display, Cormorant_Garamond } from 'next/font/google'
 import '../globals.css'
 import '@/styles/income-estate.css'
-
-const prozaLibre = Proza_Libre({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-proza',
-  display: 'swap',
-})
-
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  style: ['normal', 'italic'],
-  variable: '--font-serif-display',
-  display: 'swap',
-})
-
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  style: ['normal', 'italic'],
-  variable: '--font-cormorant',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: 'Income Estate - Fractional Resort Investments & Stable Returns',
@@ -41,8 +17,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${prozaLibre.variable} ${playfair.variable} ${cormorant.variable}`}>
-      <body className={prozaLibre.className} style={{ fontFamily: 'var(--font-proza), sans-serif' }}>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body style={{ fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>
         {children}
       </body>
     </html>
