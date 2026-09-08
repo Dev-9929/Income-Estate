@@ -5,14 +5,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { PreFooterCta } from '@/components/home/PreFooterCta'
 import { CalculatorModal } from '@/components/modals/CalculatorModal'
 import { PropertyDetailItem } from '@/data/property-detail-data'
 
 interface PropertyDetailClientProps {
   property: PropertyDetailItem
+  categorySlug?: string
 }
 
-export function PropertyDetailClient({ property }: PropertyDetailClientProps) {
+export function PropertyDetailClient({ property, categorySlug = 'roi-properties' }: PropertyDetailClientProps) {
   const [isCalcOpen, setIsCalcOpen] = useState(false)
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0)
   const [showToast, setShowToast] = useState(false)
@@ -86,7 +88,7 @@ export function PropertyDetailClient({ property }: PropertyDetailClientProps) {
           <nav className="pd2-breadcrumb" aria-label="breadcrumb">
             <Link href="/">Home</Link>
             <span className="sep">›</span>
-            <Link href="/properties">Properties</Link>
+            <Link href={`/${categorySlug}`}>{categorySlug.replace(/-/g, ' ').toUpperCase()}</Link>
             <span className="sep">›</span>
             <span className="cur">{property.title} {property.titleAccent || ''}</span>
           </nav>
@@ -569,12 +571,12 @@ export function PropertyDetailClient({ property }: PropertyDetailClientProps) {
               <div className="pd2-tag-line">Our Portfolio</div>
               <h2 className="pd2-others-title">Similar Opportunities</h2>
             </div>
-            <Link href="/properties" className="pd2-see-all">View All Properties</Link>
+            <Link href="/roi-properties" className="pd2-see-all">View All Properties</Link>
           </div>
 
           <div className="pd2-others-grid">
             {property.similarProperties.map((other, idx) => (
-              <Link href={`/properties/${other.slug}`} key={idx} className="pd2-other-card">
+              <Link href={`/${categorySlug}/${other.slug}`} key={idx} className="pd2-other-card">
                 <div className="pd2-other-card-img">
                   <img src={other.image} alt={other.title} />
                 </div>
@@ -628,23 +630,10 @@ export function PropertyDetailClient({ property }: PropertyDetailClientProps) {
         </div>
       </section>
 
-      {/* ============================================================
-           FULL-WIDTH CTA BANNER
-      ============================================================ */}
-      <div className="pd2-cta-banner">
-        <img
-          src={property.heroImage}
-          alt="CTA Background"
-        />
-        <div className="pd2-cta-content">
-          <h2>A New Way to Think About<br />Property Ownership</h2>
-          <p>
-            We curate only those properties that generate measurable, documented returns. Every listing is
-            verified for income potential before it reaches you.
-          </p>
-          <Link href="/contact" className="pd2-cta-btn">Connect with Our Expert</Link>
-        </div>
-      </div>
+
+
+      {/* Pre-Footer CTA */}
+      <PreFooterCta onConnect={() => setIsCalcOpen(true)} />
 
       {/* ============================================================
            GLOBAL FOOTER

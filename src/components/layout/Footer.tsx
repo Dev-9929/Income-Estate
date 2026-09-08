@@ -56,7 +56,7 @@ export function Footer() {
                 BOOK A CALL
               </Link>
               <Link
-                href="/properties"
+                href="/roi-properties"
                 className="btn btn-calc"
                 style={{
                   backgroundColor: '#CCAF72',
@@ -95,7 +95,7 @@ export function Footer() {
             >
               <li>
                 <Link
-                  href="/properties"
+                  href="/roi-properties"
                   style={{
                     color: 'rgba(255, 255, 255, 0.75)',
                     fontSize: '0.9rem',

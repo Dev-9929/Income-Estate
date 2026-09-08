@@ -109,6 +109,7 @@ export interface PropertyCarouselItem {
   price: string
   image: string
   slug: string
+  category?: string
 }
 
 export const propertiesCarouselData: PropertyCarouselItem[] = [

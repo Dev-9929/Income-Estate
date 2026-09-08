@@ -78,7 +78,7 @@ export function PropertiesCarousel({
               value.
             </p>
             <Link
-              href="/properties"
+              href="/roi-properties"
               className="btn btn-outline"
               id="carousel-invest-now"
               style={{
@@ -104,7 +104,7 @@ export function PropertiesCarousel({
                   className={`property-card ${idx === currentIndex ? 'active-card' : ''}`}
                   id={item.id}
                 >
-                  <Link href={`/properties/${item.slug}`}>
+                  <Link href={`/${item.category || 'roi-properties'}/${item.slug}`}>
                     <div className="card-img-wrap">
                       <img src={item.image} alt={item.title} />
                       <div className="card-gradient-overlay" />

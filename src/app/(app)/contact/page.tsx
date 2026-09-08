@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { PreFooterCta } from '@/components/home/PreFooterCta'
 import { CalculatorModal } from '@/components/modals/CalculatorModal'
 
 export default function ContactPage() {
@@ -245,6 +246,9 @@ export default function ContactPage() {
           </div>
         </div>
       </main>
+
+      {/* Pre-Footer CTA */}
+      <PreFooterCta onConnect={() => setIsCalcOpen(true)} />
 
       {/* Global Footer */}
       <Footer />

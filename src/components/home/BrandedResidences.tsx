@@ -97,7 +97,7 @@ export function BrandedResidences({
           >
             {residences.map((item) => (
               <div key={item.id} className="branded-card-new">
-                <Link href={`/branded-residences`}>
+                <Link href={`/branded-residences/${item.slug || ''}`}>
                   <div className="branded-card-img-wrap">
                     <img src={item.image} alt={item.title} />
                     <div className="branded-card-badge">{item.badge}</div>

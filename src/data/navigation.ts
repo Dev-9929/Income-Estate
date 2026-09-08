@@ -71,31 +71,31 @@ export const resourcesMegaMenu: MegaMenuData = {
 // Left wing navigation links
 export const leftNavItems: NavItem[] = [
   {
-    id: 'link-concept',
-    label: 'The Concept',
-    href: '#',
-    megaMenu: conceptMegaMenu,
-    megaMenuAlign: 'left',
-  },
-  {
     id: 'link-roi-properties',
     label: 'ROI Properties',
-    href: '/properties',
+    href: '/roi-properties',
   },
   {
     id: 'link-branded-residences',
     label: 'Branded Residences',
     href: '/branded-residences',
   },
-]
-
-// Right wing navigation links
-export const rightNavItems: NavItem[] = [
   {
     id: 'link-resources',
     label: 'Resources',
     href: '#',
     megaMenu: resourcesMegaMenu,
+    megaMenuAlign: 'left',
+  },
+]
+
+// Right wing navigation links
+export const rightNavItems: NavItem[] = [
+  {
+    id: 'link-concept',
+    label: 'The Concept',
+    href: '#',
+    megaMenu: conceptMegaMenu,
     megaMenuAlign: 'right',
   },
   {
@@ -104,3 +104,4 @@ export const rightNavItems: NavItem[] = [
     href: '/contact',
   },
 ]
+

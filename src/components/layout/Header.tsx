@@ -87,19 +87,89 @@ export function Header({ onOpenConsultation }: HeaderProps) {
   return (
     <header className={`header ${isScrolled ? 'scroll-shadow' : ''}`}>
       <div className="container nav-container">
-        {/* Left Side (Desktop: CTA + Left Links) */}
+        {/* Left Side (Desktop: Left Links) */}
         <div className="nav-left-col">
-          <div className="nav-cta">
-            <button
-              type="button"
-              className="btn btn-outline btn-calc"
-              id="btn-header-consultation"
-              onClick={handleConsultationClick}
-            >
-              Book Consultation
-            </button>
-          </div>
           <ul className="nav-links-left">
+            <li>
+              <Link href="/roi-properties" className="nav-link" id="link-roi-properties" onClick={closeMobileMenu}>
+                ROI Properties
+              </Link>
+            </li>
+            <li>
+              <Link href="/branded-residences" className="nav-link" id="link-branded-residences" onClick={closeMobileMenu}>
+                Branded Residences
+              </Link>
+            </li>
+            <li
+              className={`nav-item-dropdown megamenu-item ${activeDropdown === 'resources' ? 'active' : ''}`}
+            >
+              <a
+                href="#"
+                className="nav-link"
+                id="link-resources"
+                onClick={(e) => handleDropdownClick(e, 'resources')}
+              >
+                Resources <span className="arrow">&#9662;</span>
+              </a>
+              <div className="megamenu align-left">
+                <div className="megamenu-content">
+                  <div className="megamenu-left">
+                    <img
+                      src="/assets/wordpress_media/mansion_g5c9re.webp"
+                      alt="Investment Resources"
+                    />
+                    <div className="megamenu-image-overlay">
+                      <span className="megamenu-tag">Resources</span>
+                      <h4>Calculators & Guides</h4>
+                      <p>Empower your choices with financial estimation and expert insights.</p>
+                    </div>
+                  </div>
+                  <div className="megamenu-right">
+                    <ul className="megamenu-links">
+                      <li>
+                        <Link href="/#calculator" onClick={closeMobileMenu}>
+                          <span className="link-title">ROI Calculator</span>
+                          <span className="link-desc">
+                            Estimate your monthly yields, capital appreciation, and returns.
+                          </span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/blogs" onClick={closeMobileMenu}>
+                          <span className="link-title">Blogs</span>
+                          <span className="link-desc">
+                            Insights, articles, and expert guides on real estate investing.
+                          </span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/blogs" onClick={closeMobileMenu}>
+                          <span className="link-title">News & Updates</span>
+                          <span className="link-desc">
+                            Latest news on resort fractional share regulations and growth.
+                          </span>
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        {/* Centered Brand Logo */}
+        <Link href="/" className="logo-area" id="nav-logo-link" onClick={closeMobileMenu}>
+          <img
+            src="/assets/wordpress_media/new-site-logo.svg"
+            alt="Income Estate Logo"
+            className="logo-img"
+          />
+        </Link>
+
+        {/* Right Side (Desktop: Right Links + CTA) */}
+        <div className="nav-right-col">
+          <ul className="nav-links-right">
             <li
               className={`nav-item-dropdown megamenu-item ${activeDropdown === 'concept' ? 'active' : ''}`}
             >
@@ -111,7 +181,7 @@ export function Header({ onOpenConsultation }: HeaderProps) {
               >
                 The Concept <span className="arrow">&#9662;</span>
               </a>
-              <div className="megamenu align-left">
+              <div className="megamenu align-right">
                 <div className="megamenu-content">
                   <div className="megamenu-left">
                     <img
@@ -156,91 +226,21 @@ export function Header({ onOpenConsultation }: HeaderProps) {
               </div>
             </li>
             <li>
-              <Link href="/properties" className="nav-link" id="link-roi-properties" onClick={closeMobileMenu}>
-                ROI Properties
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* Centered Brand Logo */}
-        <Link href="/" className="logo-area" id="nav-logo-link" onClick={closeMobileMenu}>
-          <img
-            src="/assets/wordpress_media/new-site-logo.svg"
-            alt="Income Estate Logo"
-            className="logo-img"
-          />
-        </Link>
-
-        {/* Right Side (Desktop: Right Links) */}
-        <div className="nav-right-col">
-          <ul className="nav-links-right">
-            <li>
-              <Link href="/branded-residences" className="nav-link" id="link-branded-residences" onClick={closeMobileMenu}>
-                Branded Residences
-              </Link>
-            </li>
-            <li
-              className={`nav-item-dropdown megamenu-item ${activeDropdown === 'resources' ? 'active' : ''}`}
-            >
-              <a
-                href="#"
-                className="nav-link"
-                id="link-resources"
-                onClick={(e) => handleDropdownClick(e, 'resources')}
-              >
-                Resources <span className="arrow">&#9662;</span>
-              </a>
-              <div className="megamenu align-right">
-                <div className="megamenu-content">
-                  <div className="megamenu-left">
-                    <img
-                      src="/assets/wordpress_media/mansion_g5c9re.webp"
-                      alt="Investment Resources"
-                    />
-                    <div className="megamenu-image-overlay">
-                      <span className="megamenu-tag">Resources</span>
-                      <h4>Calculators & Guides</h4>
-                      <p>Empower your choices with financial estimation and expert insights.</p>
-                    </div>
-                  </div>
-                  <div className="megamenu-right">
-                    <ul className="megamenu-links">
-                      <li>
-                        <Link href="/#calculator" onClick={closeMobileMenu}>
-                          <span className="link-title">ROI Calculator</span>
-                          <span className="link-desc">
-                            Estimate your monthly yields, capital appreciation, and returns.
-                          </span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/blogs" onClick={closeMobileMenu}>
-                          <span className="link-title">Blogs</span>
-                          <span className="link-desc">
-                            Insights, articles, and expert guides on real estate investing.
-                          </span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/blogs" onClick={closeMobileMenu}>
-                          <span className="link-title">News & Updates</span>
-                          <span className="link-desc">
-                            Latest news on resort fractional share regulations and growth.
-                          </span>
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li>
               <Link href="/contact" className="nav-link" id="link-contact" onClick={closeMobileMenu}>
                 Contact Us
               </Link>
             </li>
           </ul>
+          <div className="nav-cta">
+            <button
+              type="button"
+              className="btn btn-outline btn-calc"
+              id="btn-header-consultation"
+              onClick={handleConsultationClick}
+            >
+              Book Consultation
+            </button>
+          </div>
         </div>
 
         {/* Mobile Hamburger Toggle Button (Right Side on Mobile) */}
@@ -290,40 +290,21 @@ export function Header({ onOpenConsultation }: HeaderProps) {
               {/* Mobile Drawer Menu Links */}
               <div className="mobile-drawer-content">
                 <div className="mobile-drawer-nav">
-                  {/* Item 1: The Concept (Accordion) */}
-                  <div className={`mobile-nav-item ${activeDropdown === 'concept' ? 'active' : ''}`}>
-                    <button
-                      type="button"
-                      className="mobile-nav-btn"
-                      onClick={(e) => handleDropdownClick(e, 'concept')}
-                    >
-                      <span>The Concept</span>
-                      <span className="arrow">&#9662;</span>
-                    </button>
-                    {activeDropdown === 'concept' && (
-                      <div className="mobile-sub-menu">
-                        <Link href="/about" onClick={closeMobileMenu}>About Us</Link>
-                        <Link href="/how-it-works" onClick={closeMobileMenu}>How It Works</Link>
-                        <Link href="/services" onClick={closeMobileMenu}>Our Services</Link>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Item 2: ROI Properties */}
+                  {/* Item 1: ROI Properties */}
                   <div className="mobile-nav-item">
-                    <Link href="/properties" className="mobile-nav-link" onClick={closeMobileMenu}>
+                    <Link href="/roi-properties" className="mobile-nav-link" onClick={closeMobileMenu}>
                       ROI Properties
                     </Link>
                   </div>
 
-                  {/* Item 3: Branded Residences */}
+                  {/* Item 2: Branded Residences */}
                   <div className="mobile-nav-item">
                     <Link href="/branded-residences" className="mobile-nav-link" onClick={closeMobileMenu}>
                       Branded Residences
                     </Link>
                   </div>
 
-                  {/* Item 4: Resources (Accordion) */}
+                  {/* Item 3: Resources (Accordion) */}
                   <div className={`mobile-nav-item ${activeDropdown === 'resources' ? 'active' : ''}`}>
                     <button
                       type="button"
@@ -338,6 +319,25 @@ export function Header({ onOpenConsultation }: HeaderProps) {
                         <Link href="/#calculator" onClick={closeMobileMenu}>ROI Calculator</Link>
                         <Link href="/blogs" onClick={closeMobileMenu}>Blogs</Link>
                         <Link href="/blogs" onClick={closeMobileMenu}>News &amp; Updates</Link>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Item 4: The Concept (Accordion) */}
+                  <div className={`mobile-nav-item ${activeDropdown === 'concept' ? 'active' : ''}`}>
+                    <button
+                      type="button"
+                      className="mobile-nav-btn"
+                      onClick={(e) => handleDropdownClick(e, 'concept')}
+                    >
+                      <span>The Concept</span>
+                      <span className="arrow">&#9662;</span>
+                    </button>
+                    {activeDropdown === 'concept' && (
+                      <div className="mobile-sub-menu">
+                        <Link href="/about" onClick={closeMobileMenu}>About Us</Link>
+                        <Link href="/how-it-works" onClick={closeMobileMenu}>How It Works</Link>
+                        <Link href="/services" onClick={closeMobileMenu}>Our Services</Link>
                       </div>
                     )}
                   </div>

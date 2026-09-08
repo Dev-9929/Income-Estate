@@ -1,7 +1,9 @@
 import React from 'react'
 import { notFound } from 'next/navigation'
-import { getBlogBySlug, blogsListingData } from '@/data/blogs-data'
+import { getWordPressPostBySlug, getAllWordPressPosts } from '@/lib/wordpress'
 import { BlogDetailClient } from './BlogDetailClient'
+
+export const revalidate = 60 // Next.js ISR: Revalidate every 60 seconds
 
 interface BlogDetailPageProps {
   params: Promise<{
@@ -10,14 +12,15 @@ interface BlogDetailPageProps {
 }
 
 export async function generateStaticParams() {
-  return blogsListingData.map((post) => ({
+  const posts = await getAllWordPressPosts()
+  return posts.map((post) => ({
     slug: post.slug,
   }))
 }
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params
-  const blog = getBlogBySlug(slug)
+  const blog = await getWordPressPostBySlug(slug)
 
   if (!blog) {
     notFound()
