@@ -144,6 +144,46 @@ export interface WPPostNode {
   }
 }
 
+export interface WPPostSEO {
+  title?: string
+  metaDesc?: string
+  canonical?: string
+  schema?: {
+    raw?: string
+  }
+}
+
+export interface WPBlogPostNode {
+  title: string
+  slug: string
+  excerpt?: string
+  date: string
+  categories?: {
+    nodes?: Array<{
+      name?: string
+      slug?: string
+    }>
+  }
+  featuredImage?: {
+    node?: {
+      sourceUrl?: string
+      altText?: string
+    }
+  }
+  content?: string
+  seo?: WPPostSEO
+}
+
+export interface WPAllBlogPostsResponse {
+  posts?: {
+    nodes?: WPBlogPostNode[]
+  }
+}
+
+export interface WPBlogPostBySlugResponse {
+  post?: WPBlogPostNode | null
+}
+
 export interface WPPostsResponse {
   posts?: {
     nodes?: WPPostNode[]
@@ -186,6 +226,95 @@ export async function fetchGraphQL<T = unknown>(
 // ----------------------------------------------------
 // BLOG QUERIES & HELPERS
 // ----------------------------------------------------
+
+export const GET_ALL_BLOG_POSTS_QUERY = `
+  query GetAllBlogPosts {
+    posts(first: 100, where: { orderby: { field: DATE, order: DESC } }) {
+      nodes {
+        title
+        slug
+        excerpt
+        date
+        categories {
+          nodes {
+            name
+            slug
+          }
+        }
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
+        seo {
+          title
+          metaDesc
+          canonical
+          schema {
+            raw
+          }
+        }
+      }
+    }
+  }
+`
+
+export const GET_BLOG_POST_BY_SLUG_QUERY = `
+  query GetBlogPostBySlug($slug: ID!) {
+    post(id: $slug, idType: SLUG) {
+      title
+      slug
+      excerpt
+      date
+      categories {
+        nodes {
+          name
+          slug
+        }
+      }
+      featuredImage {
+        node {
+          sourceUrl
+          altText
+        }
+      }
+      content
+      seo {
+        title
+        metaDesc
+        canonical
+        schema {
+          raw
+        }
+      }
+    }
+  }
+`
+
+export async function getAllLiveBlogPosts(): Promise<WPBlogPostNode[]> {
+  try {
+    const data = await fetchGraphQL<WPAllBlogPostsResponse>(GET_ALL_BLOG_POSTS_QUERY)
+    const nodes = data?.posts?.nodes || []
+    // Exclude "hello-world" default WordPress post as a safety net
+    return nodes.filter((post) => post.slug && post.slug.toLowerCase() !== 'hello-world')
+  } catch (error) {
+    console.error('Error fetching live WordPress blog posts:', error)
+    return []
+  }
+}
+
+export async function getLiveBlogPostBySlug(slug: string): Promise<WPBlogPostNode | null> {
+  if (!slug || slug.toLowerCase() === 'hello-world') return null
+
+  try {
+    const data = await fetchGraphQL<WPBlogPostBySlugResponse>(GET_BLOG_POST_BY_SLUG_QUERY, { slug })
+    return data?.post || null
+  } catch (error) {
+    console.error(`Error fetching WordPress blog post with slug "${slug}":`, error)
+    return null
+  }
+}
 
 export const GET_ALL_POSTS_QUERY = `
   query GetAllPosts {
@@ -251,7 +380,7 @@ export const GET_POST_BY_SLUG_QUERY = `
   }
 `
 
-function formatPostDate(rawDate?: string): string {
+export function formatPostDate(rawDate?: string): string {
   if (!rawDate) return 'June 15, 2026'
   try {
     const d = new Date(rawDate)
@@ -262,7 +391,7 @@ function formatPostDate(rawDate?: string): string {
   }
 }
 
-function calculateReadTime(text?: string): string {
+export function calculateReadTime(text?: string): string {
   if (!text) return '5 min read'
   const cleanText = text.replace(/<[^>]*>/g, '').trim()
   const words = cleanText.split(/\s+/).filter(Boolean).length
@@ -270,7 +399,7 @@ function calculateReadTime(text?: string): string {
   return `${minutes} min read`
 }
 
-function cleanExcerpt(rawExcerpt?: string): string {
+export function cleanExcerpt(rawExcerpt?: string): string {
   if (!rawExcerpt) return ''
   return rawExcerpt.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()
 }

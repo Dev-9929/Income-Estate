@@ -49,29 +49,106 @@ export function PropertiesCarousel({
     }
   }
 
-  // Calculate layout dimensions and apply styles
+  // Touch & swipe handling for mobile devices
+  const touchStartX = useRef<number>(0)
+  const touchEndX = useRef<number>(0)
+  const touchStartY = useRef<number>(0)
+  const touchEndY = useRef<number>(0)
+  const isSwiping = useRef<boolean>(false)
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX
+    touchStartY.current = e.targetTouches[0].clientY
+    touchEndX.current = e.targetTouches[0].clientX
+    touchEndY.current = e.targetTouches[0].clientY
+    isSwiping.current = true
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isSwiping.current) return
+    touchEndX.current = e.targetTouches[0].clientX
+    touchEndY.current = e.targetTouches[0].clientY
+  }
+
+  const handleTouchEnd = () => {
+    if (!isSwiping.current) return
+    isSwiping.current = false
+    const diffX = touchStartX.current - touchEndX.current
+    const diffY = Math.abs(touchStartY.current - touchEndY.current)
+
+    if (Math.abs(diffX) > 40 && Math.abs(diffX) > diffY) {
+      if (diffX > 0) {
+        handleNext()
+      } else {
+        handlePrev()
+      }
+    }
+  }
+
+  // Calculate layout dimensions and synchronize card widths across all screen sizes
   useEffect(() => {
     const handleResize = () => {
       const screenWidth = window.innerWidth
       const isMobile = screenWidth <= 768
+      const isTablet = screenWidth > 768 && screenWidth <= 992
       setVisibleCards(isMobile ? 1 : 2)
 
       const track = trackRef.current
       if (!track) return
 
-      const parentWidth = track.parentElement?.offsetWidth || 800
+      const parentWidth =
+        track.parentElement?.getBoundingClientRect().width ||
+        track.parentElement?.offsetWidth ||
+        360
+      const cardElements = Array.from(track.children) as HTMLElement[]
+
       let cardWidth = 360
       let gap = 28
 
       if (isMobile) {
-        cardWidth = parentWidth
+        gap = 16
+        cardWidth = Math.floor(parentWidth)
+        track.style.gap = `${gap}px`
+
+        cardElements.forEach((card) => {
+          card.style.flex = `0 0 ${cardWidth}px`
+          card.style.width = `${cardWidth}px`
+          card.style.maxWidth = `${cardWidth}px`
+          card.style.minWidth = `${cardWidth}px`
+        })
+      } else if (isTablet) {
+        gap = 24
+        cardWidth = Math.floor((parentWidth - gap) / 2)
+        track.style.gap = `${gap}px`
+
+        cardElements.forEach((card) => {
+          card.style.flex = `0 0 ${cardWidth}px`
+          card.style.width = `${cardWidth}px`
+          card.style.maxWidth = `${cardWidth}px`
+          card.style.minWidth = `${cardWidth}px`
+        })
+      } else {
+        // Desktop: active card expands, other cards maintain 360px
         gap = 28
-      } else if (screenWidth <= 992) {
-        cardWidth = 340
-        gap = 28
+        track.style.gap = `${gap}px`
+
+        cardElements.forEach((card, idx) => {
+          const isActive = idx === currentIndex
+          const width = isActive ? 550 : 360
+          card.style.flex = `0 0 ${width}px`
+          card.style.width = `${width}px`
+          card.style.maxWidth = `${width}px`
+          card.style.minWidth = `${width}px`
+        })
       }
 
-      const offset = currentIndex * (cardWidth + gap)
+      let offset = 0
+      if (isMobile || isTablet) {
+        offset = currentIndex * (cardWidth + gap)
+      } else {
+        offset = currentIndex * (360 + gap)
+      }
+
       track.style.transform = `translateX(-${offset}px)`
       track.style.transition = isTransitioning
         ? 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
@@ -122,7 +199,12 @@ export function PropertiesCarousel({
           </div>
 
           {/* Slider Track Area */}
-          <div className="carousel-slider-area">
+          <div
+            className="carousel-slider-area"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div
               className="carousel-track"
               id="home-carousel-track"

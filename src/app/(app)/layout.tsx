@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import '../globals.css'
 import '@/styles/income-estate.css'
+import { CinematicIntro } from '@/components/layout/CinematicIntro'
 
 export const metadata: Metadata = {
   title: 'Income Estate - Fractional Resort Investments & Stable Returns',
@@ -27,6 +28,7 @@ export default function RootLayout({
         />
       </head>
       <body style={{ fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+        <CinematicIntro />
         {children}
       </body>
     </html>

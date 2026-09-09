@@ -1,10 +1,12 @@
 import { MetadataRoute } from 'next'
 import { getAllPropertySlugs } from '@/data/property-detail-data'
+import { getAllLiveBlogPosts } from '@/lib/wordpress'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://income-estate.com'
   const categories = ['roi-properties', 'branded-residences', 'other-properties']
   const propertySlugs = getAllPropertySlugs()
+  const blogPosts = await getAllLiveBlogPosts()
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -34,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${baseUrl}/blogs`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
       priority: 0.8,
     },
     {
@@ -82,5 +84,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   })
 
-  return [...staticRoutes, ...categoryRoutes, ...detailRoutes]
+  const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${baseUrl}/blogs/${post.slug}`,
+    lastModified: post.date ? new Date(post.date) : new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }))
+
+  return [...staticRoutes, ...categoryRoutes, ...detailRoutes, ...blogRoutes]
 }

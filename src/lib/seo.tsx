@@ -1,9 +1,9 @@
 import React from 'react'
 import type { Metadata } from 'next'
-import { WPSEOData } from './wordpress'
+import { WPSEOData, WPPostSEO } from './wordpress'
 
 export interface SEOMetadataOptions {
-  seoData?: WPSEOData | null
+  seoData?: WPSEOData | WPPostSEO | null
   fallbackTitle?: string
   fallbackDesc?: string
   fallbackCanonical?: string
@@ -25,7 +25,10 @@ export function generateWPSEOMetadata(options: SEOMetadataOptions): Metadata {
   const title = seoData?.title || fallbackTitle
   const description = seoData?.metaDesc || fallbackDesc
   const canonical = seoData?.canonical || fallbackCanonical
-  const ogImage = seoData?.opengraphImage?.sourceUrl || fallbackImage
+  const ogImage =
+    (seoData && 'opengraphImage' in seoData && seoData.opengraphImage?.sourceUrl)
+      ? seoData.opengraphImage.sourceUrl
+      : fallbackImage
 
   return {
     title,
