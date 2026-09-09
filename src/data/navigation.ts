@@ -81,11 +81,9 @@ export const leftNavItems: NavItem[] = [
     href: '/branded-residences',
   },
   {
-    id: 'link-resources',
-    label: 'Resources',
-    href: '#',
-    megaMenu: resourcesMegaMenu,
-    megaMenuAlign: 'left',
+    id: 'link-other-properties',
+    label: 'Other Properties',
+    href: '/other-properties',
   },
 ]
 
@@ -96,6 +94,13 @@ export const rightNavItems: NavItem[] = [
     label: 'The Concept',
     href: '#',
     megaMenu: conceptMegaMenu,
+    megaMenuAlign: 'right',
+  },
+  {
+    id: 'link-resources',
+    label: 'Resources',
+    href: '#',
+    megaMenu: resourcesMegaMenu,
     megaMenuAlign: 'right',
   },
   {

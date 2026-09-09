@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Header } from '@/components/layout/Header'
@@ -18,6 +18,7 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
   const [isCalcOpen, setIsCalcOpen] = useState(false)
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0)
   const [showToast, setShowToast] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -25,6 +26,38 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
     interest: '₹ 70L – ₹ 1 Cr',
     message: '',
   })
+
+  const handlePrevLightbox = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    setLightboxIndex((prev) => (prev !== null ? (prev === 0 ? property.gallery.length - 1 : prev - 1) : null))
+  }, [property.gallery.length])
+
+  const handleNextLightbox = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    setLightboxIndex((prev) => (prev !== null ? (prev === property.gallery.length - 1 ? 0 : prev + 1) : null))
+  }, [property.gallery.length])
+
+  useEffect(() => {
+    if (lightboxIndex === null) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setLightboxIndex(null)
+      } else if (e.key === 'ArrowLeft') {
+        handlePrevLightbox()
+      } else if (e.key === 'ArrowRight') {
+        handleNextLightbox()
+      }
+    }
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [lightboxIndex, handlePrevLightbox, handleNextLightbox])
 
   const toggleFaq = (index: number) => {
     setOpenFaqIndex((prev) => (prev === index ? null : index))
@@ -83,16 +116,7 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
         {/* Global Navigation Header */}
         <Header />
 
-        {/* Breadcrumbs Row */}
-        <div className="container pd2-breadcrumb-wrap">
-          <nav className="pd2-breadcrumb" aria-label="breadcrumb">
-            <Link href="/">Home</Link>
-            <span className="sep">›</span>
-            <Link href={`/${categorySlug}`}>{categorySlug.replace(/-/g, ' ').toUpperCase()}</Link>
-            <span className="sep">›</span>
-            <span className="cur">{property.title} {property.titleAccent || ''}</span>
-          </nav>
-        </div>
+
 
         {/* Hero Bottom Content */}
         <div className="pd2-hero-body">
@@ -211,8 +235,27 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
 
         <div className="pd2-gallery-grid">
           {property.gallery.map((item, idx) => (
-            <div key={idx} className={`pd2-gi ${item.gridClass}`}>
+            <div
+              key={idx}
+              className={`pd2-gi ${item.gridClass}`}
+              onClick={() => setLightboxIndex(idx)}
+              role="button"
+              tabIndex={0}
+              aria-label={`View full screen image of ${item.label}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setLightboxIndex(idx)
+                }
+              }}
+            >
               <img src={item.image} alt={item.label} />
+              <div className="pd2-gi-zoom">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                  <path d="M12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z" />
+                </svg>
+              </div>
               <div className="pd2-gi-label">{item.label}</div>
             </div>
           ))}
@@ -571,7 +614,7 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
               <div className="pd2-tag-line">Our Portfolio</div>
               <h2 className="pd2-others-title">Similar Opportunities</h2>
             </div>
-            <Link href="/roi-properties" className="pd2-see-all">View All Properties</Link>
+            <Link href={`/${categorySlug}`} className="pd2-see-all">View All Properties</Link>
           </div>
 
           <div className="pd2-others-grid">
@@ -667,6 +710,64 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
           <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>
             Inquiry Submitted! Our advisor will call you shortly.
           </span>
+        </div>
+      )}
+
+      {/* Lightbox Modal */}
+      {lightboxIndex !== null && (
+        <div
+          className="pd2-lightbox-overlay"
+          onClick={() => setLightboxIndex(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image gallery lightbox"
+        >
+          <div className="pd2-lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="pd2-lightbox-close"
+              onClick={() => setLightboxIndex(null)}
+              aria-label="Close image viewer"
+            >
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              </svg>
+            </button>
+
+            <div className="pd2-lightbox-counter">
+              {lightboxIndex + 1} / {property.gallery.length}
+            </div>
+
+            <button
+              className="pd2-lightbox-nav pd2-lightbox-prev"
+              onClick={handlePrevLightbox}
+              aria-label="Previous image"
+            >
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+              </svg>
+            </button>
+
+            <div className="pd2-lightbox-stage">
+              <img
+                src={property.gallery[lightboxIndex].image}
+                alt={property.gallery[lightboxIndex].label}
+                className="pd2-lightbox-img"
+              />
+              <div className="pd2-lightbox-caption">
+                {property.gallery[lightboxIndex].label}
+              </div>
+            </div>
+
+            <button
+              className="pd2-lightbox-nav pd2-lightbox-next"
+              onClick={handleNextLightbox}
+              aria-label="Next image"
+            >
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+              </svg>
+            </button>
+          </div>
         </div>
       )}
 

@@ -119,6 +119,18 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/other-properties"
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.75)',
+                    fontSize: '0.9rem',
+                    transition: 'color 0.3s',
+                  }}
+                >
+                  Other Properties
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/services"
                   style={{
                     color: 'rgba(255, 255, 255, 0.75)',

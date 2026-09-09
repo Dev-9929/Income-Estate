@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getWordPressPropertyBySlug } from '@/lib/wordpress'
+import { getWordPressPropertyBySlug, getAllWordPressProperties } from '@/lib/wordpress'
 import { generateWPSEOMetadata, YoastJsonLd } from '@/lib/seo'
 import { getAllPropertySlugs } from '@/data/property-detail-data'
 import { PropertyDetailClient } from '@/components/properties/PropertyDetailClient'
@@ -69,10 +69,32 @@ export default async function PropertyDetailPage({
     notFound()
   }
 
+  // Fetch properties belonging ONLY to this category
+  const categoryListing = await getAllWordPressProperties(category)
+
+  // Filter out the current property so it doesn't show itself under "Similar Opportunities"
+  const categorySimilar = categoryListing
+    .filter((p) => p.slug !== slug)
+    .map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      price: p.investment
+        ? p.investment.toUpperCase().startsWith('STARTING')
+          ? p.investment
+          : `STARTING FROM ${p.investment}`
+        : 'STARTING FROM ₹ 70 LACS.',
+      image: p.image,
+    }))
+
+  const detailWithCategorySimilar = {
+    ...res.detail,
+    similarProperties: categorySimilar,
+  }
+
   return (
     <>
       <YoastJsonLd schemaRaw={res.node?.seo?.schema?.raw} />
-      <PropertyDetailClient property={res.detail} categorySlug={category} />
+      <PropertyDetailClient property={detailWithCategorySimilar} categorySlug={category} />
     </>
   )
 }

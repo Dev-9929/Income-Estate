@@ -1,5 +1,6 @@
 import { BlogPostItem, blogsListingData, getBlogBySlug } from '@/data/blogs-data'
-import { PropertyListingItem, propertiesListingData } from '@/data/properties-data'
+import { PropertyListingItem, propertiesListingData, brandedResidencesListingData } from '@/data/properties-data'
+import { PropertyCarouselItem, BrandedResidenceItem } from '@/data/home-data'
 import {
   PropertyDetailItem,
   getPropertyDetailBySlug,
@@ -742,7 +743,7 @@ export async function getAllWordPressProperties(categorySlug?: string): Promise<
   }
 
   if (categorySlug === 'branded-residences' || categorySlug === 'branded') {
-    return propertiesListingData.filter((p) => p.category === 'branded')
+    return brandedResidencesListingData
   }
   return propertiesListingData
 }
@@ -767,4 +768,34 @@ export async function getWordPressPropertyBySlug(
     return { detail: staticDetail }
   }
   return undefined
+}
+
+export async function getHomeRoiProperties(): Promise<PropertyCarouselItem[]> {
+  const wpProperties = await getAllWordPressProperties('roi-properties')
+  return wpProperties.map((p) => ({
+    id: p.id,
+    title: p.title,
+    price: p.investment
+      ? p.investment.toUpperCase().startsWith('STARTING')
+        ? p.investment
+        : `Starting from ${p.investment}`
+      : 'Starting from ₹ 70 LACS.',
+    image: p.image,
+    slug: p.slug,
+    category: 'roi-properties',
+  }))
+}
+
+export async function getHomeBrandedResidences(): Promise<BrandedResidenceItem[]> {
+  const wpProperties = await getAllWordPressProperties('branded-residences')
+  return wpProperties.map((p) => ({
+    id: p.id,
+    title: p.title,
+    location: p.location || 'Jaipur, India',
+    badge: p.investment ? (p.investment.toUpperCase().includes('MIN') ? p.investment : `${p.investment} MIN.`) : '₹ 70 LACS MIN.',
+    image: p.image,
+    units: p.units || '8+',
+    yieldStrategy: p.roi ? `${p.roi} Assured ROI` : 'SLB-Leased',
+    slug: p.slug,
+  }))
 }

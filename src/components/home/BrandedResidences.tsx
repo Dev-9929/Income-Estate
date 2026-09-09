@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { brandedResidencesData, BrandedResidenceItem } from '@/data/home-data'
 
@@ -11,18 +11,39 @@ interface BrandedResidencesProps {
 export function BrandedResidences({
   residences = brandedResidencesData,
 }: BrandedResidencesProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const activeList = residences && residences.length > 0 ? residences : brandedResidencesData
+  const totalItems = activeList.length
+
+  // Tripled dataset for seamless continuous infinite looping
+  const infiniteResidences = [
+    ...activeList.map((r, i) => ({ ...r, uniqueId: `set1-${r.id}-${i}` })),
+    ...activeList.map((r, i) => ({ ...r, uniqueId: `set2-${r.id}-${i}` })),
+    ...activeList.map((r, i) => ({ ...r, uniqueId: `set3-${r.id}-${i}` })),
+  ]
+
+  const [currentIndex, setCurrentIndex] = useState(totalItems)
+  const [isTransitioning, setIsTransitioning] = useState(true)
   const [visibleCards, setVisibleCards] = useState(2)
   const trackRef = useRef<HTMLDivElement>(null)
 
-  const maxSlides = Math.max(0, residences.length - visibleCards)
+  const handlePrev = useCallback(() => {
+    setIsTransitioning(true)
+    setCurrentIndex((prev) => prev - 1)
+  }, [])
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1))
-  }
+  const handleNext = useCallback(() => {
+    setIsTransitioning(true)
+    setCurrentIndex((prev) => prev + 1)
+  }, [])
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(maxSlides, prev + 1))
+  const handleTransitionEnd = () => {
+    if (currentIndex >= totalItems * 2) {
+      setIsTransitioning(false)
+      setCurrentIndex(currentIndex - totalItems)
+    } else if (currentIndex < totalItems) {
+      setIsTransitioning(false)
+      setCurrentIndex(currentIndex + totalItems)
+    }
   }
 
   useEffect(() => {
@@ -51,18 +72,20 @@ export function BrandedResidences({
 
       const offset = currentIndex * (cardWidth + gap)
       track.style.transform = `translateX(-${offset}px)`
-      track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
+      track.style.transition = isTransitioning
+        ? 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
+        : 'none'
     }
 
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [currentIndex, residences.length])
+  }, [currentIndex, isTransitioning, activeList.length])
 
-  const totalSteps = maxSlides + 1
-  const stepWidth = totalSteps > 0 ? 100 / totalSteps : 100
+  const normalizedIndex = ((currentIndex % totalItems) + totalItems) % totalItems
+  const stepWidth = totalItems > 0 ? 100 / totalItems : 100
   const progressWidth = `${stepWidth}%`
-  const progressLeft = `${currentIndex * stepWidth}%`
+  const progressLeft = `${(normalizedIndex / totalItems) * 100}%`
 
   return (
     <section
@@ -94,16 +117,20 @@ export function BrandedResidences({
             className="branded-carousel-track"
             id="branded-carousel-track"
             ref={trackRef}
+            onTransitionEnd={handleTransitionEnd}
           >
-            {residences.map((item) => (
-              <div key={item.id} className="branded-card-new">
+            {infiniteResidences.map((item) => (
+              <div key={item.uniqueId} className="branded-card-new">
                 <Link href={`/branded-residences/${item.slug || ''}`}>
                   <div className="branded-card-img-wrap">
                     <img src={item.image} alt={item.title} />
+                    <div className="branded-card-gradient" />
                     <div className="branded-card-badge">{item.badge}</div>
+
                     <div className="branded-card-overlay">
                       <span className="branded-card-loc">{item.location}</span>
                       <h3 className="branded-card-title">{item.title}</h3>
+
                       <div className="branded-card-stats">
                         <div className="branded-card-stat">
                           <span className="val">{item.units}</span>
@@ -114,6 +141,7 @@ export function BrandedResidences({
                           <span className="lbl">YIELD STRATEGY</span>
                         </div>
                       </div>
+
                       <div className="branded-card-btn-link">EXPLORE PROPERTY &rarr;</div>
                     </div>
                   </div>
@@ -144,8 +172,9 @@ export function BrandedResidences({
               aria-label="Previous branded property"
               onClick={handlePrev}
               style={{
-                opacity: currentIndex === 0 ? 0.3 : 1,
-                pointerEvents: currentIndex === 0 ? 'none' : 'auto',
+                opacity: 1,
+                pointerEvents: 'auto',
+                cursor: 'pointer',
               }}
             >
               <svg viewBox="0 0 24 24">
@@ -159,8 +188,9 @@ export function BrandedResidences({
               aria-label="Next branded property"
               onClick={handleNext}
               style={{
-                opacity: currentIndex >= maxSlides ? 0.3 : 1,
-                pointerEvents: currentIndex >= maxSlides ? 'none' : 'auto',
+                opacity: 1,
+                pointerEvents: 'auto',
+                cursor: 'pointer',
               }}
             >
               <svg viewBox="0 0 24 24">

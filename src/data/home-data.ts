@@ -119,20 +119,15 @@ export const propertiesCarouselData: PropertyCarouselItem[] = [
     price: 'Starting from ₹ 2.75 Cr',
     image: '/assets/wordpress_media/arayvilla-scaled-1.webp',
     slug: 'aryaville',
-  },
-  {
-    id: 'card-greenz',
-    title: 'Greenz by Danube',
-    price: 'Starting from AED 3.5 Million',
-    image: '/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp',
-    slug: 'greenz-by-danube',
+    category: 'roi-properties',
   },
   {
     id: 'card-turban',
     title: 'Turban Resort',
-    price: 'Starting from ₹ 1.50 Cr',
+    price: 'Starting from ₹ 1.40 Cr',
     image: '/assets/wordpress_media/Turbun_Group_Resort_Reception_View_08.jpg.jpg',
-    slug: 'turban-resort',
+    slug: 'turban-group-resort',
+    category: 'roi-properties',
   },
   {
     id: 'card-london-street',
@@ -140,6 +135,7 @@ export const propertiesCarouselData: PropertyCarouselItem[] = [
     price: 'Starting from ₹ 1.00 Cr',
     image: '/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp',
     slug: 'london-street',
+    category: 'roi-properties',
   },
   {
     id: 'card-turban-chandwaji',
@@ -147,6 +143,7 @@ export const propertiesCarouselData: PropertyCarouselItem[] = [
     price: 'Starting from ₹ 80 Lacs',
     image: '/assets/wordpress_media/Turbun_Group_Resort_Reception_View_10.jpg.jpg',
     slug: 'turban-resort-chandwaji',
+    category: 'roi-properties',
   },
 ]
 

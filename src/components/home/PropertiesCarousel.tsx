@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { propertiesCarouselData, PropertyCarouselItem } from '@/data/home-data'
 
@@ -11,18 +11,42 @@ interface PropertiesCarouselProps {
 export function PropertiesCarousel({
   properties = propertiesCarouselData,
 }: PropertiesCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  // Filter out any non-ROI properties to ensure strict ROI category isolation
+  const roiProperties = properties.filter(
+    (p) => p.category !== 'branded' && p.slug !== 'greenz-by-danube'
+  )
+  const totalItems = roiProperties.length
+
+  // Tripled dataset for seamless infinite looping without rewinding
+  const infiniteProperties = [
+    ...roiProperties.map((p, i) => ({ ...p, uniqueId: `set1-${p.id}-${i}` })),
+    ...roiProperties.map((p, i) => ({ ...p, uniqueId: `set2-${p.id}-${i}` })),
+    ...roiProperties.map((p, i) => ({ ...p, uniqueId: `set3-${p.id}-${i}` })),
+  ]
+
+  const [currentIndex, setCurrentIndex] = useState(totalItems)
+  const [isTransitioning, setIsTransitioning] = useState(true)
   const [visibleCards, setVisibleCards] = useState(2)
   const trackRef = useRef<HTMLDivElement>(null)
 
-  const maxSlides = Math.max(0, properties.length - visibleCards)
+  const handlePrev = useCallback(() => {
+    setIsTransitioning(true)
+    setCurrentIndex((prev) => prev - 1)
+  }, [])
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1))
-  }
+  const handleNext = useCallback(() => {
+    setIsTransitioning(true)
+    setCurrentIndex((prev) => prev + 1)
+  }, [])
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(maxSlides, prev + 1))
+  const handleTransitionEnd = () => {
+    if (currentIndex >= totalItems * 2) {
+      setIsTransitioning(false)
+      setCurrentIndex(currentIndex - totalItems)
+    } else if (currentIndex < totalItems) {
+      setIsTransitioning(false)
+      setCurrentIndex(currentIndex + totalItems)
+    }
   }
 
   // Calculate layout dimensions and apply styles
@@ -49,18 +73,20 @@ export function PropertiesCarousel({
 
       const offset = currentIndex * (cardWidth + gap)
       track.style.transform = `translateX(-${offset}px)`
-      track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
+      track.style.transition = isTransitioning
+        ? 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
+        : 'none'
     }
 
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [currentIndex])
+  }, [currentIndex, isTransitioning])
 
-  const totalSteps = maxSlides + 1
-  const stepWidth = totalSteps > 0 ? 100 / totalSteps : 100
+  const normalizedIndex = ((currentIndex % totalItems) + totalItems) % totalItems
+  const stepWidth = totalItems > 0 ? 100 / totalItems : 100
   const progressWidth = `${stepWidth}%`
-  const progressLeft = `${currentIndex * stepWidth}%`
+  const progressLeft = `${(normalizedIndex / totalItems) * 100}%`
 
   return (
     <section className="section-padding carousel-section" id="projects">
@@ -97,10 +123,15 @@ export function PropertiesCarousel({
 
           {/* Slider Track Area */}
           <div className="carousel-slider-area">
-            <div className="carousel-track" id="home-carousel-track" ref={trackRef}>
-              {properties.map((item, idx) => (
+            <div
+              className="carousel-track"
+              id="home-carousel-track"
+              ref={trackRef}
+              onTransitionEnd={handleTransitionEnd}
+            >
+              {infiniteProperties.map((item, idx) => (
                 <div
-                  key={item.id}
+                  key={item.uniqueId}
                   className={`property-card ${idx === currentIndex ? 'active-card' : ''}`}
                   id={item.id}
                 >
@@ -142,8 +173,8 @@ export function PropertiesCarousel({
               aria-label="Previous property"
               onClick={handlePrev}
               style={{
-                opacity: currentIndex === 0 ? 0.35 : 1,
-                cursor: currentIndex === 0 ? 'not-allowed' : 'pointer',
+                opacity: 1,
+                cursor: 'pointer',
               }}
             >
               <svg viewBox="0 0 24 24" strokeWidth="2.5">
@@ -156,8 +187,8 @@ export function PropertiesCarousel({
               aria-label="Next property"
               onClick={handleNext}
               style={{
-                opacity: currentIndex >= maxSlides ? 0.35 : 1,
-                cursor: currentIndex >= maxSlides ? 'not-allowed' : 'pointer',
+                opacity: 1,
+                cursor: 'pointer',
               }}
             >
               <svg viewBox="0 0 24 24" strokeWidth="2.5">
