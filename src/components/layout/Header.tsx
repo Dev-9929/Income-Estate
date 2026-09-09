@@ -14,6 +14,7 @@ export interface HeaderProps {
 export function Header({ onOpenConsultation, className = '' }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
 
   // Scroll listener for sticky header transition
   useEffect(() => {
@@ -42,18 +43,34 @@ export function Header({ onOpenConsultation, className = '' }: HeaderProps) {
       >
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20">
           <div className="flex items-center justify-between relative">
-            {/* Left: Pure Minimalist Search Icon (No circle bg, expands smoothly on hover/click) */}
+            {/* Left: Search Trigger */}
             <div className="flex-1 flex items-center justify-start z-10">
-              <NavSearch isScrolled={isScrolled} />
+              <NavSearch
+                isScrolled={isScrolled}
+                isMobileOpen={isMobileSearchOpen}
+                onMobileToggle={setIsMobileSearchOpen}
+              />
             </div>
 
-            {/* Center: Brand Logo (Always perfectly centered) */}
-            <div className="absolute left-1/2 -translate-x-1/2 z-10 flex items-center justify-center">
+            {/* Center: Brand Logo (Hidden on mobile while search overlay is active) */}
+            <div
+              className={`absolute left-1/2 -translate-x-1/2 z-10 flex items-center justify-center transition-opacity duration-200 ${
+                isMobileSearchOpen
+                  ? 'opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto'
+                  : 'opacity-100'
+              }`}
+            >
               <NavLogo isScrolled={isScrolled} />
             </div>
 
-            {/* Right: Pure Minimalist Hamburger Lines (No circle bg, no box shadow) */}
-            <div className="flex-1 flex items-center justify-end z-10">
+            {/* Right: Hamburger Menu (Hidden on mobile while search overlay is active) */}
+            <div
+              className={`flex-1 flex items-center justify-end z-10 transition-opacity duration-200 ${
+                isMobileSearchOpen
+                  ? 'opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto'
+                  : 'opacity-100'
+              }`}
+            >
               <NavHamburger
                 isOpen={isMenuOpen}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
