@@ -41,14 +41,22 @@ export interface WPPropertyDetails {
 export interface WPPropertyPage {
   titleAccent?: string
   heroLabel?: string
+  propertyType?: string
+  possession?: string
+  projectScope?: string
+  sizeArea?: string
   priceStarting?: string
   rentalYield?: string
   targetIrr?: string
+  brochureFile?: { node?: { mediaItemUrl?: string; sourceUrl?: string } }
+  brochureUrl?: string
   overviewTag?: string
   overviewHeading?: string
   overviewHeadingAccent?: string
   overviewText1?: string
   overviewText2?: string
+  overviewFullStory?: Array<{ paragraph?: string }>
+  overviewHighlights?: Array<{ highlight?: string }>
   locationDesc?: string
   mapEmbedUrl?: string
   heroImage?: { node?: { sourceUrl?: string; altText?: string } }
@@ -62,9 +70,28 @@ export interface WPPropertyPage {
     gridClass?: string
     image?: { node?: { sourceUrl?: string; altText?: string } }
   }>
+  unitConfigurations?: Array<{
+    type?: string
+    size?: string
+    price?: string
+    paymentPlan?: string
+  }>
+  highlightsIntro?: string
+  projectHighlights?: Array<{ highlight?: string }>
   roiMetrics?: Array<{ label?: string; val?: string; isGold?: boolean }>
   tenants?: Array<{ name?: string; detail?: string }>
   amenities?: Array<{ name?: string; iconType?: 'lease' | 'parking' | 'security' | 'view' | 'interior' | 'managed' | 'pool' | 'spa' }>
+  videos?: Array<{
+    id?: string
+    title?: string
+    category?: 'route' | 'drone' | 'walkthrough' | 'construction'
+    categoryLabel?: string
+    duration?: string
+    posterImage?: { node?: { sourceUrl?: string; altText?: string } }
+    videoUrl?: string
+    description?: string
+    waypoints?: Array<{ marker?: string; title?: string; desc?: string }>
+  }>
   nearby?: Array<{ name?: string; dist?: string }>
   paymentPlan?: Array<{ milestone?: string; timeline?: string; percent?: string; isHighlight?: boolean }>
   constructionStages?: Array<{
@@ -194,33 +221,47 @@ export interface WPPostBySlugResponse {
   post?: WPPostNode | null
 }
 
-export async function fetchGraphQL<T = unknown>(
+export async function fetchGraphQL<T>(
   query: string,
   variables: Record<string, unknown> = {}
 ): Promise<T> {
   const endpoint = process.env.NEXT_PUBLIC_WORDPRESS_API_URL
 
   if (!endpoint) {
-    throw new Error('NEXT_PUBLIC_WORDPRESS_API_URL is not defined in .env.local')
+    console.warn('NEXT_PUBLIC_WORDPRESS_API_URL is not defined in .env.local')
+    return {} as T
   }
 
-  const res = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ query, variables }),
-    next: { revalidate: 60 }, // ISR revalidation every 60 seconds
-  })
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query, variables }),
+      next: { revalidate: 60 }, // ISR revalidation every 60 seconds
+    })
 
-  const { data, errors } = await res.json()
+    if (!res.ok) {
+      console.warn(`WordPress GraphQL HTTP ${res.status}: ${res.statusText}`)
+      return {} as T
+    }
 
-  if (errors) {
-    console.error('GraphQL Errors:', errors)
-    throw new Error('Failed to fetch WordPress data')
+    const json = await res.json()
+
+    if (json.errors && json.errors.length > 0) {
+      console.warn('WordPress GraphQL query notices:', json.errors[0]?.message || json.errors)
+    }
+
+    if (json.data) {
+      return json.data as T
+    }
+
+    return {} as T
+  } catch (err) {
+    console.warn('WordPress GraphQL fetch failed, using fallback data:', err)
+    return {} as T
   }
-
-  return data as T
 }
 
 // ----------------------------------------------------
@@ -601,14 +642,31 @@ export const GET_PROPERTY_BY_SLUG_QUERY = `
       propertyPage {
         titleAccent
         heroLabel
+        propertyType
+        possession
+        projectScope
+        sizeArea
         priceStarting
         rentalYield
         targetIrr
+        brochureFile {
+          node {
+            mediaItemUrl
+            sourceUrl
+          }
+        }
+        brochureUrl
         overviewTag
         overviewHeading
         overviewHeadingAccent
         overviewText1
         overviewText2
+        overviewFullStory {
+          paragraph
+        }
+        overviewHighlights {
+          highlight
+        }
         locationDesc
         mapEmbedUrl
         heroImage {
@@ -655,6 +713,16 @@ export const GET_PROPERTY_BY_SLUG_QUERY = `
             }
           }
         }
+        unitConfigurations {
+          type
+          size
+          price
+          paymentPlan
+        }
+        highlightsIntro
+        projectHighlights {
+          highlight
+        }
         roiMetrics {
           label
           val
@@ -667,6 +735,26 @@ export const GET_PROPERTY_BY_SLUG_QUERY = `
         amenities {
           name
           iconType
+        }
+        videos {
+          id
+          title
+          category
+          categoryLabel
+          duration
+          videoUrl
+          description
+          posterImage {
+            node {
+              sourceUrl
+              altText
+            }
+          }
+          waypoints {
+            marker
+            title
+            desc
+          }
         }
         nearby {
           name
@@ -814,6 +902,56 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
       ? page.faqs.map((faq) => ({ question: faq.question || '', answer: faq.answer || '' }))
       : fallbackDetail.faqs
 
+  const unitConfigurationsItems =
+    page?.unitConfigurations && page.unitConfigurations.length > 0
+      ? page.unitConfigurations.map((u) => ({
+          type: u.type || '',
+          size: u.size || '',
+          price: u.price || '',
+          paymentPlan: u.paymentPlan || '',
+        }))
+      : fallbackDetail.unitConfigurations
+
+  const videosItems =
+    page?.videos && page.videos.length > 0
+      ? page.videos.map((v, vIdx) => ({
+          id: v.id || `video-${vIdx}`,
+          title: v.title || '',
+          category: (v.category || 'route') as 'route' | 'drone' | 'walkthrough' | 'construction',
+          categoryLabel: v.categoryLabel || '',
+          duration: v.duration || '',
+          posterImage: v.posterImage?.node?.sourceUrl || '',
+          videoUrl: v.videoUrl || '',
+          description: v.description || '',
+          waypoints: v.waypoints?.map((w) => ({
+            marker: w.marker || '',
+            title: w.title || '',
+            desc: w.desc || '',
+          })),
+        }))
+      : fallbackDetail.videos
+
+  const overviewFullStoryItems =
+    page?.overviewFullStory && page.overviewFullStory.length > 0
+      ? page.overviewFullStory.map((s) => s.paragraph || '').filter(Boolean)
+      : fallbackDetail.overviewFullStory
+
+  const overviewHighlightsItems =
+    page?.overviewHighlights && page.overviewHighlights.length > 0
+      ? page.overviewHighlights.map((h) => h.highlight || '').filter(Boolean)
+      : fallbackDetail.overviewHighlights
+
+  const projectHighlightsItems =
+    page?.projectHighlights && page.projectHighlights.length > 0
+      ? page.projectHighlights.map((h) => h.highlight || '').filter(Boolean)
+      : fallbackDetail.projectHighlights
+
+  const brochureUrl =
+    page?.brochureFile?.node?.mediaItemUrl ||
+    page?.brochureFile?.node?.sourceUrl ||
+    page?.brochureUrl ||
+    fallbackDetail.brochureUrl
+
   return {
     ...fallbackDetail,
     id: node.databaseId ? String(node.databaseId) : node.id,
@@ -821,12 +959,17 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
     title: wpTitle,
     titleAccent: titleAlreadyContainsAccent ? '' : rawTitleAccent,
     heroLabel: page?.heroLabel || fallbackDetail.heroLabel,
+    propertyType: page?.propertyType || fallbackDetail.propertyType,
+    possession: page?.possession || fallbackDetail.possession,
+    projectScope: page?.projectScope || fallbackDetail.projectScope,
+    sizeArea: page?.sizeArea || fallbackDetail.sizeArea,
     location: details?.location || fallbackDetail.location,
     heroImage: heroImg,
     mainImage: mainImg,
     thumbImage: thumbImg,
     roiFrontImage: roiFrontImg,
     roiBackImage: roiBackImg,
+    brochureUrl,
     priceStarting: page?.priceStarting || details?.priceDisplay || fallbackDetail.priceStarting,
     rentalYield: page?.rentalYield || details?.annualRoi || fallbackDetail.rentalYield,
     targetIrr: page?.targetIrr || fallbackDetail.targetIrr,
@@ -835,13 +978,19 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
     overviewHeadingAccent: page?.overviewHeadingAccent || fallbackDetail.overviewHeadingAccent,
     overviewText1: page?.overviewText1 || fallbackDetail.overviewText1,
     overviewText2: page?.overviewText2 || fallbackDetail.overviewText2,
+    overviewFullStory: overviewFullStoryItems,
+    overviewHighlights: overviewHighlightsItems,
+    highlightsIntro: page?.highlightsIntro || fallbackDetail.highlightsIntro,
+    projectHighlights: projectHighlightsItems,
     locationDesc: page?.locationDesc || fallbackDetail.locationDesc,
     mapEmbedUrl: page?.mapEmbedUrl || fallbackDetail.mapEmbedUrl,
     facts: factsItems,
     gallery: galleryItems,
+    unitConfigurations: unitConfigurationsItems,
     roiMetrics: roiMetricsItems,
     tenants: tenantsItems,
     amenities: amenitiesItems,
+    videos: videosItems,
     nearby: nearbyItems,
     paymentPlan: paymentPlanItems,
     constructionStages: constructionStagesItems,

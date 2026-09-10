@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { PreFooterCta } from '@/components/home/PreFooterCta'
 import { CalculatorModal } from '@/components/modals/CalculatorModal'
+import { FaqSection } from '@/components/common/FaqSection'
 import { PropertyListingItem, propertyPageFaqs } from '@/data/properties-data'
 
 interface CategoryListingClientProps {
@@ -20,13 +21,6 @@ export function CategoryListingClient({
   properties,
 }: CategoryListingClientProps) {
   const [isCalcOpen, setIsCalcOpen] = useState(false)
-  const [openFaqIds, setOpenFaqIds] = useState<string[]>(['p-faq-2'])
-
-  const toggleFaq = (id: string) => {
-    setOpenFaqIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    )
-  }
 
   return (
     <div className="main-wrapper">
@@ -114,98 +108,19 @@ export function CategoryListingClient({
       </main>
 
       {/* Properties FAQ Section */}
-      <section className="section-padding faq-section" style={{ backgroundColor: '#FFFFFF' }}>
-        <div className="container faq-grid">
-          <div className="faq-left">
-            <h2
-              className="faq-left-title"
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 700,
-                color: 'var(--primary)',
-                fontSize: '2.25rem',
-                marginBottom: '1.5rem',
-              }}
-            >
-              FAQ
-            </h2>
-            <p className="faq-left-desc" style={{ color: '#666666', fontSize: '0.95rem', lineHeight: 1.6 }}>
-              Everything you need to know about us as brand.
-            </p>
-          </div>
-
-          <div className="faq-accordion" id="faq-accordion-container">
-            {propertyPageFaqs.map((faq) => {
-              const isOpen = openFaqIds.includes(faq.id)
-              return (
-                <div key={faq.id} className={`faq-item ${isOpen ? 'active' : ''}`}>
-                  <div
-                    className="faq-header-row"
-                    onClick={() => toggleFaq(faq.id)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <span className="faq-question">{faq.question}</span>
-                    <div className="faq-icon-btn">
-                      <svg
-                        viewBox="0 0 24 24"
-                        style={{
-                          transform: isOpen ? 'rotate(45deg)' : 'none',
-                          transition: 'transform 0.3s ease',
-                        }}
-                      >
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                      </svg>
-                    </div>
-                  </div>
-                  {isOpen && (
-                    <div className="faq-answer" style={{ display: 'block' }}>
-                      <div className="faq-answer-inner">
-                        <p style={{ marginBottom: faq.bullets ? '0.75rem' : 0 }}>{faq.answer}</p>
-                        {faq.bullets && (
-                          <ul
-                            style={{
-                              listStyle: 'none',
-                              paddingLeft: 0,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '0.4rem',
-                            }}
-                          >
-                            {faq.bullets.map((bullet, idx) => (
-                              <li
-                                key={idx}
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '0.5rem',
-                                  fontWeight: 600,
-                                  color: 'var(--primary)',
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    color: 'var(--accent)',
-                                    fontSize: '1.2rem',
-                                    lineHeight: 1,
-                                  }}
-                                >
-                                  &bull;
-                                </span>{' '}
-                                {bullet}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </section>
+      <FaqSection
+        tag="Got Questions?"
+        title={
+          <>
+            Frequently<br />
+            Asked <em>Questions</em>
+          </>
+        }
+        description="Everything you need to know about fractional investments, returns, and property compliance."
+        faqs={propertyPageFaqs}
+        backgroundColor="#FFFFFF"
+        id="faq"
+      />
 
       <PreFooterCta />
       <Footer />

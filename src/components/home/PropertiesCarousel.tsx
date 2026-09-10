@@ -174,7 +174,7 @@ export function PropertiesCarousel({
             <span className="editorial-tag">Curated Yield</span>
             <h2 className="editorial-title">
               ROI<br />
-              <em>Residences</em>
+              <em>Properties</em>
             </h2>
             <p style={{ marginBottom: '2rem' }}>
               We curate investment properties designed to deliver consistent income and long-term

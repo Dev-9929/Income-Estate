@@ -11,7 +11,6 @@ import {
   MapPin, 
   MessageSquare, 
   ShieldCheck, 
-  Sparkles,
   Search,
   X
 } from 'lucide-react'
@@ -27,10 +26,9 @@ interface NavLinkItem {
   id: string
   number: string
   title: string
-  subtitle: string
+  subtitle?: string
   href: string
   image: string
-  badge?: string
 }
 
 const MENU_ITEMS: NavLinkItem[] = [
@@ -41,7 +39,6 @@ const MENU_ITEMS: NavLinkItem[] = [
     subtitle: 'Pre-leased luxury resort assets yielding up to 12.4% net annual returns',
     href: '/roi-properties',
     image: '/assets/wordpress_media/mansion_g5c9re.webp',
-    badge: '12.4% Net Yield',
   },
   {
     id: 'branded',
@@ -50,7 +47,6 @@ const MENU_ITEMS: NavLinkItem[] = [
     subtitle: 'Co-own 5-star hospitality keys with complimentary annual vacation stays',
     href: '/branded-residences',
     image: '/assets/wordpress_media/elegant-music-lounge-with-comfortable-seating.webp',
-    badge: '5-Star Hospitality',
   },
   {
     id: 'other',
@@ -69,13 +65,12 @@ const MENU_ITEMS: NavLinkItem[] = [
     image: '/assets/wordpress_media/elegant-music-lounge-with-comfortable-seating.webp',
   },
   {
-    id: 'nri',
+    id: 'about',
     number: '05',
-    title: 'NRI Investment Desk',
-    subtitle: 'FEMA-compliant cross-border advisory, NRE/NRO repatriation & wealth tax planning',
-    href: '/nri-desk',
+    title: 'About Us',
+    subtitle: 'Our founding vision, leadership team, and institutional real estate heritage',
+    href: '/about',
     image: '/assets/wordpress_media/mansion_g5c9re.webp',
-    badge: 'NRI Advisory',
   },
   {
     id: 'services',
@@ -88,7 +83,7 @@ const MENU_ITEMS: NavLinkItem[] = [
   {
     id: 'insights',
     number: '07',
-    title: 'Blogs & Market Insights',
+    title: 'Blogs',
     subtitle: 'Institutional whitepapers, fractional property laws, and hospitality growth trends',
     href: '/blogs',
     image: '/assets/wordpress_media/mansion_g5c9re.webp',
@@ -96,7 +91,7 @@ const MENU_ITEMS: NavLinkItem[] = [
   {
     id: 'contact',
     number: '08',
-    title: 'Contact & Advisory',
+    title: 'Contact Us',
     subtitle: 'Schedule an executive briefing with our principal asset managers',
     href: '/contact',
     image: '/assets/wordpress_media/elegant-music-lounge-with-comfortable-seating.webp',
@@ -322,14 +317,6 @@ export function FullScreenMenu({ isOpen, onClose, onOpenConsultation }: FullScre
                   priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#040D0A] via-[#040D0A]/30 to-transparent" />
-                
-                {/* Badge */}
-                {activeItem.badge && (
-                  <div className="absolute top-4 left-4 px-3 py-1.5 rounded-md bg-[#040D0A]/90 backdrop-blur-md border border-[#CCAF72]/40 text-[11px] font-semibold uppercase tracking-wider text-[#CCAF72] flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>{activeItem.badge}</span>
-                  </div>
-                )}
 
                 {/* Active Card Content */}
                 <div className="absolute bottom-5 left-5 right-5">
@@ -393,7 +380,7 @@ export function FullScreenMenu({ isOpen, onClose, onOpenConsultation }: FullScre
                           href={item.href}
                           onClick={handleTriggerClose}
                           onMouseEnter={() => handleItemHover(item)}
-                          className="group flex items-center justify-between py-3 sm:py-3.5 pr-2 transition-all"
+                          className="group flex items-center justify-between py-3.5 sm:py-4 pr-2 transition-all"
                         >
                           <div className="flex items-center gap-4 sm:gap-6 min-w-0">
                             <span className="text-xs sm:text-sm font-mono text-white/30 group-hover:text-[#CCAF72] transition-colors w-6 flex-shrink-0">
@@ -403,18 +390,10 @@ export function FullScreenMenu({ isOpen, onClose, onOpenConsultation }: FullScre
                               <h2 className="text-xl sm:text-2xl md:text-3xl font-light tracking-tight text-white/90 group-hover:text-white group-hover:translate-x-2 transition-all duration-300 truncate">
                                 {item.title}
                               </h2>
-                              <p className="text-[11px] sm:text-xs text-white/40 group-hover:text-white/70 transition-colors mt-0.5 truncate">
-                                {item.subtitle}
-                              </p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-3 flex-shrink-0 ml-4">
-                            {item.badge && (
-                              <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#CCAF72]/15 text-[#CCAF72] border border-[#CCAF72]/30">
-                                {item.badge}
-                              </span>
-                            )}
                             <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 group-hover:border-[#CCAF72] group-hover:text-[#CCAF72] group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-all">
                               <ArrowUpRight className="w-4 h-4" />
                             </div>

@@ -42,6 +42,31 @@ export interface ConstructionStage {
   overlay: string
 }
 
+export interface VideoWaypoint {
+  marker: string
+  title: string
+  desc: string
+}
+
+export interface PropertyVideoItem {
+  id: string
+  title: string
+  category: 'route' | 'drone' | 'walkthrough' | 'construction'
+  categoryLabel: string
+  duration: string
+  posterImage: string
+  videoUrl: string
+  description: string
+  waypoints?: VideoWaypoint[]
+}
+
+export interface UnitConfiguration {
+  type: string
+  size: string
+  price: string
+  paymentPlan?: string
+}
+
 export interface PropertyDetailItem {
   id: string
   slug: string
@@ -51,22 +76,33 @@ export interface PropertyDetailItem {
   location: string
   heroImage: string
   priceStarting: string
-  rentalYield: string
-  targetIrr: string
+  rentalYield?: string
+  targetIrr?: string
+  propertyType?: string
+  possession?: string
+  projectScope?: string
+  sizeArea?: string
   overviewTag: string
   overviewHeading: string
   overviewHeadingAccent: string
   overviewText1: string
   overviewText2: string
+  overviewFullStory?: string[]
+  overviewHighlights?: string[]
+  projectHighlights?: string[]
+  highlightsIntro?: string
   mainImage: string
   thumbImage: string
   facts: PropertyFact[]
   gallery: GalleryItem[]
+  unitConfigurations?: UnitConfiguration[]
   roiMetrics: RoiMetric[]
   tenants: TenantInfo[]
   roiFrontImage: string
   roiBackImage: string
   amenities: AmenityItem[]
+  videos?: PropertyVideoItem[]
+  brochureUrl?: string
   locationDesc: string
   mapEmbedUrl: string
   nearby: NearbyLocation[]
@@ -90,9 +126,13 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
     heroLabel: 'Premium Commercial Investment',
     location: 'Near Patrakar Colony, Jaipur, Rajasthan',
     heroImage: '/assets/wordpress_media/Project-Photo-9-Skyline-Arcadia-Jaipur-5442983_2000_1226.jpg',
-    priceStarting: '₹ 70 L',
+    priceStarting: 'From ₹ 70 LACS.',
     rentalYield: '9.0%',
     targetIrr: '12.0%',
+    propertyType: 'Commercial Office',
+    possession: 'Ready to Buy',
+    projectScope: '8 Exclusive Units',
+    sizeArea: '1100 SqYd (Bigha)',
     overviewTag: 'Project Overview',
     overviewHeading: 'A Commercial Landmark',
     overviewHeadingAccent: 'Built for Investors',
@@ -100,6 +140,34 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
       'Strategically located in the heart of Jaipur, Skyline Arcadia is a thoughtfully planned mixed-use commercial destination that blends modern business infrastructure with hospitality and lifestyle-driven spaces. Designed for evolving urban investment needs, it delivers consistent returns from day one.',
     overviewText2:
       'The development features premium retail showrooms, coworking zones, and hospitality suites — all within a professionally managed ecosystem where investors receive passive, structured rental income without lifting a finger.',
+    overviewFullStory: [
+      'Strategically located in Jaipur, Skyline Arcadia is a thoughtfully planned mixed-use commercial destination that blends modern business infrastructure with hospitality and lifestyle-driven spaces. Designed to cater to evolving urban and investment needs, the project combines retail, office, and studio environments within a professionally managed ecosystem.',
+      'Spread across a well-developed commercial layout, the project features premium retail showrooms, office spaces, coworking zones, and hospitality suites, creating a dynamic environment for businesses, investors, and visitors alike. The development focuses on convenience, sustainability, and long-term value, supported by modern architecture and functional design planning.',
+      'A key highlight of Skyline Arcadia is its strong tenant ecosystem and operational occupancy. The 2nd to 4th floors are leased to Regenta Hotel, operating 40 well-appointed rooms that bring hospitality value and consistent visitor footfall to the property. The 1st floor houses Hobnob Coworks, serving startups, freelancers, and modern businesses with flexible workspace solutions. The ground floor is occupied by Punjab National Bank (PNB) across a 2,900 sq. ft. double-height space, generating a monthly rental income of ₹2.20 lakhs while adding institutional credibility and long-term stability to the development.',
+      'The project also emphasizes sustainable and future-oriented infrastructure with features such as solar-powered common areas, EV-friendly planning, rainwater harvesting provisions, and 24/7 utility support. Lifestyle additions such as rooftop dining and integrated commercial experiences further enhance the overall appeal of the development.',
+    ],
+    overviewHighlights: [
+      '5-Year Guaranteed Lease Structure with Predictable Monthly Yields',
+      'Institutional Tenants: PNB (₹2.20L/mo), Regenta Hotel & Hobnob Coworks',
+      'Reserved Parking Facilities & Ample Basement Zones',
+      'Earthquake-Resistant RCC Structure with Safety Compliance',
+      'Solar Energy Integration for Common Building Utilities',
+      '24/7 CCTV Surveillance & Advanced Security Monitoring',
+      'Gated Community-Style Commercial Access & Controlled Entry',
+      'Rooftop Dining & Lifestyle Amenities for Enhanced Footfall',
+    ],
+    highlightsIntro:
+      'Skyline Arcadia combines prime urban connectivity, pre-leased institutional tenants, and modern infrastructure to deliver predictable value and superior operational benefits.',
+    projectHighlights: [
+      'High-Footfall Commercial Corridor Near Patrakar Colony, Mansarovar',
+      '5-Year Guaranteed Lease Structure with Predictable Monthly Yields',
+      'Tier-1 Institutional Tenants: Punjab National Bank, Regenta & Hobnob',
+      'Double-Height Retail Showrooms & Grade-A Flexible Workspaces',
+      'Solar Energy Integration for Common Utilities & Reduced Overheads',
+      'Dedicated Multi-Level Basement Parking & High-Speed Elevators',
+      'Integrated Rooftop Dining & Lifestyle Customer Footfall Hub',
+      '100% Hands-Free Fully Managed Commercial Asset Operations',
+    ],
     mainImage: '/assets/wordpress_media/Project-Photo-3-Skyline-Arcadia-Jaipur-5442983_2000_1217.jpg',
     thumbImage: '/assets/wordpress_media/Project-Photo-6-Skyline-Arcadia-Jaipur-5442983_868_1600.jpg',
     facts: [
@@ -141,6 +209,26 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
         gridClass: 'pd2-gi-6',
       },
     ],
+    unitConfigurations: [
+      {
+        type: 'Retail Showroom (Ground Floor)',
+        size: '2,900 SQ.FT',
+        price: '₹ 2.45 Cr',
+        paymentPlan: '50:50 Flexi',
+      },
+      {
+        type: 'Corporate Office Suite (1st Floor)',
+        size: '1,100 SQ.FT',
+        price: '₹ 95.00 Lacs',
+        paymentPlan: '30:40:30',
+      },
+      {
+        type: 'Boutique Studio Suite (2nd–4th Floor)',
+        size: '750 SQ.FT',
+        price: '₹ 70.00 Lacs',
+        paymentPlan: 'Construction Linked',
+      },
+    ],
     roiMetrics: [
       { label: 'Gross Rental Yield', val: '9.0%', isGold: true },
       { label: 'Target IRR (Yield + Appreciation)', val: '12.0%', isGold: true },
@@ -161,6 +249,43 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
       { name: 'Panoramic City View', iconType: 'view' },
       { name: 'Hotel-Grade Interiors', iconType: 'interior' },
       { name: 'Managed Operations', iconType: 'managed' },
+    ],
+    videos: [
+      {
+        id: 'skyline-route',
+        title: 'Approach & Connectivity Drive-Through',
+        category: 'route',
+        categoryLabel: 'Route & Approach',
+        duration: '1:45 Min',
+        posterImage: '/assets/wordpress_media/Project-Photo-9-Skyline-Arcadia-Jaipur-5442983_2000_1226.jpg',
+        videoUrl: '/assets/video/Home-banner-video.mp4',
+        description: 'Experience the smooth driving approach from Mansarovar Metro and Ajmer Road directly into Skyline Arcadia’s commercial promenade.',
+        waypoints: [
+          { marker: '0 KM', title: 'Ajmer Expressway Junction', desc: 'Direct 6-lane signal-free arterial flow' },
+          { marker: '1.2 KM', title: 'Patrakar Colony Avenue', desc: 'High-density commercial & retail high-street' },
+          { marker: 'At Site', title: 'Grand Commercial Portico', desc: 'Reserved basement entrance & drop-off concourse' },
+        ],
+      },
+      {
+        id: 'skyline-drone',
+        title: '360° Aerial Drone & Catchment Overview',
+        category: 'drone',
+        categoryLabel: 'Aerial Drone Tour',
+        duration: '2:15 Min',
+        posterImage: '/assets/wordpress_media/Project-Photo-3-Skyline-Arcadia-Jaipur-5442983_2000_1217.jpg',
+        videoUrl: '/assets/video/cta-video.mp4',
+        description: 'A comprehensive bird’s-eye perspective capturing the dense urban catchment, adjacent luxury residential enclaves, and future transit corridor.',
+      },
+      {
+        id: 'skyline-walkthrough',
+        title: 'Boutique Office & Regenta Suites Walkthrough',
+        category: 'walkthrough',
+        categoryLabel: 'Interior Walkthrough',
+        duration: '2:40 Min',
+        posterImage: '/assets/wordpress_media/1767445680167-g1.jpg',
+        videoUrl: '/assets/video/Home-banner-video.mp4',
+        description: 'Step inside the double-height retail showrooms, Hobnob cowork spaces, and fully furnished Regenta Hotel operational floors.',
+      },
     ],
     locationDesc:
       "Near Patrakar Colony, Jaipur — one of the city's fastest-growing commercial corridors with excellent road connectivity, dense residential catchment, and direct access to major transit nodes.",
@@ -258,9 +383,13 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
     heroLabel: 'Luxury Hospitality Fractional Asset',
     location: 'Jaipur-Delhi Highway, Rajasthan',
     heroImage: '/assets/wordpress_media/Turbun_Group_Resort_Reception_View_08.jpg.jpg',
-    priceStarting: '₹ 80 L',
+    priceStarting: 'From ₹ 80 LACS.',
     rentalYield: '9.2%',
     targetIrr: '14.5%',
+    propertyType: 'Hospitality Resort',
+    possession: 'Operational',
+    projectScope: '40+ Resort Keys',
+    sizeArea: '5 Acres Estate',
     overviewTag: 'Hospitality Co-Ownership',
     overviewHeading: 'A High-Yield Luxury Destination',
     overviewHeadingAccent: 'On Delhi-Jaipur Express Corridor',
@@ -268,6 +397,18 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
       'Turban Resort Chandwaji is a bespoke destination resort nestled against the Aravali foothills on the busy Delhi-Jaipur highway, attracting weekend leisure getaways, corporate conferences, and luxury destination weddings.',
     overviewText2:
       'Backed by 15-year Sale & Leaseback agreements with guaranteed minimum returns and quarterly operational bonus distributions, investors enjoy consistent cash flows and complimentary owner stays.',
+    highlightsIntro:
+      'Turban Resort Chandwaji blends highway accessibility, destination wedding hospitality, and guaranteed long-term lease cash flows nestled in the scenic Aravalis.',
+    projectHighlights: [
+      'Strategic Destination Resort on Delhi-Jaipur Express Highway',
+      '15-Year Institutional Sale & Leaseback Agreement',
+      'High Weekend Leisure Footfall & Luxury Wedding Banqueting',
+      'Fully Operational Luxury Villa Suites & Grand Arrival Lobby',
+      'Temperature Controlled Pools, Signature Spa & Multi-Cuisine Dining',
+      '14 Days Free Owner Holiday Stays Every Year with VIP Concierge',
+      '100% Asset-Backed Fractional Co-Ownership SPV Title',
+      'Guaranteed Monthly Direct Bank Distribution Payouts',
+    ],
     mainImage: '/assets/wordpress_media/Turbun_Group_Resort_Reception_View_08.jpg.jpg',
     thumbImage: '/assets/wordpress_media/Turbun_Group_Resort_Reception_View_10.jpg.jpg',
     facts: [
@@ -307,6 +448,26 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
         image: '/assets/wordpress_media/HNIs-Are-Shifting-Toward.jpg',
         label: 'Fine Dining Restaurant',
         gridClass: 'pd2-gi-6',
+      },
+    ],
+    unitConfigurations: [
+      {
+        type: 'Aravali Heritage Cottage Suite',
+        size: '650 SQ.FT',
+        price: '₹ 80.00 Lacs',
+        paymentPlan: 'Guaranteed SLB',
+      },
+      {
+        type: 'Private Pool Pavilion Villa',
+        size: '1,250 SQ.FT',
+        price: '₹ 1.45 Cr',
+        paymentPlan: 'Guaranteed SLB',
+      },
+      {
+        type: 'Presidential Royal Chalet',
+        size: '2,100 SQ.FT',
+        price: '₹ 2.20 Cr',
+        paymentPlan: 'Guaranteed SLB',
       },
     ],
     roiMetrics: [
@@ -409,9 +570,13 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
     heroLabel: 'European Themed Luxury Villas',
     location: 'Chandwaji, Aravali Hills, Rajasthan',
     heroImage: '/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp',
-    priceStarting: '₹ 1 CR',
+    priceStarting: 'From ₹ 1 CR.',
     rentalYield: '8.8%',
     targetIrr: '13.8%',
+    propertyType: 'European Themed Villas',
+    possession: 'Possession 2026',
+    projectScope: '42+ Luxury Villas',
+    sizeArea: '12 Acres Enclave',
     overviewTag: 'Themed Luxury Villas',
     overviewHeading: 'British Architecture in',
     overviewHeadingAccent: 'The Heart of the Aravalis',
@@ -419,10 +584,22 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
       'London Street is a themed luxury villa enclave designed with classic English cobblestone pathways, boutique clubhouses, and private heated plunge pools. Positioned for discerning luxury holidaymakers.',
     overviewText2:
       'Managed under an exclusive hospitality operator with guaranteed rental distribution, investors benefit from high wedding-season banquet rentals and steady weekend tourism yields.',
+    highlightsIntro:
+      'London Street delivers an exceptional blend of English architectural heritage, scenic hill enclave privacy, and guaranteed hospitality-driven cash flows.',
+    projectHighlights: [
+      'Prime Location in Chandwaji with Panoramic Aravali Foothill Views',
+      'Direct Access & High Visibility on Delhi-Jaipur National Highway Corridor',
+      '10-Year Assured Leaseback with Complete Maintenance & Asset Management',
+      'Private Heated Plunge Pools & Signature English Landscaped Gardens',
+      'Gated Luxury Community with 24/7 Multi-Tiered Security & Concierge',
+      'Boutique Clubhouse, Spa, Fine-Dining European Bistro & Banquet Lawns',
+      '18 Days Complimentary Annual Vacation Stays for Owners',
+      'Clear Freehold Title with 100% RERA & Legal Transparency',
+    ],
     mainImage: '/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp',
     thumbImage: '/assets/wordpress_media/mansion_g5c9re.webp',
     facts: [
-      { val: 'Under Constr.', lbl: 'Possession: 2026' },
+      { val: '2026', lbl: 'Possession Status' },
       { val: '42+', lbl: 'Luxury Villas' },
       { val: '12 Acres', lbl: 'Total Area' },
       { val: '10 Yr', lbl: 'SLB Leaseback' },
@@ -460,6 +637,26 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
         gridClass: 'pd2-gi-6',
       },
     ],
+    unitConfigurations: [
+      {
+        type: '3 BHK Cotswold Luxury Villa',
+        size: '2,800 SQ.FT',
+        price: '₹ 1.25 Cr',
+        paymentPlan: '40:60 SLB',
+      },
+      {
+        type: '4 BHK Kensington Signature Villa',
+        size: '3,600 SQ.FT',
+        price: '₹ 1.85 Cr',
+        paymentPlan: '40:60 SLB',
+      },
+      {
+        type: '5 BHK Mayfair Royal Estate',
+        size: '4,800 SQ.FT',
+        price: '₹ 2.60 Cr',
+        paymentPlan: '30:30:40',
+      },
+    ],
     roiMetrics: [
       { label: 'Gross Annual Rental Yield', val: '8.8%', isGold: true },
       { label: 'Target IRR', val: '13.8%', isGold: true },
@@ -480,6 +677,43 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
       { name: 'Aravali Panoramic Views', iconType: 'view' },
       { name: 'European Themed Decor', iconType: 'interior' },
       { name: 'Bespoke Concierge', iconType: 'managed' },
+    ],
+    videos: [
+      {
+        id: 'london-route',
+        title: 'Delhi-Jaipur Highway to Doorstep Experience',
+        category: 'route',
+        categoryLabel: 'Route & Approach',
+        duration: '2:05 Min',
+        posterImage: '/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp',
+        videoUrl: '/assets/video/Home-banner-video.mp4',
+        description: 'Trace the scenic drive from Delhi-Jaipur NH-48 through peaceful Chandwaji foothill roads straight to the cobblestone gates of London Street.',
+        waypoints: [
+          { marker: '0 KM', title: 'Delhi-Jaipur NH-48 Highway', desc: 'Fast expressway transit from NCR & Jaipur' },
+          { marker: '3.5 KM', title: 'Scenic Aravali Foothill Road', desc: 'Tree-lined smooth 4-lane access corridor' },
+          { marker: 'At Gate', title: 'English Estate Main Gatehouse', desc: 'Private 24/7 security checkpoint & cobblestone avenue' },
+        ],
+      },
+      {
+        id: 'london-drone',
+        title: 'Aerial Valley & 12-Acre Estate Drone Tour',
+        category: 'drone',
+        categoryLabel: 'Aerial Drone Tour',
+        duration: '1:50 Min',
+        posterImage: '/assets/wordpress_media/mansion_g5c9re.webp',
+        videoUrl: '/assets/video/cta-video.mp4',
+        description: 'Hover across 12 lush acres of private landscaped grounds, English chalets, private plunge pools, and uninterrupted Aravali mountain views.',
+      },
+      {
+        id: 'london-walkthrough',
+        title: 'Sample Private Pool Villa Walkthrough',
+        category: 'walkthrough',
+        categoryLabel: 'Sample Villa Tour',
+        duration: '3:10 Min',
+        posterImage: '/assets/wordpress_media/Turbun_Group_Resort_Reception_View_10.jpg.jpg',
+        videoUrl: '/assets/video/Home-banner-video.mp4',
+        description: 'A walkthrough inside the European-themed villa: double-height living lounge, heated private plunge pool deck, and master cottage suites.',
+      },
     ],
     locationDesc:
       'Situated in scenic Chandwaji with rapid access to the upcoming Delhi-Mumbai Expressway connector and surrounding nature reserves.',
@@ -542,6 +776,232 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
       },
     ],
   },
+  'tonino-lamborghini-residences': {
+    id: 'tonino-lamborghini-residences',
+    slug: 'tonino-lamborghini-residences',
+    title: 'Tonino Lamborghini',
+    titleAccent: 'Residences Arcadia',
+    heroLabel: 'Ultra-Luxury Branded Residences',
+    location: 'Sector 58, Golf Course Extension Road, Gurugram',
+    heroImage: '/assets/hero_resort.png',
+    priceStarting: 'From ₹ 23.10 Crore',
+    rentalYield: '',
+    targetIrr: '',
+    propertyType: 'Residential Flats',
+    possession: 'Sep 2033',
+    projectScope: '2 Tower - 240 Unit',
+    sizeArea: '5500 – 8500 Sq. Ft.',
+    overviewTag: 'Exclusive Living',
+    overviewHeading: 'Architectural Grandeur',
+    overviewHeadingAccent: 'With Italian Heritage',
+    overviewText1:
+      'Tonino Lamborghini Residences Arcadia brings world-class Italian craftsmanship and luxury branded living to the prestigious Sector 58 corridor in Gurugram.',
+    overviewText2:
+      'Featuring ultra-low density living with only two residences per floor, private elevator lobbies, and panoramic Aravali vistas, this development redefines super-luxury living.',
+    overviewFullStory: [
+      'Oberoi Realty marks its highly anticipated entry into the NCR residential market with an iconic ultra-luxury development in Sector 58, Gurugram. Spread across approximately 15 acres, this landmark project is designed to redefine luxury living through a rare combination of scale, privacy, and exclusivity.',
+      'The development features seven elegant high-rise towers rising up to 40 storeys, with only 190 residences planned in Phase 1. Designed with an ultra-low-density philosophy, each floor accommodates just two residences, creating the feel of a private residence level and offering unmatched privacy for homeowners.',
+      'Offering expansive 4.5 BHK and 5.5 BHK residences ranging from approximately 5,500 sq. ft. to 8,500 sq. ft., the project caters to discerning individuals and families who seek generous living spaces, premium specifications, and a truly elevated lifestyle. Every aspect of the development has been thoughtfully planned to deliver a seamless blend of luxury, comfort, and sophistication.',
+      'Strategically located in Sector 58, Gurugram, the project enjoys excellent connectivity to Golf Course Road, Golf Course Extension Road, Dwarka Expressway, Faridabad Road, and South Delhi, placing residents within easy reach of major business hubs, lifestyle destinations, educational institutions, and healthcare facilities.',
+      "As Oberoi Realty's first residential offering in NCR, combined with its highly limited inventory and exceptional location, this development is positioned to become one of Gurugram's most prestigious residential addresses and a landmark opportunity for luxury homebuyers and investors alike.",
+    ],
+    overviewHighlights: [
+      'First Residential Development by Oberoi Realty in NCR',
+      '15 Acres of Ultra-Luxury Development',
+      'Limited to 190 Residences in Phase 1',
+      '7 Iconic High-Rise Towers',
+      'G+40 Storey Architecture',
+      'Ultra-Low Density Planning',
+      'Only 2 Residences Per Floor',
+      'Large Format Luxury Residences',
+      'Prime Sector 58, Gurugram Location',
+      'Seamless Connectivity to Golf Course Road & South Delhi',
+    ],
+    highlightsIntro:
+      'Tonino Lamborghini Residences Arcadia delivers unprecedented low-density luxury, Italian architectural prestige, and unparalleled connectivity to Gurugram’s most coveted corridors.',
+    projectHighlights: [
+      'Direct Access to Golf Course Road',
+      'Easy Connectivity to Golf Course Extension Road',
+      'Seamless Access to Dwarka Expressway',
+      'Well Connected to South Delhi',
+      'Convenient Access to Faridabad Road',
+      'Close to Leading Schools & Healthcare Facilities',
+      'Surrounded by Premium Residential Communities',
+      'Near Major Corporate & Commercial Hubs',
+    ],
+    mainImage: '/assets/wordpress_media/mansion_g5c9re.webp',
+    thumbImage: '/assets/wordpress_media/elegant-music-lounge-with-comfortable-seating.webp',
+    facts: [
+      { val: 'Sep 2033', lbl: 'Possession Date' },
+      { val: '240', lbl: 'Total Units (2 Towers)' },
+      { val: '32 Acres', lbl: 'Total Land Area' },
+      { val: 'Ultra-Luxury', lbl: 'Specification Grade' },
+      { val: 'Residential', lbl: 'Asset Category' },
+    ],
+    gallery: [
+      {
+        image: '/assets/hero_resort.png',
+        label: 'Grand Facade & Sky Lounge',
+        gridClass: 'pd2-gi-1',
+      },
+      {
+        image: '/assets/wordpress_media/mansion_g5c9re.webp',
+        label: 'Waterfront Estate Facade',
+        gridClass: 'pd2-gi-2',
+      },
+      {
+        image: '/assets/wordpress_media/elegant-music-lounge-with-comfortable-seating.webp',
+        label: 'Private Residents Club',
+        gridClass: 'pd2-gi-3',
+      },
+      {
+        image: '/assets/wordpress_media/HNIs-Are-Shifting-Toward.jpg',
+        label: 'High-Ceiling Italian Living Room',
+        gridClass: 'pd2-gi-4',
+      },
+      {
+        image: '/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp',
+        label: 'Manicured Zen Courtyards',
+        gridClass: 'pd2-gi-5',
+      },
+      {
+        image: '/assets/wordpress_media/Turbun_Group_Resort_Reception_View_08.jpg.jpg',
+        label: 'Grand Arrival Atrium',
+        gridClass: 'pd2-gi-6',
+      },
+    ],
+    unitConfigurations: [
+      {
+        type: '4.5 BHK Ultra-Luxury Residence',
+        size: '5,500 SQ.FT',
+        price: '₹ 23.10 Cr',
+        paymentPlan: '30:30:40',
+      },
+      {
+        type: '5.5 BHK Grand Sky Penthouse',
+        size: '8,500 SQ.FT',
+        price: '₹ 32.50 Cr',
+        paymentPlan: '30:30:40',
+      },
+    ],
+    roiMetrics: [
+      { label: 'Unit Configurations', val: '4.5 & 5.5 BHK' },
+      { label: 'Starting Price', val: '₹ 23.10 Cr' },
+      { label: 'Floor Density', val: '2 Units / Floor', isGold: true },
+      { label: 'Total Land Parcel', val: '32 Acres' },
+    ],
+    tenants: [
+      { name: 'Tonino Lamborghini Hospitality', detail: 'Managed Concierge & Club' },
+      { name: 'Private Residents Club', detail: 'Dedicated Dining & Spa' },
+    ],
+    roiFrontImage: '/assets/wordpress_media/mansion_g5c9re.webp',
+    roiBackImage: '/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp',
+    amenities: [
+      { name: 'Private Concierge', iconType: 'managed' },
+      { name: 'Dedicated Covered Parking', iconType: 'parking' },
+      { name: '24/7 Security & CCTV', iconType: 'security' },
+      { name: 'Panoramic Golf Views', iconType: 'view' },
+      { name: 'Italian Designer Interiors', iconType: 'interior' },
+      { name: 'Olympic-Length Pool', iconType: 'pool' },
+      { name: 'Signature Spa & Wellness', iconType: 'spa' },
+      { name: 'Assured Rental Lease', iconType: 'lease' },
+    ],
+    videos: [
+      {
+        id: 'tl-route',
+        title: 'Golf Course Extension Road to Private Concourse',
+        category: 'route',
+        categoryLabel: 'Route & Approach',
+        duration: '1:55 Min',
+        posterImage: '/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp',
+        videoUrl: '/assets/video/Home-banner-video.mp4',
+        description: 'Experience the drive through Gurugram’s prime Golf Course Extension corridor into Sector 58’s exclusive branded residences sanctuary.',
+        waypoints: [
+          { marker: '0 KM', title: 'Golf Course Extension Road', desc: 'Prime Gurugram arterial connecting Cyber City' },
+          { marker: '0.8 KM', title: 'Grand Hyatt Corridor', desc: 'Luxury institutional and hospitality micro-market' },
+          { marker: 'At Lobby', title: 'Tonino Lamborghini Portico', desc: 'Private valet concourse & double-height foyer' },
+        ],
+      },
+      {
+        id: 'tl-drone',
+        title: 'Panoramic Golf Views & Tower Aerial Flight',
+        category: 'drone',
+        categoryLabel: 'Aerial Drone Tour',
+        duration: '2:25 Min',
+        posterImage: '/assets/wordpress_media/mansion_g5c9re.webp',
+        videoUrl: '/assets/video/cta-video.mp4',
+        description: 'Ascend over Sector 58 to take in panoramic horizon vistas, lush green golf fairways, and architectural facade detailing.',
+      },
+      {
+        id: 'tl-walkthrough',
+        title: 'Ultra-Luxury 5.5 BHK Show Residence Tour',
+        category: 'walkthrough',
+        categoryLabel: 'Residence Walkthrough',
+        duration: '3:45 Min',
+        posterImage: '/assets/wordpress_media/1767445680167-g1.jpg',
+        videoUrl: '/assets/video/Home-banner-video.mp4',
+        description: 'Immerse yourself in Italian craftsmanship, expansive wrap-around balconies, motorized home automation, and bespoke Tonino club amenities.',
+      },
+    ],
+    locationDesc:
+      'Situated in Sector 58, Golf Course Extension Road, Gurugram, offering seamless connectivity to Cyber City, Rapid Metro, and Delhi International Airport.',
+    mapEmbedUrl:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d112343.83758368551!2d77.036573!3d28.406935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d226a2c264c11%3A0xe54d90e0b3d88190!2sSector%2058%2C%20Gurugram%2C%20Haryana!5e0!3m2!1sen!2sin!4v1700000000000',
+    nearby: [
+      { name: 'Golf Course Road Extension', dist: '2 Min Drive' },
+      { name: 'Grand Hyatt Gurgaon', dist: '5 Min Drive' },
+      { name: 'Cyber Hub / DLF Phase 2', dist: '15 Min Drive' },
+      { name: 'IGI International Airport', dist: '30 Min Drive' },
+    ],
+    paymentPlan: [
+      { milestone: 'Booking Token', timeline: 'On Booking', percent: '10%', isHighlight: true },
+      { milestone: '1st Installment', timeline: 'Within 30 Days', percent: '15%' },
+      { milestone: 'Completion of Plinth', timeline: 'Milestone 1', percent: '15%' },
+      { milestone: 'Superstructure Completion', timeline: 'Milestone 2', percent: '25%' },
+      { milestone: 'Finishing & Handover', timeline: 'Possession', percent: '35%' },
+    ],
+    constructionStages: [
+      {
+        image: '/assets/wordpress_media/Project-Photo-3-Skyline-Arcadia-Jaipur-5442983_2000_1217.jpg',
+        overlay: 'Excavation & Shoring (Active)',
+      },
+      {
+        image: '/assets/wordpress_media/Project-Photo-9-Skyline-Arcadia-Jaipur-5442983_2000_1226.jpg',
+        overlay: 'Piling & Foundation Stage',
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the configuration of these residences?',
+        answer:
+          'The project features ultra-luxury 4.5 BHK (Approx. 5,500 Sq. Ft.) and 5.5 BHK (Approx. 8,500 Sq. Ft.) residences with double-height ceiling living areas and expansive private balconies.',
+      },
+      {
+        question: 'Is this project approved under RERA?',
+        answer:
+          'Yes, the project is completely RERA registered with all environmental and development approvals in place.',
+      },
+      {
+        question: 'Can NRIs purchase through FEMA channels?',
+        answer:
+          'Yes, 100% compliant with RBI and FEMA guidelines for non-resident investors with direct NRE/NRO repatriation pathways.',
+      },
+    ],
+    similarProperties: [
+      {
+        slug: 'skyline-arcadia',
+        title: 'Skyline Arcadia',
+        price: 'Starting From ₹ 70 LACS.',
+        image: '/assets/wordpress_media/Project-Photo-9-Skyline-Arcadia-Jaipur-5442983_2000_1226.jpg',
+      },
+      {
+        slug: 'london-street',
+        title: 'London Street',
+        price: 'Starting From ₹ 1 CR.',
+        image: '/assets/wordpress_media/Backyard-Landscaping-Ideas-Landscape-Art.webp',
+      },
+    ],
+  },
 }
 
 export function getPropertyDetailBySlug(slug: string): PropertyDetailItem | undefined {
@@ -549,5 +1009,13 @@ export function getPropertyDetailBySlug(slug: string): PropertyDetailItem | unde
 }
 
 export function getAllPropertySlugs(): string[] {
-  return ['skyline-arcadia', 'turban-resort-chandwaji', 'london-street', 'turban-group-resort', 'aryaville', 'greenz-danube']
+  return [
+    'skyline-arcadia',
+    'turban-resort-chandwaji',
+    'london-street',
+    'tonino-lamborghini-residences',
+    'turban-group-resort',
+    'aryaville',
+    'greenz-danube',
+  ]
 }
