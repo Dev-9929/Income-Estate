@@ -12,38 +12,20 @@ export async function POST(req: Request) {
       )
     }
 
-    try {
-      if (process.env.DATABASE_URI) {
-        const { getPayload } = await import('payload')
-        const config = (await import('@/payload.config')).default
-        const payload = await getPayload({ config })
-        const doc = await payload.create({
-          collection: 'inquiries' as any,
-          data: {
-            fullName,
-            email,
-            phone,
-            budget: budget || 'Not Specified',
-            message: message || '',
-            source: source || 'Website Consultation Form',
-            status: 'new',
-          } as any,
-        })
+    console.log('[Inquiry Received]', {
+      fullName,
+      email,
+      phone,
+      budget: budget || 'Not Specified',
+      message: message || '',
+      source: source || 'Website Consultation Form',
+      timestamp: new Date().toISOString(),
+    })
 
-        return NextResponse.json({
-          success: true,
-          message: 'Inquiry registered successfully in Payload CMS database.',
-          id: doc.id,
-        })
-      }
-    } catch (dbErr) {
-      console.warn('Database write bypassed (offline/unconfigured DB):', dbErr)
-    }
-
-    // Always return success so the client UI shows the thank-you confirmation toast
+    // Return success response to client UI toast
     return NextResponse.json({
       success: true,
-      message: 'Inquiry received successfully.',
+      message: 'Inquiry received successfully. Our team will contact you shortly.',
     })
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : 'Failed to process inquiry'
