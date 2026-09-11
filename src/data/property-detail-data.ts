@@ -22,7 +22,7 @@ export interface TenantInfo {
 
 export interface AmenityItem {
   name: string
-  iconType: 'lease' | 'parking' | 'security' | 'view' | 'interior' | 'managed' | 'pool' | 'spa'
+  iconType: string
 }
 
 export interface NearbyLocation {
@@ -33,7 +33,9 @@ export interface NearbyLocation {
 export interface PaymentMilestone {
   milestone: string
   timeline: string
-  percent: string
+  percent?: string
+  percentage?: number
+  amount?: string
   isHighlight?: boolean
 }
 
@@ -299,15 +301,9 @@ export const propertiesDetailData: Record<string, PropertyDetailItem> = {
       { name: 'Patrakar Colony Metro Node', dist: 'Immediate vicinity' },
     ],
     paymentPlan: [
-      { milestone: 'Booking Token', timeline: 'On Booking', percent: '10%', isHighlight: true },
-      { milestone: '1st Installment', timeline: 'July 2024', percent: '10%' },
-      { milestone: '2nd Installment', timeline: 'October 2024', percent: '10%' },
-      { milestone: '3rd Installment', timeline: 'January 2025', percent: '10%' },
-      { milestone: '4th Installment', timeline: 'April 2025', percent: '10%' },
-      { milestone: '5th Installment', timeline: 'July 2025', percent: '10%' },
-      { milestone: '6th Installment', timeline: 'October 2025', percent: '10%' },
-      { milestone: '7th Installment', timeline: 'January 2026', percent: '10%' },
-      { milestone: 'Final — On Registration', timeline: 'April 2026', percent: '20%', isHighlight: true },
+      { milestone: 'Booking Amount', timeline: 'At the time of booking', percent: '10%', amount: '₹ 27,50,000', isHighlight: true },
+      { milestone: '2nd Installment', timeline: 'Within 60 days of booking', percent: '50%', amount: '₹ 1,37,50,000' },
+      { milestone: 'Final Installment', timeline: 'At the time of final agreement (15–18 months)', percent: '40%', amount: '₹ 1,10,000,000', isHighlight: true },
     ],
     constructionStages: [
       {

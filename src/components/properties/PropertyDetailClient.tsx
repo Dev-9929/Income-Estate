@@ -17,6 +17,173 @@ interface PropertyDetailClientProps {
   categorySlug?: string
 }
 
+function renderAmenityIcon(rawIconType?: string, rawName?: string) {
+  const str = `${rawIconType || ''} ${rawName || ''}`.toLowerCase().trim()
+
+  // 1. Garage / Parking / Car
+  if (
+    str.includes('garage') ||
+    str.includes('parking') ||
+    str.includes('car') ||
+    str.includes('basement') ||
+    str.includes('valet')
+  ) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="4" />
+        <path d="M9 17V7h4a3 3 0 0 1 0 6H9" />
+      </svg>
+    )
+  }
+
+  // 2. Pool / Swimming / Water
+  if (
+    str.includes('pool') ||
+    str.includes('swimming') ||
+    str.includes('water') ||
+    str.includes('plunge') ||
+    str.includes('jacuzzi')
+  ) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 17c2.5 0 3.5-1.5 6-1.5s3.5 1.5 6 1.5 3.5-1.5 6-1.5" />
+        <path d="M2 21c2.5 0 3.5-1.5 6-1.5s3.5 1.5 6 1.5 3.5-1.5 6-1.5" />
+        <circle cx="15" cy="7" r="3" />
+        <path d="M12 13l3-3 4 2" />
+      </svg>
+    )
+  }
+
+  // 3. Garden / Park / Nature / Lawn / Landscape
+  if (
+    str.includes('garden') ||
+    str.includes('lawn') ||
+    str.includes('park') ||
+    str.includes('nature') ||
+    str.includes('landscape') ||
+    str.includes('tree') ||
+    str.includes('green')
+  ) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7z" />
+        <path d="M12 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+      </svg>
+    )
+  }
+
+  // 4. View / Panoramic / City / Mountain / Hill / Skyline
+  if (
+    str.includes('view') ||
+    str.includes('panoramic') ||
+    str.includes('scenic') ||
+    str.includes('skyline') ||
+    str.includes('mountain') ||
+    str.includes('hill') ||
+    str.includes('golf')
+  ) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    )
+  }
+
+  // 5. Lease / Guarantee / Return / Yield / Financial
+  if (
+    str.includes('lease') ||
+    str.includes('guarantee') ||
+    str.includes('return') ||
+    str.includes('yield') ||
+    str.includes('rental')
+  ) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <path d="M9 15l2 2 4-4" />
+      </svg>
+    )
+  }
+
+  // 6. Security / CCTV / Gated / Guard
+  if (
+    str.includes('security') ||
+    str.includes('cctv') ||
+    str.includes('gated') ||
+    str.includes('guard') ||
+    str.includes('surveillance') ||
+    str.includes('safe')
+  ) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <path d="M9 12l2 2 4-4" />
+      </svg>
+    )
+  }
+
+  // 7. Interior / Decor / Villa / Furniture
+  if (
+    str.includes('interior') ||
+    str.includes('decor') ||
+    str.includes('furniture') ||
+    str.includes('designer') ||
+    str.includes('room') ||
+    str.includes('suite')
+  ) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 19v2M18 19v2" />
+        <path d="M4 11a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5z" />
+        <path d="M4 14h16" />
+      </svg>
+    )
+  }
+
+  // 8. Managed / Concierge / Service / Maintenance
+  if (
+    str.includes('managed') ||
+    str.includes('concierge') ||
+    str.includes('service') ||
+    str.includes('management') ||
+    str.includes('host')
+  ) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 18H6a2 2 0 0 1-2-2c0-4 4-6 8-6s8 2 8 6a2 2 0 0 1-2 2z" />
+        <path d="M12 6V4" />
+        <path d="M10 4h4" />
+        <path d="M2 20h20" />
+      </svg>
+    )
+  }
+
+  // 9. Spa / Wellness / Gym / Fitness
+  if (
+    str.includes('spa') ||
+    str.includes('wellness') ||
+    str.includes('gym') ||
+    str.includes('fitness') ||
+    str.includes('health')
+  ) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 3c-2 4-5 7-9 8 3 3 6 4 9 4s6-1 9-4c-4-1-7-4-9-8z" />
+        <path d="M12 15c-3 2-6 3-9 3 2 2 5 3 9 3s7-1 9-3c-3 0-6-1-9-3z" />
+      </svg>
+    )
+  }
+
+  // 10. Default Luxury Feature Fallback (Star/Sparkle Icon)
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  )
+}
+
 export function PropertyDetailClient({ property, categorySlug = 'roi-properties' }: PropertyDetailClientProps) {
   const [isCalcOpen, setIsCalcOpen] = useState(false)
   const [isOverviewOpen, setIsOverviewOpen] = useState(false)
@@ -25,9 +192,22 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
   const [isSubmittedSuccess, setIsSubmittedSuccess] = useState(false)
   const [honeypot, setHoneypot] = useState('')
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const [constSlideIdx, setConstSlideIdx] = useState(0)
   const [activeVideoIdx, setActiveVideoIdx] = useState(0)
   const [isPlayingVideo, setIsPlayingVideo] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
+
+  const constStages = property.constructionStages || []
+  const totalConst = constStages.length
+  const maxConstIndex = Math.max(0, totalConst - 4)
+
+  const handlePrevConst = () => {
+    setConstSlideIdx((prev) => Math.max(0, prev - 1))
+  }
+
+  const handleNextConst = () => {
+    setConstSlideIdx((prev) => Math.min(maxConstIndex, prev + 1))
+  }
 
   const handleSelectVideo = (idx: number) => {
     setActiveVideoIdx(idx)
@@ -658,60 +838,7 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
             {property.amenities.map((amenity, idx) => (
               <div key={idx} className="pd2-amenity">
                 <div className="pd2-amenity-icon" aria-hidden="true">
-                  {amenity.iconType === 'lease' && (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                      <polyline points="14 2 14 8 20 8" />
-                      <path d="M9 15l2 2 4-4" />
-                    </svg>
-                  )}
-                  {amenity.iconType === 'parking' && (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="3" width="18" height="18" rx="4" />
-                      <path d="M9 17V7h4a3 3 0 0 1 0 6H9" />
-                    </svg>
-                  )}
-                  {amenity.iconType === 'security' && (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                      <path d="M9 12l2 2 4-4" />
-                    </svg>
-                  )}
-                  {amenity.iconType === 'view' && (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  )}
-                  {amenity.iconType === 'interior' && (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M6 19v2M18 19v2" />
-                      <path d="M4 11a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5z" />
-                      <path d="M4 14h16" />
-                    </svg>
-                  )}
-                  {amenity.iconType === 'managed' && (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M18 18H6a2 2 0 0 1-2-2c0-4 4-6 8-6s8 2 8 6a2 2 0 0 1-2 2z" />
-                      <path d="M12 6V4" />
-                      <path d="M10 4h4" />
-                      <path d="M2 20h20" />
-                    </svg>
-                  )}
-                  {amenity.iconType === 'pool' && (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M2 17c2.5 0 3.5-1.5 6-1.5s3.5 1.5 6 1.5 3.5-1.5 6-1.5" />
-                      <path d="M2 21c2.5 0 3.5-1.5 6-1.5s3.5 1.5 6 1.5 3.5-1.5 6-1.5" />
-                      <circle cx="15" cy="7" r="3" />
-                      <path d="M12 13l3-3 4 2" />
-                    </svg>
-                  )}
-                  {amenity.iconType === 'spa' && (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 3c-2 4-5 7-9 8 3 3 6 4 9 4s6-1 9-4c-4-1-7-4-9-8z" />
-                      <path d="M12 15c-3 2-6 3-9 3 2 2 5 3 9 3s7-1 9-3c-3 0-6-1-9-3z" />
-                    </svg>
-                  )}
+                  {renderAmenityIcon(amenity.iconType, amenity.name)}
                 </div>
                 <span className="pd2-amenity-name">{amenity.name}</span>
               </div>
@@ -775,35 +902,58 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
             </a>
           </div>
 
-          <div>
-            <table className="pd2-payment-table">
-              <thead>
-                <tr>
-                  <th>Milestone</th>
-                  <th>Timeline</th>
-                  <th style={{ textAlign: 'right' }}>%</th>
-                </tr>
-              </thead>
-              <tbody>
-                {property.paymentPlan.map((item, idx) => (
-                  <tr key={idx} className={item.isHighlight ? 'first-row' : ''}>
-                    <td>{item.milestone}</td>
-                    <td>{item.timeline}</td>
-                    <td
-                      style={{
-                        textAlign: 'right',
-                        fontFamily: 'var(--font-serif)',
-                        fontSize: '1.35rem',
-                        fontWeight: 600,
-                        color: 'var(--accent)',
-                      }}
-                    >
-                      {item.percent}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="pd2-payment-table-scroll">
+            {(() => {
+              const hasAmount = property.paymentPlan.some((item) => Boolean(item.amount))
+              const hasPercent = property.paymentPlan.some((item) => Boolean(item.percent))
+
+              return (
+                <table className="pd2-payment-table">
+                  <thead>
+                    <tr>
+                      <th>Milestone</th>
+                      <th>Timeline</th>
+                      {hasPercent && <th style={{ textAlign: hasAmount ? 'center' : 'right' }}>%</th>}
+                      {hasAmount && <th style={{ textAlign: 'right' }}>Amount (INR)</th>}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {property.paymentPlan.map((item, idx) => (
+                      <tr key={idx} className={item.isHighlight ? 'first-row' : ''}>
+                        <td>{item.milestone}</td>
+                        <td>{item.timeline}</td>
+                        {hasPercent && (
+                          <td
+                            style={{
+                              textAlign: hasAmount ? 'center' : 'right',
+                              fontFamily: hasAmount ? 'inherit' : 'var(--font-serif)',
+                              fontSize: hasAmount ? '0.95rem' : '1.35rem',
+                              fontWeight: 600,
+                              color: hasAmount ? 'rgba(255,255,255,0.85)' : 'var(--accent)',
+                            }}
+                          >
+                            {item.percent || '—'}
+                          </td>
+                        )}
+                        {hasAmount && (
+                          <td
+                            style={{
+                              textAlign: 'right',
+                              fontFamily: 'var(--font-serif)',
+                              fontSize: '1.35rem',
+                              fontWeight: 600,
+                              color: 'var(--accent)',
+                            }}
+                          >
+                            {item.amount || '—'}
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )
+            })()}
           </div>
         </div>
       </section>
@@ -823,14 +973,68 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
             </p>
           </div>
 
-          <div className="pd2-construction-grid">
-            {property.constructionStages.map((stage, idx) => (
-              <div key={idx} className="pd2-const-item">
-                <img src={stage.image} alt={`Construction Stage ${idx + 1}`} />
-                <div className="pd2-const-overlay">{stage.overlay}</div>
+          <div className="pd2-const-carousel-wrap">
+            {totalConst > 4 && (
+              <button
+                type="button"
+                className="pd2-const-nav pd2-const-prev"
+                onClick={handlePrevConst}
+                disabled={constSlideIdx === 0}
+                aria-label="Previous construction image"
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+            )}
+
+            <div className="pd2-const-viewport">
+              <div
+                className="pd2-const-track"
+                style={{
+                  transform: `translateX(-${constSlideIdx * 25}%)`,
+                }}
+              >
+                {constStages.map((stage, idx) => (
+                  <div key={idx} className="pd2-const-slide">
+                    <div className="pd2-const-item">
+                      <img src={stage.image} alt={`Construction Stage ${idx + 1}`} />
+                      {stage.overlay && <div className="pd2-const-overlay">{stage.overlay}</div>}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {totalConst > 4 && (
+              <button
+                type="button"
+                className="pd2-const-nav pd2-const-next"
+                onClick={handleNextConst}
+                disabled={constSlideIdx >= maxConstIndex}
+                aria-label="Next construction image"
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            )}
           </div>
+
+          {/* Dots Pagination Navigation */}
+          {totalConst > 4 && (
+            <div className="pd2-const-dots">
+              {Array.from({ length: maxConstIndex + 1 }).map((_, dotIdx) => (
+                <button
+                  key={dotIdx}
+                  type="button"
+                  className={`pd2-const-dot ${constSlideIdx === dotIdx ? 'active' : ''}`}
+                  onClick={() => setConstSlideIdx(dotIdx)}
+                  aria-label={`Go to construction slide ${dotIdx + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

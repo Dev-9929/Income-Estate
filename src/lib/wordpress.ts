@@ -80,7 +80,7 @@ export interface WPPropertyPage {
   projectHighlights?: Array<{ highlight?: string }>
   roiMetrics?: Array<{ label?: string; val?: string; isGold?: boolean }>
   tenants?: Array<{ name?: string; detail?: string }>
-  amenities?: Array<{ name?: string; iconType?: 'lease' | 'parking' | 'security' | 'view' | 'interior' | 'managed' | 'pool' | 'spa' }>
+  amenities?: Array<{ name?: string; iconType?: string }>
   videos?: Array<{
     id?: string
     title?: string
@@ -93,7 +93,7 @@ export interface WPPropertyPage {
     waypoints?: Array<{ marker?: string; title?: string; desc?: string }>
   }>
   nearby?: Array<{ name?: string; dist?: string }>
-  paymentPlan?: Array<{ milestone?: string; timeline?: string; percent?: string; isHighlight?: boolean }>
+  paymentPlan?: Array<{ milestone?: string; timeline?: string; percent?: string; amount?: string; isHighlight?: boolean }>
   constructionStages?: Array<{
     overlay?: string
     image?: { node?: { sourceUrl?: string; altText?: string } }
@@ -764,6 +764,7 @@ export const GET_PROPERTY_BY_SLUG_QUERY = `
           milestone
           timeline
           percent
+          amount
           isHighlight
         }
         constructionStages {
@@ -871,7 +872,7 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
 
   const amenitiesItems =
     page?.amenities && page.amenities.length > 0
-      ? page.amenities.map((a) => ({ name: a.name || '', iconType: (a.iconType || 'lease') as any }))
+      ? page.amenities.map((a) => ({ name: a.name || '', iconType: a.iconType || a.name || 'lease' }))
       : fallbackDetail.amenities
 
   const nearbyItems =
@@ -885,6 +886,7 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
           milestone: p.milestone || '',
           timeline: p.timeline || '',
           percent: p.percent || '',
+          amount: p.amount || '',
           isHighlight: Boolean(p.isHighlight),
         }))
       : fallbackDetail.paymentPlan

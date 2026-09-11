@@ -91,7 +91,9 @@ export interface PropertyAmenity {
 export interface PaymentMilestone {
   milestone: string
   timeline: string
-  percentage: number
+  percentage?: number
+  percent?: string
+  amount?: string
   isHighlighted?: boolean
 }
 
