@@ -1098,3 +1098,106 @@ function ie_register_property_page_scf_fields() {
 	}
 }
 add_action( 'acf/init', 'ie_register_property_page_scf_fields' );
+
+/**
+ * 4. Register Custom Post Type: Inquiry / Leads ("inquiry")
+ */
+function ie_register_inquiry_cpt() {
+	$labels = array(
+		'name'               => _x( 'Inquiries / Leads', 'post type general name', 'income-estate' ),
+		'singular_name'      => _x( 'Inquiry', 'post type singular name', 'income-estate' ),
+		'menu_name'          => _x( 'Inquiries / Leads', 'admin menu', 'income-estate' ),
+		'name_admin_bar'     => _x( 'Inquiry', 'add new on admin bar', 'income-estate' ),
+		'add_new'            => _x( 'Add New Inquiry', 'inquiry', 'income-estate' ),
+		'add_new_item'       => __( 'Add New Inquiry', 'income-estate' ),
+		'new_item'           => __( 'New Inquiry', 'income-estate' ),
+		'edit_item'          => __( 'Edit Inquiry', 'income-estate' ),
+		'view_item'          => __( 'View Inquiry', 'income-estate' ),
+		'all_items'          => __( 'All Inquiries', 'income-estate' ),
+		'search_items'       => __( 'Search Inquiries', 'income-estate' ),
+		'not_found'          => __( 'No inquiries found.', 'income-estate' ),
+		'not_found_in_trash' => __( 'No inquiries found in Trash.', 'income-estate' ),
+	);
+
+	$args = array(
+		'labels'              => $labels,
+		'public'              => false,
+		'publicly_queryable'  => false,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'query_var'           => true,
+		'rewrite'             => array( 'slug' => 'inquiry' ),
+		'capability_type'     => 'post',
+		'has_archive'         => false,
+		'hierarchical'        => false,
+		'menu_position'       => 6,
+		'menu_icon'           => 'dashicons-email-alt',
+		'supports'            => array( 'title', 'editor', 'custom-fields' ),
+		'show_in_rest'        => true,
+		'show_in_graphql'     => true,
+		'graphql_single_name' => 'inquiry',
+		'graphql_plural_name' => 'inquiries',
+	);
+
+	register_post_type( 'inquiry', $args );
+}
+add_action( 'init', 'ie_register_inquiry_cpt' );
+
+/**
+ * 5. Public REST API Endpoint for Inquiries: POST /wp-json/income-estate/v1/inquiry
+ */
+function ie_register_inquiry_rest_route() {
+	register_rest_route( 'income-estate/v1', '/inquiry', array(
+		'methods'             => 'POST',
+		'callback'            => 'ie_handle_inquiry_submission',
+		'permission_callback' => '__return_true',
+	) );
+}
+add_action( 'rest_api_init', 'ie_register_inquiry_rest_route' );
+
+function ie_handle_inquiry_submission( WP_REST_Request $request ) {
+	$params = $request->get_json_params();
+
+	$fullName = ! empty( $params['fullName'] ) ? sanitize_text_field( $params['fullName'] ) : 'Anonymous Lead';
+	$email    = ! empty( $params['email'] ) ? sanitize_email( $params['email'] ) : '';
+	$phone    = ! empty( $params['phone'] ) ? sanitize_text_field( $params['phone'] ) : '';
+	$budget   = ! empty( $params['budget'] ) ? sanitize_text_field( $params['budget'] ) : 'Not Specified';
+	$source   = ! empty( $params['source'] ) ? sanitize_text_field( $params['source'] ) : 'Website Lead Form';
+	$message  = ! empty( $params['message'] ) ? sanitize_textarea_field( $params['message'] ) : '';
+
+	$post_id = wp_insert_post( array(
+		'post_type'    => 'inquiry',
+		'post_title'   => sprintf( 'Inquiry: %s (%s)', $fullName, $phone ? $phone : 'No Phone' ),
+		'post_content' => sprintf(
+			"<strong>Full Name:</strong> %s<br/>\n<strong>Email:</strong> %s<br/>\n<strong>Phone:</strong> %s<br/>\n<strong>Budget:</strong> %s<br/>\n<strong>Source:</strong> %s<br/>\n<strong>Message:</strong> %s<br/>\n<strong>Date:</strong> %s",
+			esc_html( $fullName ),
+			esc_html( $email ),
+			esc_html( $phone ),
+			esc_html( $budget ),
+			esc_html( $source ),
+			nl2br( esc_html( $message ) ),
+			current_time( 'mysql' )
+		),
+		'post_status'  => 'publish',
+	) );
+
+	if ( is_wp_error( $post_id ) ) {
+		return new WP_REST_Response( array(
+			'success' => false,
+			'message' => $post_id->get_error_message(),
+		), 500 );
+	}
+
+	update_post_meta( $post_id, 'lead_email', $email );
+	update_post_meta( $post_id, 'lead_phone', $phone );
+	update_post_meta( $post_id, 'lead_budget', $budget );
+	update_post_meta( $post_id, 'lead_source', $source );
+
+	return new WP_REST_Response( array(
+		'success' => true,
+		'message' => 'Inquiry recorded successfully in WordPress Admin',
+		'lead_id' => $post_id,
+	), 200 );
+}
+
+

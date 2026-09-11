@@ -1077,3 +1077,69 @@ export async function getHomeBrandedResidences(): Promise<BrandedResidenceItem[]
     slug: p.slug,
   }))
 }
+
+// ----------------------------------------------------
+// WORDPRESS PAGE QUERIES & HELPERS
+// ----------------------------------------------------
+
+export interface WPPageNode {
+  id: string
+  databaseId?: number
+  title: string
+  slug: string
+  content?: string
+  date?: string
+  featuredImage?: {
+    node?: {
+      sourceUrl?: string
+      altText?: string
+    }
+  }
+  seo?: WPSEOData
+}
+
+export interface WPPageBySlugResponse {
+  page?: WPPageNode | null
+}
+
+export const GET_WP_PAGE_BY_SLUG_QUERY = `
+  query GetWPPageBySlug($id: ID!) {
+    page(id: $id, idType: URI) {
+      id
+      databaseId
+      title
+      slug
+      content
+      date
+      featuredImage {
+        node {
+          sourceUrl
+          altText
+        }
+      }
+      seo {
+        title
+        metaDesc
+        canonical
+        opengraphImage {
+          sourceUrl
+        }
+        schema {
+          raw
+        }
+      }
+    }
+  }
+`
+
+export async function getWordPressPageBySlug(slug: string): Promise<WPPageNode | null> {
+  try {
+    const data = await fetchGraphQL<WPPageBySlugResponse>(GET_WP_PAGE_BY_SLUG_QUERY, { id: slug })
+    if (data?.page) {
+      return data.page
+    }
+  } catch (err) {
+    console.warn(`WPGraphQL page fetch failed for slug "${slug}":`, err)
+  }
+  return null
+}

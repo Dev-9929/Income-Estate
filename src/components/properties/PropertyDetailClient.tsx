@@ -10,6 +10,7 @@ import { CalculatorModal } from '@/components/modals/CalculatorModal'
 import { PropertyOverviewModal } from '@/components/modals/PropertyOverviewModal'
 import { FaqSection } from '@/components/common/FaqSection'
 import { PropertyDetailItem } from '@/data/property-detail-data'
+import { executeRecaptchaToken } from '@/lib/recaptcha'
 
 interface PropertyDetailClientProps {
   property: PropertyDetailItem
@@ -20,6 +21,9 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
   const [isCalcOpen, setIsCalcOpen] = useState(false)
   const [isOverviewOpen, setIsOverviewOpen] = useState(false)
   const [showToast, setShowToast] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmittedSuccess, setIsSubmittedSuccess] = useState(false)
+  const [honeypot, setHoneypot] = useState('')
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [activeVideoIdx, setActiveVideoIdx] = useState(0)
   const [isPlayingVideo, setIsPlayingVideo] = useState(false)
@@ -78,7 +82,6 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
 
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', handleKeyDown)
-
     return () => {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', handleKeyDown)
@@ -87,7 +90,9 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsSubmitting(true)
     try {
+      const token = await executeRecaptchaToken('property_inquiry')
       await fetch('/api/inquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -98,22 +103,27 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
           budget: formData.interest,
           message: formData.message,
           source: `Property Detail: ${property.title} ${property.titleAccent || ''}`.trim(),
+          honeypot,
+          recaptchaToken: token,
         }),
       })
+      setIsSubmittedSuccess(true)
     } catch (err) {
       console.warn('Property inquiry submission fallback:', err)
     } finally {
+      setIsSubmitting(false)
       setShowToast(true)
+      setHoneypot('')
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        interest: '₹ 70L – ₹ 1 Cr',
+        message: '',
+      })
       setTimeout(() => {
         setShowToast(false)
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          interest: '₹ 70L – ₹ 1 Cr',
-          message: '',
-        })
-      }, 4000)
+      }, 3500)
     }
   }
 
@@ -874,74 +884,117 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
               <span className="pd2-form-tag">Request Information</span>
               <h3 className="pd2-form-heading">Connect With Investment Desk</h3>
             </div>
-            <form onSubmit={handleSubmit} className="pd2-form-body">
-              <div className="pd2-input-row">
-                <div className="pd2-input-field">
-                  <label className="pd2-input-label">Full Name <span className="pd2-req">*</span></label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Vikram Sharma"
-                    className="pd2-input"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                  />
+            {isSubmittedSuccess ? (
+              <div style={{ textAlign: 'center', padding: '3rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: 'rgba(212, 175, 106, 0.15)', color: 'var(--accent, #D4AF6A)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                  <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
                 </div>
-                <div className="pd2-input-field">
-                  <label className="pd2-input-label">Email Address <span className="pd2-req">*</span></label>
-                  <input
-                    type="email"
-                    placeholder="e.g. vikram@example.com"
-                    className="pd2-input"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                  />
-                </div>
+                <h3 style={{ fontFamily: 'var(--font-serif, "DM Sans", sans-serif)', fontSize: '1.4rem', fontWeight: 600, color: 'var(--primary, #061D15)', marginBottom: '0.5rem' }}>
+                  Inquiry Received!
+                </h3>
+                <p style={{ color: 'var(--text-muted, #6E6862)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.5rem', maxWidth: '380px' }}>
+                  Thank you for your interest in {property.title}. Our investment desk has received your details and will get in touch shortly.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setIsSubmittedSuccess(false)}
+                  style={{
+                    padding: '0.65rem 1.25rem',
+                    borderRadius: '4px',
+                    border: '1px solid var(--accent, #D4AF6A)',
+                    backgroundColor: 'transparent',
+                    color: 'var(--primary, #061D15)',
+                    fontWeight: 700,
+                    fontSize: '0.78rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Submit Another Inquiry
+                </button>
               </div>
-              <div className="pd2-input-row">
-                <div className="pd2-input-field">
-                  <label className="pd2-input-label">Phone / WhatsApp <span className="pd2-req">*</span></label>
-                  <input
-                    type="tel"
-                    placeholder="+91 98765 43210"
-                    className="pd2-input"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="pd2-input-field">
-                  <label className="pd2-input-label">Investment Range</label>
-                  <select
-                    className="pd2-input pd2-select"
-                    value={formData.interest}
-                    onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                  >
-                    <option>₹ 70L – ₹ 1 Cr</option>
-                    <option>₹ 1 Cr – ₹ 2 Cr</option>
-                    <option>₹ 2 Cr – ₹ 5 Cr</option>
-                    <option>₹ 5 Cr+</option>
-                  </select>
-                </div>
-              </div>
-              <div className="pd2-input-field">
-                <label className="pd2-input-label">Message / Specific Questions</label>
-                <textarea
-                  placeholder="Tell us about your investment horizon or preferred villa type..."
-                  className="pd2-input pd2-textarea"
-                  rows={3}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+            ) : (
+              <form onSubmit={handleSubmit} className="pd2-form-body">
+                <input
+                  type="text"
+                  name="website_confirm"
+                  style={{ display: 'none' }}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
                 />
-              </div>
-              <button type="submit" className="pd2-submit">
-                <span>SUBMIT ENQUIRY</span>
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                  <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z" />
-                </svg>
-              </button>
-            </form>
+                <div className="pd2-input-row">
+                  <div className="pd2-input-field">
+                    <label className="pd2-input-label">Full Name <span className="pd2-req">*</span></label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Vikram Sharma"
+                      className="pd2-input"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="pd2-input-field">
+                    <label className="pd2-input-label">Email Address <span className="pd2-req">*</span></label>
+                    <input
+                      type="email"
+                      placeholder="e.g. vikram@example.com"
+                      className="pd2-input"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="pd2-input-row">
+                  <div className="pd2-input-field">
+                    <label className="pd2-input-label">Phone / WhatsApp <span className="pd2-req">*</span></label>
+                    <input
+                      type="tel"
+                      placeholder="+91 98765 43210"
+                      className="pd2-input"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="pd2-input-field">
+                    <label className="pd2-input-label">Investment Range</label>
+                    <select
+                      className="pd2-input pd2-select"
+                      value={formData.interest}
+                      onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
+                    >
+                      <option>₹ 70L – ₹ 1 Cr</option>
+                      <option>₹ 1 Cr – ₹ 2 Cr</option>
+                      <option>₹ 2 Cr – ₹ 5 Cr</option>
+                      <option>₹ 5 Cr+</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="pd2-input-field">
+                  <label className="pd2-input-label">Message / Specific Questions</label>
+                  <textarea
+                    placeholder="Tell us about your investment horizon or preferred villa type..."
+                    className="pd2-input pd2-textarea"
+                    rows={3}
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  />
+                </div>
+                <button type="submit" disabled={isSubmitting} className="pd2-submit" style={{ opacity: isSubmitting ? 0.7 : 1 }}>
+                  <span>{isSubmitting ? 'SUBMITTING...' : 'SUBMIT ENQUIRY'}</span>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z" />
+                  </svg>
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </section>

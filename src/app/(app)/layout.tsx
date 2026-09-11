@@ -4,6 +4,7 @@ import '@/styles/income-estate.css'
 import { CinematicIntro } from '@/components/layout/CinematicIntro'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'https://income-estate.com'),
   title: 'Income Estate - Fractional Resort Investments & Stable Returns',
   description:
     'Income Estate - Earn high-yield stable monthly returns through curated fractional real estate investments in premium resorts.',

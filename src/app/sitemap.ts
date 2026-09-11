@@ -3,7 +3,7 @@ import { getAllPropertySlugs } from '@/data/property-detail-data'
 import { getAllLiveBlogPosts } from '@/lib/wordpress'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://income-estate.com'
+  const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://income-estate.com'
   const categories = ['roi-properties', 'branded-residences', 'other-properties']
   const propertySlugs = getAllPropertySlugs()
   const blogPosts = await getAllLiveBlogPosts()
@@ -38,12 +38,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/faq`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
     },
     {
       url: `${baseUrl}/how-it-works`,

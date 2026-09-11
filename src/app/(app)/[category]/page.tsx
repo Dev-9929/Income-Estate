@@ -1,9 +1,10 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getAllWordPressProperties } from '@/lib/wordpress'
-import { generateWPSEOMetadata } from '@/lib/seo'
+import { getAllWordPressProperties, getWordPressPageBySlug } from '@/lib/wordpress'
+import { generateWPSEOMetadata, YoastJsonLd } from '@/lib/seo'
 import { CategoryListingClient } from '@/components/properties/CategoryListingClient'
+import { GenericPageClient } from '@/components/common/GenericPageClient'
 
 export const revalidate = 60 // ISR revalidation every 60 seconds
 
@@ -26,17 +27,30 @@ export async function generateMetadata({
   params: Promise<{ category: string }>
 }): Promise<Metadata> {
   const { category } = await params
-  if (!VALID_CATEGORIES.includes(category as (typeof VALID_CATEGORIES)[number])) {
-    return {}
+
+  // 1. If it's a known property category
+  if (VALID_CATEGORIES.includes(category as (typeof VALID_CATEGORIES)[number])) {
+    const wpPage = await getWordPressPageBySlug(category)
+    const title = `${formatCategoryTitle(category)} | Income Estate`
+    const desc = `Explore curated ${formatCategoryTitle(category)} real estate investment opportunities yielding high monthly returns.`
+
+    return generateWPSEOMetadata({
+      seoData: wpPage?.seo,
+      fallbackTitle: title,
+      fallbackDesc: desc,
+    })
   }
 
-  const title = `${formatCategoryTitle(category)} | Income Estate`
-  const desc = `Explore curated ${formatCategoryTitle(category)} real estate investment opportunities yielding high monthly returns.`
+  // 2. Otherwise check if it's a dynamic WordPress Page (e.g. privacy-policy)
+  const wpPage = await getWordPressPageBySlug(category)
+  if (wpPage) {
+    return generateWPSEOMetadata({
+      seoData: wpPage.seo,
+      fallbackTitle: `${wpPage.title} | Income Estate`,
+    })
+  }
 
-  return generateWPSEOMetadata({
-    fallbackTitle: title,
-    fallbackDesc: desc,
-  })
+  return {}
 }
 
 export default async function CategoryListingPage({
@@ -46,18 +60,30 @@ export default async function CategoryListingPage({
 }) {
   const { category } = await params
 
-  if (!VALID_CATEGORIES.includes(category as (typeof VALID_CATEGORIES)[number])) {
-    notFound()
+  // 1. Property category route
+  if (VALID_CATEGORIES.includes(category as (typeof VALID_CATEGORIES)[number])) {
+    const properties = await getAllWordPressProperties(category)
+    const categoryTitle = formatCategoryTitle(category)
+
+    return (
+      <CategoryListingClient
+        categorySlug={category}
+        categoryTitle={categoryTitle}
+        properties={properties}
+      />
+    )
   }
 
-  const properties = await getAllWordPressProperties(category)
-  const categoryTitle = formatCategoryTitle(category)
+  // 2. Dynamic WordPress Page route (Privacy Policy, Terms, etc.)
+  const wpPage = await getWordPressPageBySlug(category)
+  if (wpPage) {
+    return (
+      <>
+        <YoastJsonLd schemaRaw={wpPage.seo?.schema?.raw} />
+        <GenericPageClient title={wpPage.title} content={wpPage.content} />
+      </>
+    )
+  }
 
-  return (
-    <CategoryListingClient
-      categorySlug={category}
-      categoryTitle={categoryTitle}
-      properties={properties}
-    />
-  )
+  notFound()
 }
