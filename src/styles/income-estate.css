@@ -7976,7 +7976,7 @@ main.container.section-padding {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #000000;
+  background-color: #061D15;
   overflow: hidden;
   text-align: center;
 }
@@ -7988,10 +7988,142 @@ main.container.section-padding {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.85) 100%), url('/assets/wordpress_media/Sale-Leaseback-Model.jpg');
+  background: linear-gradient(to bottom, rgba(6, 29, 21, 0.4) 0%, rgba(6, 29, 21, 0.9) 100%), url('/assets/wordpress_media/Sale-Leaseback-Model.jpg');
   background-size: cover;
   background-position: center;
   z-index: 1;
+}
+
+.blogs-hero-title {
+  position: relative;
+  z-index: 2;
+  color: #FFFFFF !important;
+  font-family: var(--font-serif, serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ==========================================================================
+   LUXURY EDITORIAL FOOTER STYLES & ANIMATIONS
+   ========================================================================== */
+.footer {
+  background: linear-gradient(180deg, #091A14 0%, #040D0A 100%) !important;
+  background-color: #061D15 !important;
+  color: #FFFFFF !important;
+  padding: 5rem 0 3rem 0 !important;
+  border-top: 1px solid rgba(204, 175, 114, 0.25) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.footer-nav-link {
+  position: relative;
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 0.9rem !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0.15rem 0 !important;
+  transition: all 0.25s ease !important;
+  transform: translateX(0);
+}
+
+.footer-nav-link:hover {
+  color: #CCAF72 !important;
+  transform: translateX(4px) !important;
+}
+
+.footer-links {
+  list-style: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.35rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.footer-links li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.footer-btn-book {
+  background-color: rgba(13, 64, 43, 0.8) !important;
+  color: #CCAF72 !important;
+  border: 1.5px solid #CCAF72 !important;
+  padding: 0.75rem 2rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  border-radius: 4px !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.25s ease !important;
+  box-shadow: none !important;
+  filter: none !important;
+  cursor: pointer !important;
+}
+
+.footer-btn-book:hover {
+  background-color: #CCAF72 !important;
+  color: #040D0A !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+.footer-btn-invest {
+  background: #CCAF72 !important;
+  color: #040D0A !important;
+  border: 1.5px solid #CCAF72 !important;
+  padding: 0.75rem 2rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  border-radius: 4px !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.25s ease !important;
+  box-shadow: none !important;
+  filter: none !important;
+  cursor: pointer !important;
+}
+
+.footer-btn-invest:hover {
+  background: #E5C383 !important;
+  color: #040D0A !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+.footer-social-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 4px !important;
+  color: #FFFFFF !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  text-decoration: none !important;
+}
+
+.footer-social-icon:hover {
+  border-color: #CCAF72 !important;
+  color: #CCAF72 !important;
+  background: rgba(204, 175, 114, 0.12) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 4px 15px rgba(204, 175, 114, 0.25) !important;
 }
 
 .blog-filters {

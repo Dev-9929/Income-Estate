@@ -1,12 +1,13 @@
 import { MetadataRoute } from 'next'
 import { getAllPropertySlugs } from '@/data/property-detail-data'
-import { getAllLiveBlogPosts } from '@/lib/wordpress'
+import { getAllLiveBlogPosts, getAllLiveNewsPosts } from '@/lib/wordpress'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://income-estate.com'
   const categories = ['roi-properties', 'branded-residences', 'other-properties']
   const propertySlugs = getAllPropertySlugs()
   const blogPosts = await getAllLiveBlogPosts()
+  const newsPosts = await getAllLiveNewsPosts()
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -35,6 +36,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/blogs`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/news`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.8,
@@ -79,5 +86,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  return [...staticRoutes, ...categoryRoutes, ...detailRoutes, ...blogRoutes]
+  const newsRoutes: MetadataRoute.Sitemap = newsPosts.map((post) => ({
+    url: `${baseUrl}/news/${post.slug}`,
+    lastModified: post.date ? new Date(post.date) : new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }))
+
+  return [...staticRoutes, ...categoryRoutes, ...detailRoutes, ...blogRoutes, ...newsRoutes]
 }

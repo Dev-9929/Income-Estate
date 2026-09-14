@@ -16,14 +16,15 @@ import { FaqSection } from '@/components/home/FaqSection'
 import { PreFooterCta } from '@/components/home/PreFooterCta'
 import { Footer } from '@/components/layout/Footer'
 import { CalculatorModal } from '@/components/modals/CalculatorModal'
-import { PropertyCarouselItem, BrandedResidenceItem } from '@/data/home-data'
+import { PropertyCarouselItem, BrandedResidenceItem, HomePageDynamicData } from '@/data/home-data'
 
 interface HomePageClientProps {
   roiProperties: PropertyCarouselItem[]
   brandedResidences: BrandedResidenceItem[]
+  homeData?: HomePageDynamicData
 }
 
-export function HomePageClient({ roiProperties, brandedResidences }: HomePageClientProps) {
+export function HomePageClient({ roiProperties, brandedResidences, homeData }: HomePageClientProps) {
   const [isCalcOpen, setIsCalcOpen] = useState(false)
 
   return (
@@ -35,10 +36,10 @@ export function HomePageClient({ roiProperties, brandedResidences }: HomePageCli
       <HeroBanner />
 
       {/* Section 2: Top Stats Bar */}
-      <TopStatsBar />
+      <TopStatsBar stats={homeData?.topStats} />
 
       {/* Section 3: Built for Investors & Value Pillars */}
-      <ConceptSection />
+      <ConceptSection pillars={homeData?.conceptPillars} />
 
       {/* Section 4: Philosophy Section */}
       <PhilosophySection />
@@ -56,13 +57,13 @@ export function HomePageClient({ roiProperties, brandedResidences }: HomePageCli
       <ComparisonSection />
 
       {/* Section 9: Simple Process Timeline */}
-      <ProcessTimeline />
+      <ProcessTimeline steps={homeData?.processSteps} />
 
       {/* Section 11: Investor Trust & Testimonials */}
-      <TestimonialsSection />
+      <TestimonialsSection testimonials={homeData?.testimonials} />
 
       {/* Section 12: Frequently Asked Questions */}
-      <FaqSection />
+      <FaqSection faqs={homeData?.faqs} />
 
       {/* Section 13: Video Background Pre-Footer CTA */}
       <PreFooterCta />

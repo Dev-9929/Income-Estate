@@ -100,8 +100,94 @@ function ie_register_property_schema() {
 add_action( 'init', 'ie_register_property_schema', 10 );
 
 /**
- * 2. Pre-register Default Taxonomy Terms
- * Automatically seeds default terms for "property_category" on init if they do not exist.
+ * 2. Register Taxonomy ("news_category") & Custom Post Type ("news") with WPGraphQL
+ */
+function ie_register_news_schema() {
+
+	/**
+	 * Taxonomy: News Category (news_category)
+	 */
+	$taxonomy_labels = array(
+		'name'              => _x( 'News Categories', 'taxonomy general name', 'income-estate' ),
+		'singular_name'     => _x( 'News Category', 'taxonomy singular name', 'income-estate' ),
+		'search_items'      => __( 'Search News Categories', 'income-estate' ),
+		'all_items'         => __( 'All News Categories', 'income-estate' ),
+		'parent_item'       => __( 'Parent News Category', 'income-estate' ),
+		'parent_item_colon' => __( 'Parent News Category:', 'income-estate' ),
+		'edit_item'         => __( 'Edit News Category', 'income-estate' ),
+		'update_item'       => __( 'Update News Category', 'income-estate' ),
+		'add_new_item'      => __( 'Add New News Category', 'income-estate' ),
+		'new_item_name'     => __( 'New News Category Name', 'income-estate' ),
+		'menu_name'         => __( 'News Categories', 'income-estate' ),
+	);
+
+	$taxonomy_args = array(
+		'labels'              => $taxonomy_labels,
+		'hierarchical'        => true,
+		'public'              => true,
+		'show_ui'             => true,
+		'show_admin_column'   => true,
+		'show_in_nav_menus'   => true,
+		'show_tagcloud'       => false,
+		'show_in_rest'        => true,
+		'rewrite'             => array( 'slug' => 'news-category' ),
+		// WPGraphQL Configuration for Headless WordPress
+		'show_in_graphql'     => true,
+		'graphql_single_name' => 'newsCategory',
+		'graphql_plural_name' => 'newsCategories',
+	);
+
+	register_taxonomy( 'news_category', array( 'news' ), $taxonomy_args );
+
+	/**
+	 * Custom Post Type: News (news)
+	 */
+	$cpt_labels = array(
+		'name'               => _x( 'News', 'post type general name', 'income-estate' ),
+		'singular_name'      => _x( 'News Item', 'post type singular name', 'income-estate' ),
+		'menu_name'          => _x( 'News', 'admin menu', 'income-estate' ),
+		'name_admin_bar'     => _x( 'News', 'add new on admin bar', 'income-estate' ),
+		'add_new'            => _x( 'Add New', 'news', 'income-estate' ),
+		'add_new_item'       => __( 'Add New News Article', 'income-estate' ),
+		'new_item'           => __( 'New News Article', 'income-estate' ),
+		'edit_item'          => __( 'Edit News Article', 'income-estate' ),
+		'view_item'          => __( 'View News Article', 'income-estate' ),
+		'all_items'          => __( 'All News', 'income-estate' ),
+		'search_items'       => __( 'Search News', 'income-estate' ),
+		'parent_item_colon'  => __( 'Parent News:', 'income-estate' ),
+		'not_found'          => __( 'No news articles found.', 'income-estate' ),
+		'not_found_in_trash' => __( 'No news articles found in Trash.', 'income-estate' ),
+	);
+
+	$cpt_args = array(
+		'labels'              => $cpt_labels,
+		'public'              => true,
+		'publicly_queryable'  => true,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'query_var'           => true,
+		'rewrite'             => array( 'slug' => 'news' ),
+		'capability_type'     => 'post',
+		'has_archive'         => true,
+		'hierarchical'        => false,
+		'menu_position'       => 6,
+		'menu_icon'           => 'dashicons-format-aside',
+		'supports'            => array( 'title', 'editor', 'thumbnail', 'excerpt', 'author' ),
+		'taxonomies'          => array( 'news_category' ),
+		'show_in_rest'        => true,
+		// WPGraphQL Configuration for Headless WordPress
+		'show_in_graphql'     => true,
+		'graphql_single_name' => 'newsItem',
+		'graphql_plural_name' => 'newsItems',
+	);
+
+	register_post_type( 'news', $cpt_args );
+}
+add_action( 'init', 'ie_register_news_schema', 10 );
+
+/**
+ * 3. Pre-register Default Taxonomy Terms
+ * Automatically seeds default terms for "property_category" & "news_category" on init if they do not exist.
  */
 function ie_seed_default_property_categories() {
 	$default_terms = array(
@@ -117,6 +203,25 @@ function ie_seed_default_property_categories() {
 				'property_category',
 				array(
 					'slug' => sanitize_title( $term_name ),
+				)
+			);
+		}
+	}
+
+	$default_news_terms = array(
+		'Market News',
+		'Policy & FEMA',
+		'Hospitality Insights',
+		'Infrastructure',
+	);
+
+	foreach ( $default_news_terms as $news_term ) {
+		if ( ! term_exists( $news_term, 'news_category' ) ) {
+			wp_insert_term(
+				$news_term,
+				'news_category',
+				array(
+					'slug' => sanitize_title( $news_term ),
 				)
 			);
 		}
@@ -1199,5 +1304,819 @@ function ie_handle_inquiry_submission( WP_REST_Request $request ) {
 		'lead_id' => $post_id,
 	), 200 );
 }
+
+/**
+ * 6. Register SCF (Secure Custom Fields / ACF) Field Group: "News Article Settings" (newsDetails)
+ */
+function ie_register_news_scf_fields() {
+	if ( function_exists( 'acf_add_local_field_group' ) ) {
+		acf_add_local_field_group( array(
+			'key'                   => 'group_news_details',
+			'title'                 => 'News Article Settings',
+			'fields'                => array(
+				array(
+					'key'                => 'field_news_read_time',
+					'label'              => 'Read Time',
+					'name'               => 'read_time',
+					'type'               => 'text',
+					'default_value'      => '4 min read',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'readTime',
+				),
+				array(
+					'key'                => 'field_news_author_desk',
+					'label'              => 'Author / Desk Name',
+					'name'               => 'author_desk',
+					'type'               => 'text',
+					'default_value'      => 'INCOME ESTATE NEWS DESK',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'authorDesk',
+				),
+				array(
+					'key'                => 'field_news_is_featured',
+					'label'              => 'Feature Article / Top Bulletin',
+					'name'               => 'is_featured',
+					'type'               => 'true_false',
+					'ui'                 => 1,
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'isFeatured',
+				),
+				array(
+					'key'                => 'field_news_source_url',
+					'label'              => 'External Source URL (Optional)',
+					'name'               => 'external_source_url',
+					'type'               => 'text',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'externalSourceUrl',
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'news',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'show_in_graphql'       => 1,
+			'graphql_field_name'    => 'newsDetails',
+			'map_graphql_types_from_location_rules' => 0,
+			'graphql_types'         => array( 'NewsItem' ),
+		) );
+	}
+}
+add_action( 'acf/init', 'ie_register_news_scf_fields' );
+
+/**
+ * 7. Register SCF (Secure Custom Fields / ACF) Field Group: "Home Page Settings" (homePage)
+ * Allows full dynamic management of Hero Slides, Stats, Concept Pillars, Tiers, Timeline, Testimonials, FAQs in WordPress.
+ */
+function ie_register_home_page_scf_fields() {
+	if ( function_exists( 'acf_add_local_field_group' ) ) {
+		acf_add_local_field_group( array(
+			'key'                   => 'group_home_page_settings',
+			'title'                 => 'Home Page Section Settings',
+			'fields'                => array(
+				// Hero Slides Repeater
+				array(
+					'key'                => 'field_home_hero_slides',
+					'label'              => 'Hero Banner Slides',
+					'name'               => 'hero_slides',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Hero Slide',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'heroSlides',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_hero_title',
+							'label'              => 'Slide Title Accent (e.g. RESIDENCE, YIELD, ESTATE)',
+							'name'               => 'title',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'title',
+						),
+						array(
+							'key'                => 'field_hero_subtitle',
+							'label'              => 'Subtitle Heading',
+							'name'               => 'subtitle',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'subtitle',
+						),
+						array(
+							'key'                => 'field_hero_cta_text',
+							'label'              => 'CTA Button Text',
+							'name'               => 'cta_text',
+							'type'               => 'text',
+							'default_value'      => 'Explore Projects',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'ctaText',
+						),
+						array(
+							'key'                => 'field_hero_cta_link',
+							'label'              => 'CTA Button Link',
+							'name'               => 'cta_link',
+							'type'               => 'text',
+							'default_value'      => '#projects',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'ctaLink',
+						),
+						array(
+							'key'                => 'field_hero_bg_left',
+							'label'              => 'Left Banner Image URL',
+							'name'               => 'bg_left',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'bgLeft',
+						),
+						array(
+							'key'                => 'field_hero_bg_right',
+							'label'              => 'Right Banner Image URL',
+							'name'               => 'bg_right',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'bgRight',
+						),
+					),
+				),
+
+				// Top Stats Repeater
+				array(
+					'key'                => 'field_home_top_stats',
+					'label'              => 'Top Key Stats Bar',
+					'name'               => 'top_stats',
+					'type'               => 'repeater',
+					'layout'             => 'table',
+					'button_label'       => 'Add Stat Item',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'topStats',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_stat_num',
+							'label'              => 'Stat Value (e.g. 6-15%)',
+							'name'               => 'num',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'num',
+						),
+						array(
+							'key'                => 'field_stat_label',
+							'label'              => 'Stat Label (e.g. AVERAGE ANNUAL ROI)',
+							'name'               => 'label',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'label',
+						),
+						array(
+							'key'                => 'field_stat_icon',
+							'label'              => 'Icon Type (roi, investment, managed)',
+							'name'               => 'icon',
+							'type'               => 'select',
+							'options'            => array(
+								'roi'        => 'ROI Icon',
+								'investment' => 'Investment Icon',
+								'managed'    => 'Managed Icon',
+							),
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'icon',
+						),
+					),
+				),
+
+				// Concept Pillars Repeater
+				array(
+					'key'                => 'field_home_concept_pillars',
+					'label'              => 'Concept Value Pillars',
+					'name'               => 'concept_pillars',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Value Pillar',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'conceptPillars',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_pillar_num',
+							'label'              => 'Pillar Number (e.g. 01)',
+							'name'               => 'num',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'num',
+						),
+						array(
+							'key'                => 'field_pillar_title',
+							'label'              => 'Pillar Title',
+							'name'               => 'title',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'title',
+						),
+						array(
+							'key'                => 'field_pillar_desc',
+							'label'              => 'Pillar Description',
+							'name'               => 'description',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'description',
+						),
+					),
+				),
+
+				// Process Steps Repeater
+				array(
+					'key'                => 'field_home_process_steps',
+					'label'              => 'Process Timeline Steps',
+					'name'               => 'process_steps',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Timeline Step',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'processSteps',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_step_num',
+							'label'              => 'Step Number (e.g. 01)',
+							'name'               => 'num',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'num',
+						),
+						array(
+							'key'                => 'field_step_title',
+							'label'              => 'Step Title',
+							'name'               => 'title',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'title',
+						),
+						array(
+							'key'                => 'field_step_desc',
+							'label'              => 'Step Description',
+							'name'               => 'description',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'description',
+						),
+					),
+				),
+
+				// Testimonials Repeater
+				array(
+					'key'                => 'field_home_testimonials',
+					'label'              => 'Investor Testimonials',
+					'name'               => 'testimonials',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Testimonial',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'testimonials',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_t_quote',
+							'label'              => 'Investor Quote',
+							'name'               => 'quote',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'quote',
+						),
+						array(
+							'key'                => 'field_t_author',
+							'label'              => 'Author Name',
+							'name'               => 'author',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'author',
+						),
+						array(
+							'key'                => 'field_t_info',
+							'label'              => 'Author Info / Location & Invested Amount',
+							'name'               => 'info',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'info',
+						),
+					),
+				),
+
+				// FAQs Repeater
+				array(
+					'key'                => 'field_home_faqs',
+					'label'              => 'Frequently Asked Questions (FAQs)',
+					'name'               => 'faqs',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add FAQ',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'faqs',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_faq_q',
+							'label'              => 'Question',
+							'name'               => 'question',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'question',
+						),
+						array(
+							'key'                => 'field_faq_a',
+							'label'              => 'Answer',
+							'name'               => 'answer',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'answer',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'page',
+					),
+				),
+			),
+			'menu_order'            => 0,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'show_in_graphql'       => 1,
+			'graphql_field_name'    => 'homePage',
+			'map_graphql_types_from_location_rules' => 0,
+			'graphql_types'         => array( 'Page' ),
+		) );
+	}
+}
+add_action( 'acf/init', 'ie_register_home_page_scf_fields' );
+
+/**
+ * 6. Register Static Page Fields: About Us Page ("aboutUsPage")
+ */
+function ie_register_about_page_scf_fields() {
+	if ( function_exists( 'acf_add_local_field_group' ) ) {
+		acf_add_local_field_group( array(
+			'key'                   => 'group_about_us_page',
+			'title'                 => 'About Us Page Section Settings',
+			'fields'                => array(
+				array(
+					'key'                => 'field_about_story_title',
+					'label'              => 'Story Section Title',
+					'name'               => 'story_title',
+					'type'               => 'text',
+					'default_value'      => 'Our Story',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'storyTitle',
+				),
+				array(
+					'key'                => 'field_about_story_subtitle',
+					'label'              => 'Story Section Subtitle',
+					'name'               => 'story_subtitle',
+					'type'               => 'textarea',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'storySubtitle',
+				),
+				array(
+					'key'                => 'field_about_story_paragraphs',
+					'label'              => 'Story Paragraphs',
+					'name'               => 'story_paragraphs',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Paragraph',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'storyParagraphs',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_story_p',
+							'label'              => 'Paragraph Text',
+							'name'               => 'text',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'text',
+						),
+					),
+				),
+				array(
+					'key'                => 'field_about_founders',
+					'label'              => 'Founders Profiles',
+					'name'               => 'founders',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Founder',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'founders',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_founder_name',
+							'label'              => 'Founder Name (e.g. Mr. Aman Duggal)',
+							'name'               => 'name',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'name',
+						),
+						array(
+							'key'                => 'field_founder_photo',
+							'label'              => 'Founder Photo URL',
+							'name'               => 'photo',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'photo',
+						),
+						array(
+							'key'                => 'field_founder_bio',
+							'label'              => 'Founder Bio / Experience',
+							'name'               => 'bio',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'bio',
+						),
+						array(
+							'key'                => 'field_founder_quote',
+							'label'              => 'Signature Quote',
+							'name'               => 'quote',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'quote',
+						),
+					),
+				),
+				array(
+					'key'                => 'field_about_pillars',
+					'label'              => 'Company Pillars',
+					'name'               => 'pillars',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Pillar',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'pillars',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_about_p_num',
+							'label'              => 'Pillar Number (01, 02...)',
+							'name'               => 'num',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'num',
+						),
+						array(
+							'key'                => 'field_about_p_title',
+							'label'              => 'Pillar Title',
+							'name'               => 'title',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'title',
+						),
+						array(
+							'key'                => 'field_about_p_desc',
+							'label'              => 'Pillar Description',
+							'name'               => 'description',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'description',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'page',
+					),
+				),
+			),
+			'menu_order'            => 1,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'show_in_graphql'       => 1,
+			'graphql_field_name'    => 'aboutUsPage',
+			'map_graphql_types_from_location_rules' => 0,
+			'graphql_types'         => array( 'Page' ),
+		) );
+	}
+}
+add_action( 'acf/init', 'ie_register_about_page_scf_fields' );
+
+/**
+ * 7. Register Static Page Fields: How It Works Page ("howItWorksPage")
+ */
+function ie_register_how_it_works_page_scf_fields() {
+	if ( function_exists( 'acf_add_local_field_group' ) ) {
+		acf_add_local_field_group( array(
+			'key'                   => 'group_how_it_works_page',
+			'title'                 => 'How It Works Page Section Settings',
+			'fields'                => array(
+				array(
+					'key'                => 'field_hiw_hero_title',
+					'label'              => 'Hero Title',
+					'name'               => 'hero_title',
+					'type'               => 'text',
+					'default_value'      => 'HOW IT WORKS',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'heroTitle',
+				),
+				array(
+					'key'                => 'field_hiw_hero_subtitle',
+					'label'              => 'Hero Subtitle / Description',
+					'name'               => 'hero_subtitle',
+					'type'               => 'textarea',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'heroSubtitle',
+				),
+				array(
+					'key'                => 'field_hiw_steps',
+					'label'              => 'Detailed Process Steps',
+					'name'               => 'steps',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Detailed Step',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'steps',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_hiw_step_num',
+							'label'              => 'Step Number (e.g. STEP 01)',
+							'name'               => 'step_num',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'stepNum',
+						),
+						array(
+							'key'                => 'field_hiw_step_title',
+							'label'              => 'Step Title',
+							'name'               => 'title',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'title',
+						),
+						array(
+							'key'                => 'field_hiw_step_desc',
+							'label'              => 'Step Detailed Description',
+							'name'               => 'description',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'description',
+						),
+						array(
+							'key'                => 'field_hiw_step_highlight',
+							'label'              => 'Key Takeaway / Highlight Note',
+							'name'               => 'highlight',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'highlight',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'page',
+					),
+				),
+			),
+			'menu_order'            => 2,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'show_in_graphql'       => 1,
+			'graphql_field_name'    => 'howItWorksPage',
+			'map_graphql_types_from_location_rules' => 0,
+			'graphql_types'         => array( 'Page' ),
+		) );
+	}
+}
+add_action( 'acf/init', 'ie_register_how_it_works_page_scf_fields' );
+
+/**
+ * 8. Register Static Page Fields: Services Page ("servicesPage")
+ */
+function ie_register_services_page_scf_fields() {
+	if ( function_exists( 'acf_add_local_field_group' ) ) {
+		acf_add_local_field_group( array(
+			'key'                   => 'group_services_page',
+			'title'                 => 'Services Page Section Settings',
+			'fields'                => array(
+				array(
+					'key'                => 'field_serv_hero_title',
+					'label'              => 'Hero Title',
+					'name'               => 'hero_title',
+					'type'               => 'text',
+					'default_value'      => 'OUR SERVICES',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'heroTitle',
+				),
+				array(
+					'key'                => 'field_serv_hero_subtitle',
+					'label'              => 'Hero Subtitle / Description',
+					'name'               => 'hero_subtitle',
+					'type'               => 'textarea',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'heroSubtitle',
+				),
+				array(
+					'key'                => 'field_serv_investor_services',
+					'label'              => 'B2C Investor Services',
+					'name'               => 'investor_services',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Investor Service',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'investorServices',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_serv_inv_title',
+							'label'              => 'Service Title',
+							'name'               => 'title',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'title',
+						),
+						array(
+							'key'                => 'field_serv_inv_desc',
+							'label'              => 'Service Description',
+							'name'               => 'description',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'description',
+						),
+						array(
+							'key'                => 'field_serv_inv_features',
+							'label'              => 'Features (one per line)',
+							'name'               => 'features',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'features',
+						),
+					),
+				),
+				array(
+					'key'                => 'field_serv_developer_services',
+					'label'              => 'B2B Developer & Asset Owner Services',
+					'name'               => 'developer_services',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Developer Service',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'developerServices',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_serv_dev_title',
+							'label'              => 'Service Title',
+							'name'               => 'title',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'title',
+						),
+						array(
+							'key'                => 'field_serv_dev_desc',
+							'label'              => 'Service Description',
+							'name'               => 'description',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'description',
+						),
+						array(
+							'key'                => 'field_serv_dev_features',
+							'label'              => 'Features (one per line)',
+							'name'               => 'features',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'features',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'page',
+					),
+				),
+			),
+			'menu_order'            => 3,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'show_in_graphql'       => 1,
+			'graphql_field_name'    => 'servicesPage',
+			'map_graphql_types_from_location_rules' => 0,
+			'graphql_types'         => array( 'Page' ),
+		) );
+	}
+}
+add_action( 'acf/init', 'ie_register_services_page_scf_fields' );
+
+/**
+ * 9. Register Static Page Fields: Contact Page ("contactPage")
+ */
+function ie_register_contact_page_scf_fields() {
+	if ( function_exists( 'acf_add_local_field_group' ) ) {
+		acf_add_local_field_group( array(
+			'key'                   => 'group_contact_page',
+			'title'                 => 'Contact Us Page Section Settings',
+			'fields'                => array(
+				array(
+					'key'                => 'field_contact_hero_title',
+					'label'              => 'Hero Title',
+					'name'               => 'hero_title',
+					'type'               => 'text',
+					'default_value'      => 'CONTACT US',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'heroTitle',
+				),
+				array(
+					'key'                => 'field_contact_hero_subtitle',
+					'label'              => 'Hero Subtitle',
+					'name'               => 'hero_subtitle',
+					'type'               => 'textarea',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'heroSubtitle',
+				),
+				array(
+					'key'                => 'field_contact_offices',
+					'label'              => 'Office Locations',
+					'name'               => 'offices',
+					'type'               => 'repeater',
+					'layout'             => 'block',
+					'button_label'       => 'Add Office Location',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'offices',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_office_city',
+							'label'              => 'Office City / Name (e.g. Jaipur HQ)',
+							'name'               => 'city',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'city',
+						),
+						array(
+							'key'                => 'field_office_address',
+							'label'              => 'Full Address',
+							'name'               => 'address',
+							'type'               => 'textarea',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'address',
+						),
+						array(
+							'key'                => 'field_office_phone',
+							'label'              => 'Phone Number',
+							'name'               => 'phone',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'phone',
+						),
+						array(
+							'key'                => 'field_office_email',
+							'label'              => 'Email Address',
+							'name'               => 'email',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'email',
+						),
+					),
+				),
+			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'page',
+					),
+				),
+			),
+			'menu_order'            => 4,
+			'position'              => 'normal',
+			'style'                 => 'default',
+			'label_placement'       => 'top',
+			'instruction_placement' => 'label',
+			'show_in_graphql'       => 1,
+			'graphql_field_name'    => 'contactPage',
+			'map_graphql_types_from_location_rules' => 0,
+			'graphql_types'         => array( 'Page' ),
+		) );
+	}
+}
+add_action( 'acf/init', 'ie_register_contact_page_scf_fields' );
+
+
 
 

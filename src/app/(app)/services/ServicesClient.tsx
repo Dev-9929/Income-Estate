@@ -24,6 +24,8 @@ import { FaqSection } from '@/components/home/FaqSection'
 import { PreFooterCta } from '@/components/home/PreFooterCta'
 import { CalculatorModal } from '@/components/modals/CalculatorModal'
 
+import { ServicesPageDynamicData } from '@/lib/wordpress'
+
 interface B2CServiceItem {
   id: string
   icon: React.ComponentType<{ className?: string }>
@@ -39,7 +41,7 @@ interface B2BServiceItem {
   description: string
 }
 
-const B2C_SERVICES: B2CServiceItem[] = [
+const DEFAULT_B2C_SERVICES: B2CServiceItem[] = [
   {
     id: 'investment-consultation',
     icon: Users,
@@ -78,7 +80,7 @@ const B2C_SERVICES: B2CServiceItem[] = [
   },
 ]
 
-const B2B_SERVICES: B2BServiceItem[] = [
+const DEFAULT_B2B_SERVICES: B2BServiceItem[] = [
   {
     id: 'project-conceptualization',
     icon: Layers,
@@ -123,8 +125,42 @@ const B2B_SERVICES: B2BServiceItem[] = [
   },
 ]
 
-export function ServicesClient() {
+interface ServicesClientProps {
+  servicesData?: ServicesPageDynamicData
+}
+
+export function ServicesClient({ servicesData }: ServicesClientProps) {
   const [isCalcOpen, setIsCalcOpen] = useState(false)
+
+  const heroTitle = servicesData?.heroTitle || 'OUR SERVICES'
+  const heroSubtitle = servicesData?.heroSubtitle || undefined
+
+  const b2cServices: B2CServiceItem[] =
+    servicesData?.investorServices && servicesData.investorServices.length > 0
+      ? servicesData.investorServices.map((s, idx) => {
+          const fallback = DEFAULT_B2C_SERVICES[idx] || DEFAULT_B2C_SERVICES[0]
+          return {
+            id: `b2c-${idx}`,
+            icon: fallback.icon,
+            title: s.title || fallback.title,
+            description: s.description || fallback.description,
+            badges: s.features && s.features.length > 0 ? s.features : fallback.badges,
+          }
+        })
+      : DEFAULT_B2C_SERVICES
+
+  const b2bServices: B2BServiceItem[] =
+    servicesData?.developerServices && servicesData.developerServices.length > 0
+      ? servicesData.developerServices.map((s, idx) => {
+          const fallback = DEFAULT_B2B_SERVICES[idx] || DEFAULT_B2B_SERVICES[0]
+          return {
+            id: `b2b-${idx}`,
+            icon: fallback.icon,
+            title: s.title || fallback.title,
+            description: s.description || fallback.description,
+          }
+        })
+      : DEFAULT_B2B_SERVICES
 
   return (
     <div className="main-wrapper">
@@ -205,7 +241,7 @@ export function ServicesClient() {
 
           {/* 3x2 Grid for B2C */}
           <div className="services-grid-b2c">
-            {B2C_SERVICES.map((item) => {
+            {b2cServices.map((item) => {
               const IconComp = item.icon
               return (
                 <div key={item.id} className="services-card-b2c">
@@ -294,7 +330,7 @@ export function ServicesClient() {
 
           {/* 3x2 Grid for B2B (matches Screenshot 3) */}
           <div className="services-grid-b2b">
-            {B2B_SERVICES.map((item) => {
+            {b2bServices.map((item) => {
               const IconComp = item.icon
               return (
                 <div key={item.id} className="services-card-b2b">

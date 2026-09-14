@@ -376,4 +376,14 @@ export const faqData: FaqItem[] = [
   },
 ]
 
+export interface HomePageDynamicData {
+  heroSlides?: HeroSlide[]
+  topStats?: TopStatItem[]
+  conceptPillars?: ConceptPillar[]
+  processSteps?: TimelineStep[]
+  testimonials?: TestimonialItem[]
+  faqs?: Array<{ id?: string; question: string; answer: string; bullets?: string[] }>
+}
+
+
 

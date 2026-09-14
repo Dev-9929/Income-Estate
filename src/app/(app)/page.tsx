@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Metadata } from 'next'
-import { getHomeRoiProperties, getHomeBrandedResidences } from '@/lib/wordpress'
+import { getHomeRoiProperties, getHomeBrandedResidences, getHomePageDynamicData } from '@/lib/wordpress'
 import { generateWPSEOMetadata, YoastJsonLd } from '@/lib/seo'
 import { HomePageClient } from '@/components/home/HomePageClient'
 
@@ -17,6 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home() {
   const roiProperties = await getHomeRoiProperties()
   const brandedResidences = await getHomeBrandedResidences()
+  const homeData = await getHomePageDynamicData()
 
   return (
     <>
@@ -24,6 +25,7 @@ export default async function Home() {
       <HomePageClient
         roiProperties={roiProperties}
         brandedResidences={brandedResidences}
+        homeData={homeData}
       />
     </>
   )

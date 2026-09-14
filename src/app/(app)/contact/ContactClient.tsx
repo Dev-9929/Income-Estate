@@ -6,9 +6,14 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { PreFooterCta } from '@/components/home/PreFooterCta'
 import { CalculatorModal } from '@/components/modals/CalculatorModal'
+import { ContactPageDynamicData } from '@/lib/wordpress'
 import { executeRecaptchaToken } from '@/lib/recaptcha'
 
-export function ContactClient() {
+interface ContactClientProps {
+  contactData?: ContactPageDynamicData
+}
+
+export function ContactClient({ contactData }: ContactClientProps) {
   const [isCalcOpen, setIsCalcOpen] = useState(false)
   const [showToast, setShowToast] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -20,6 +25,9 @@ export function ContactClient() {
     phone: '',
     message: '',
   })
+
+  const heroTitle = contactData?.heroTitle || 'CONTACT US'
+  const offices = contactData?.offices
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -60,7 +68,7 @@ export function ContactClient() {
 
       {/* Hero Banner */}
       <section className="contact-hero">
-        <h1 className="contact-hero-title">CONTACT US</h1>
+        <h1 className="contact-hero-title">{heroTitle}</h1>
       </section>
 
       {/* Main Contact Content */}
@@ -124,155 +132,246 @@ export function ContactClient() {
               the right opportunities, offering insights, structure, and a seamless experience at every step.
             </p>
 
-            {/* Jaipur Office Card */}
-            <div
-              style={{
-                backgroundColor: 'var(--bg-card, #FFFFFF)',
-                border: '1px solid var(--border-color, #EAE7E0)',
-                borderRadius: '8px',
-                padding: '1.75rem',
-                marginBottom: '1.25rem',
-                boxShadow: 'var(--shadow-sm, 0 4px 12px rgba(18, 24, 21, 0.03))',
-                transition: 'all 0.3s ease',
-              }}
-            >
-              <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+            {/* Office Locations */}
+            {offices && offices.length > 0 ? (
+              offices.map((office, idx) => (
                 <div
+                  key={idx}
                   style={{
-                    width: '46px',
-                    height: '46px',
+                    backgroundColor: 'var(--bg-card, #FFFFFF)',
+                    border: '1px solid var(--border-color, #EAE7E0)',
                     borderRadius: '8px',
-                    background: 'rgba(212, 175, 106, 0.12)',
-                    border: '1px solid rgba(212, 175, 106, 0.25)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
+                    padding: '1.75rem',
+                    marginBottom: '1.25rem',
+                    boxShadow: 'var(--shadow-sm, 0 4px 12px rgba(18, 24, 21, 0.03))',
+                    transition: 'all 0.3s ease',
                   }}
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="22"
-                    height="22"
-                    fill="none"
-                    stroke="var(--accent, #D4AF6A)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
+                  <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+                    <div
+                      style={{
+                        width: '46px',
+                        height: '46px',
+                        borderRadius: '8px',
+                        background: 'rgba(212, 175, 106, 0.12)',
+                        border: '1px solid rgba(212, 175, 106, 0.25)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="22"
+                        height="22"
+                        fill="none"
+                        stroke="var(--accent, #D4AF6A)"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3
+                        style={{
+                          fontFamily: 'var(--font-sans, "DM Sans", sans-serif)',
+                          fontSize: '0.95rem',
+                          fontWeight: 700,
+                          color: 'var(--primary, #061D15)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.04em',
+                          marginBottom: '0.4rem',
+                        }}
+                      >
+                        {office.city}
+                      </h3>
+                      <p
+                        style={{
+                          color: 'var(--text-muted, #6E6862)',
+                          fontSize: '0.9rem',
+                          lineHeight: 1.6,
+                          margin: 0,
+                        }}
+                      >
+                        {office.address}
+                        <br />
+                        Phone:{' '}
+                        <a
+                          href={`tel:${office.phone}`}
+                          style={{ color: 'var(--accent, #D4AF6A)', fontWeight: 600 }}
+                        >
+                          {office.phone}
+                        </a>
+                        <br />
+                        Email:{' '}
+                        <a
+                          href={`mailto:${office.email}`}
+                          style={{ color: 'var(--accent, #D4AF6A)', fontWeight: 600 }}
+                        >
+                          {office.email}
+                        </a>
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3
-                    style={{
-                      fontFamily: 'var(--font-sans, "DM Sans", sans-serif)',
-                      fontSize: '0.95rem',
-                      fontWeight: 700,
-                      color: 'var(--primary, #061D15)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.04em',
-                      marginBottom: '0.4rem',
-                    }}
-                  >
-                    Jaipur Office
-                  </h3>
-                  <p
-                    style={{
-                      color: 'var(--text-muted, #6E6862)',
-                      fontSize: '0.9rem',
-                      lineHeight: 1.6,
-                      margin: 0,
-                    }}
-                  >
-                    2nd Floor 35/69, Rajat Path, Sector 3,<br />
-                    Mansarovar, Jaipur, Rajasthan 302020
-                  </p>
+              ))
+            ) : (
+              <>
+                {/* Jaipur Office Card */}
+                <div
+                  style={{
+                    backgroundColor: 'var(--bg-card, #FFFFFF)',
+                    border: '1px solid var(--border-color, #EAE7E0)',
+                    borderRadius: '8px',
+                    padding: '1.75rem',
+                    marginBottom: '1.25rem',
+                    boxShadow: 'var(--shadow-sm, 0 4px 12px rgba(18, 24, 21, 0.03))',
+                    transition: 'all 0.3s ease',
+                  }}
+                >
+                  <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+                    <div
+                      style={{
+                        width: '46px',
+                        height: '46px',
+                        borderRadius: '8px',
+                        background: 'rgba(212, 175, 106, 0.12)',
+                        border: '1px solid rgba(212, 175, 106, 0.25)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="22"
+                        height="22"
+                        fill="none"
+                        stroke="var(--accent, #D4AF6A)"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3
+                        style={{
+                          fontFamily: 'var(--font-sans, "DM Sans", sans-serif)',
+                          fontSize: '0.95rem',
+                          fontWeight: 700,
+                          color: 'var(--primary, #061D15)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.04em',
+                          marginBottom: '0.4rem',
+                        }}
+                      >
+                        Jaipur Office
+                      </h3>
+                      <p
+                        style={{
+                          color: 'var(--text-muted, #6E6862)',
+                          fontSize: '0.9rem',
+                          lineHeight: 1.6,
+                          margin: 0,
+                        }}
+                      >
+                        2nd Floor 35/69, Rajat Path, Sector 3,<br />
+                        Mansarovar, Jaipur, Rajasthan 302020
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Contact Us On Card */}
-            <div
-              style={{
-                backgroundColor: 'var(--bg-card, #FFFFFF)',
-                border: '1px solid var(--border-color, #EAE7E0)',
-                borderRadius: '8px',
-                padding: '1.75rem',
-                marginBottom: '2rem',
-                boxShadow: 'var(--shadow-sm, 0 4px 12px rgba(18, 24, 21, 0.03))',
-                transition: 'all 0.3s ease',
-              }}
-            >
-              <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+                {/* Contact Us On Card */}
                 <div
                   style={{
-                    width: '46px',
-                    height: '46px',
+                    backgroundColor: 'var(--bg-card, #FFFFFF)',
+                    border: '1px solid var(--border-color, #EAE7E0)',
                     borderRadius: '8px',
-                    background: 'rgba(212, 175, 106, 0.12)',
-                    border: '1px solid rgba(212, 175, 106, 0.25)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
+                    padding: '1.75rem',
+                    marginBottom: '2rem',
+                    boxShadow: 'var(--shadow-sm, 0 4px 12px rgba(18, 24, 21, 0.03))',
+                    transition: 'all 0.3s ease',
                   }}
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="22"
-                    height="22"
-                    fill="none"
-                    stroke="var(--accent, #D4AF6A)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3
-                    style={{
-                      fontFamily: 'var(--font-sans, "DM Sans", sans-serif)',
-                      fontSize: '0.95rem',
-                      fontWeight: 700,
-                      color: 'var(--primary, #061D15)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.04em',
-                      marginBottom: '0.4rem',
-                    }}
-                  >
-                    Contact Us On
-                  </h3>
-                  <p
-                    style={{
-                      color: 'var(--text-muted, #6E6862)',
-                      fontSize: '0.9rem',
-                      lineHeight: 1.6,
-                      margin: 0,
-                    }}
-                  >
-                    Email:{' '}
-                    <a
-                      href="mailto:sales@income-estate.com"
-                      style={{ color: 'var(--accent, #D4AF6A)', fontWeight: 600 }}
+                  <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}>
+                    <div
+                      style={{
+                        width: '46px',
+                        height: '46px',
+                        borderRadius: '8px',
+                        background: 'rgba(212, 175, 106, 0.12)',
+                        border: '1px solid rgba(212, 175, 106, 0.25)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
                     >
-                      sales@income-estate.com
-                    </a>
-                    <br />
-                    Phone:{' '}
-                    <a
-                      href="tel:+917665212212"
-                      style={{ color: 'var(--accent, #D4AF6A)', fontWeight: 600 }}
-                    >
-                      +91 7665212212
-                    </a>
-                  </p>
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="22"
+                        height="22"
+                        fill="none"
+                        stroke="var(--accent, #D4AF6A)"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3
+                        style={{
+                          fontFamily: 'var(--font-sans, "DM Sans", sans-serif)',
+                          fontSize: '0.95rem',
+                          fontWeight: 700,
+                          color: 'var(--primary, #061D15)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.04em',
+                          marginBottom: '0.4rem',
+                        }}
+                      >
+                        Contact Us On
+                      </h3>
+                      <p
+                        style={{
+                          color: 'var(--text-muted, #6E6862)',
+                          fontSize: '0.9rem',
+                          lineHeight: 1.6,
+                          margin: 0,
+                        }}
+                      >
+                        Email:{' '}
+                        <a
+                          href="mailto:sales@income-estate.com"
+                          style={{ color: 'var(--accent, #D4AF6A)', fontWeight: 600 }}
+                        >
+                          sales@income-estate.com
+                        </a>
+                        <br />
+                        Phone:{' '}
+                        <a
+                          href="tel:+917665212212"
+                          style={{ color: 'var(--accent, #D4AF6A)', fontWeight: 600 }}
+                        >
+                          +91 7665212212
+                        </a>
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
 
             {/* Google Map Embed */}
             <div

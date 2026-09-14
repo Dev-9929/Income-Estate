@@ -60,11 +60,6 @@ export const resourcesMegaMenu: MegaMenuData = {
       desc: 'Insights, articles, and expert guides on real estate investing.',
       href: '/blogs',
     },
-    {
-      title: 'News & Updates',
-      desc: 'Latest news on resort fractional share regulations and growth.',
-      href: '/blogs',
-    },
   ],
 }
 

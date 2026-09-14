@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import { generateWPSEOMetadata, YoastJsonLd } from '@/lib/seo'
-import { getWordPressPageBySlug } from '@/lib/wordpress'
+import { getWordPressPageBySlug, getAboutPageDynamicData } from '@/lib/wordpress'
 import { AboutClient } from './AboutClient'
 
 export const revalidate = 60
@@ -21,11 +21,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AboutPage() {
   const wpPage = (await getWordPressPageBySlug('about')) || (await getWordPressPageBySlug('about-us'))
+  const aboutData = await getAboutPageDynamicData()
 
   return (
     <>
       <YoastJsonLd schemaRaw={wpPage?.seo?.schema?.raw} />
-      <AboutClient />
+      <AboutClient aboutData={aboutData} />
     </>
   )
 }

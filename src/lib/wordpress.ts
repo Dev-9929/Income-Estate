@@ -1,6 +1,17 @@
 import { BlogPostItem, blogsListingData, getBlogBySlug } from '@/data/blogs-data'
+import { NewsPostItem, newsListingData, getNewsBySlug } from '@/data/news-data'
 import { PropertyListingItem, propertiesListingData, brandedResidencesListingData } from '@/data/properties-data'
-import { PropertyCarouselItem, BrandedResidenceItem } from '@/data/home-data'
+import {
+  PropertyCarouselItem,
+  BrandedResidenceItem,
+  HomePageDynamicData,
+  heroSlidesData,
+  topStatsData,
+  conceptPillarsData,
+  timelineStepsData,
+  testimonialsData,
+  faqData,
+} from '@/data/home-data'
 import {
   PropertyDetailItem,
   getPropertyDetailBySlug,
@@ -353,6 +364,183 @@ export async function getLiveBlogPostBySlug(slug: string): Promise<WPBlogPostNod
     return data?.post || null
   } catch (error) {
     console.error(`Error fetching WordPress blog post with slug "${slug}":`, error)
+    return null
+  }
+}
+
+export const GET_ALL_NEWS_ITEMS_QUERY = `
+  query GetAllNewsItems {
+    newsItems(first: 100, where: { orderby: { field: DATE, order: DESC } }) {
+      nodes {
+        title
+        slug
+        excerpt
+        date
+        content
+        categories: newsCategories {
+          nodes {
+            name
+            slug
+          }
+        }
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
+        seo {
+          title
+          metaDesc
+          canonical
+          schema {
+            raw
+          }
+        }
+      }
+    }
+  }
+`
+
+export const GET_NEWS_ITEM_BY_SLUG_QUERY = `
+  query GetNewsItemBySlug($slug: ID!) {
+    newsItem(id: $slug, idType: SLUG) {
+      title
+      slug
+      excerpt
+      date
+      content
+      categories: newsCategories {
+        nodes {
+          name
+          slug
+        }
+      }
+      featuredImage {
+        node {
+          sourceUrl
+          altText
+        }
+      }
+      seo {
+        title
+        metaDesc
+        canonical
+        schema {
+          raw
+        }
+      }
+    }
+  }
+`
+
+export interface WPNewsItemsResponse {
+  newsItems?: {
+    nodes?: WPBlogPostNode[]
+  }
+}
+
+export interface WPNewsItemBySlugResponse {
+  newsItem?: WPBlogPostNode | null
+}
+
+export async function getAllLiveNewsPosts(): Promise<WPBlogPostNode[]> {
+  try {
+    // 1. First try querying WPGraphQL for Custom Post Type "newsItems"
+    const newsData = await fetchGraphQL<WPNewsItemsResponse>(GET_ALL_NEWS_ITEMS_QUERY)
+    const newsNodes = newsData?.newsItems?.nodes || []
+    if (newsNodes.length > 0) {
+      return newsNodes.filter((item) => item.slug)
+    }
+
+    // 2. Fallback to local structured news dataset if WP CPT has no posts or is pending
+    return newsListingData.map((news) => ({
+      title: news.title,
+      slug: news.slug,
+      excerpt: news.excerpt,
+      date: news.date,
+      content: news.contentHtml,
+      categories: {
+        nodes: [{ name: news.category, slug: news.category.toLowerCase().replace(/\s+/g, '-') }],
+      },
+      featuredImage: {
+        node: {
+          sourceUrl: news.image,
+          altText: news.title,
+        },
+      },
+    }))
+  } catch (error) {
+    console.error('Error fetching live WordPress news items:', error)
+    return newsListingData.map((news) => ({
+      title: news.title,
+      slug: news.slug,
+      excerpt: news.excerpt,
+      date: news.date,
+      content: news.contentHtml,
+      categories: {
+        nodes: [{ name: news.category, slug: news.category.toLowerCase().replace(/\s+/g, '-') }],
+      },
+      featuredImage: {
+        node: {
+          sourceUrl: news.image,
+          altText: news.title,
+        },
+      },
+    }))
+  }
+}
+
+export async function getLiveNewsPostBySlug(slug: string): Promise<WPBlogPostNode | null> {
+  if (!slug || slug.toLowerCase() === 'hello-world') return null
+
+  try {
+    // 1. Try fetching from WPGraphQL newsItem by slug
+    const data = await fetchGraphQL<WPNewsItemBySlugResponse>(GET_NEWS_ITEM_BY_SLUG_QUERY, { slug })
+    if (data?.newsItem) return data.newsItem
+
+    // 2. Fallback to local news dataset
+    const localNews = getNewsBySlug(slug)
+    if (localNews) {
+      return {
+        title: localNews.title,
+        slug: localNews.slug,
+        excerpt: localNews.excerpt,
+        date: localNews.date,
+        content: localNews.contentHtml,
+        categories: {
+          nodes: [{ name: localNews.category, slug: localNews.category.toLowerCase().replace(/\s+/g, '-') }],
+        },
+        featuredImage: {
+          node: {
+            sourceUrl: localNews.image,
+            altText: localNews.title,
+          },
+        },
+      }
+    }
+    return null
+  } catch (error) {
+    console.error(`Error fetching WordPress news item with slug "${slug}":`, error)
+    const localNews = getNewsBySlug(slug)
+    if (localNews) {
+      return {
+        title: localNews.title,
+        slug: localNews.slug,
+        excerpt: localNews.excerpt,
+        date: localNews.date,
+        content: localNews.contentHtml,
+        categories: {
+          nodes: [{ name: localNews.category, slug: localNews.category.toLowerCase().replace(/\s+/g, '-') }],
+        },
+        featuredImage: {
+          node: {
+            sourceUrl: localNews.image,
+            altText: localNews.title,
+          },
+        },
+      }
+    }
     return null
   }
 }
@@ -1144,4 +1332,405 @@ export async function getWordPressPageBySlug(slug: string): Promise<WPPageNode |
     console.warn(`WPGraphQL page fetch failed for slug "${slug}":`, err)
   }
   return null
+}
+
+export interface WPHomePageFields {
+  heroSlides?: Array<{
+    title?: string
+    subtitle?: string
+    ctaText?: string
+    ctaLink?: string
+    bgLeft?: string
+    bgRight?: string
+  }>
+  topStats?: Array<{
+    num?: string
+    label?: string
+    icon?: 'roi' | 'investment' | 'managed'
+  }>
+  conceptPillars?: Array<{
+    num?: string
+    title?: string
+    description?: string
+  }>
+  processSteps?: Array<{
+    num?: string
+    title?: string
+    description?: string
+  }>
+  testimonials?: Array<{
+    quote?: string
+    author?: string
+    info?: string
+  }>
+  faqs?: Array<{
+    question?: string
+    answer?: string
+  }>
+}
+
+export interface WPHomePageNode extends WPPageNode {
+  homePage?: WPHomePageFields
+}
+
+export interface WPHomePageResponse {
+  page?: WPHomePageNode | null
+}
+
+export const GET_HOME_PAGE_DATA_QUERY = `
+  query GetHomePageData {
+    page(id: "home", idType: URI) {
+      id
+      title
+      slug
+      homePage {
+        heroSlides {
+          title
+          subtitle
+          ctaText
+          ctaLink
+          bgLeft
+          bgRight
+        }
+        topStats {
+          num
+          label
+          icon
+        }
+        conceptPillars {
+          num
+          title
+          description
+        }
+        processSteps {
+          num
+          title
+          description
+        }
+        testimonials {
+          quote
+          author
+          info
+        }
+        faqs {
+          question
+          answer
+        }
+      }
+    }
+  }
+`
+
+export async function getHomePageDynamicData(): Promise<HomePageDynamicData> {
+  try {
+    const data = await fetchGraphQL<WPHomePageResponse>(GET_HOME_PAGE_DATA_QUERY)
+    const homeFields = data?.page?.homePage
+
+    return {
+      heroSlides:
+        homeFields?.heroSlides && homeFields.heroSlides.length > 0
+          ? homeFields.heroSlides.map((s, idx) => ({
+              id: `slide-${idx + 1}`,
+              title: s.title || 'RESIDENCE',
+              subtitle: s.subtitle || '',
+              ctaText: s.ctaText || 'Explore Projects',
+              ctaLink: s.ctaLink || '#projects',
+              bgLeft: s.bgLeft || '/assets/hero_resort.png',
+              bgRight: s.bgRight || '/assets/wordpress_media/mansion_g5c9re.webp',
+              bgLeftAlt: s.title || 'Resort Asset',
+              bgRightAlt: 'Luxury Lifestyle',
+            }))
+          : heroSlidesData,
+      topStats:
+        homeFields?.topStats && homeFields.topStats.length > 0
+          ? homeFields.topStats.map((st) => ({
+              num: st.num || '',
+              label: st.label || '',
+              icon: (st.icon || 'roi') as 'roi' | 'investment' | 'managed',
+            }))
+          : topStatsData,
+      conceptPillars:
+        homeFields?.conceptPillars && homeFields.conceptPillars.length > 0
+          ? homeFields.conceptPillars.map((cp) => ({
+              num: cp.num || '01',
+              title: cp.title || '',
+              description: cp.description || '',
+            }))
+          : conceptPillarsData,
+      processSteps:
+        homeFields?.processSteps && homeFields.processSteps.length > 0
+          ? homeFields.processSteps.map((ps) => ({
+              num: ps.num || '01',
+              title: ps.title || '',
+              description: ps.description || '',
+            }))
+          : timelineStepsData,
+      testimonials:
+        homeFields?.testimonials && homeFields.testimonials.length > 0
+          ? homeFields.testimonials.map((t, tIdx) => ({
+              id: `t-${tIdx + 1}`,
+              quote: t.quote || '',
+              author: t.author || '',
+              info: t.info || '',
+            }))
+          : testimonialsData,
+      faqs:
+        homeFields?.faqs && homeFields.faqs.length > 0
+          ? homeFields.faqs.map((f, fIdx) => ({
+              id: `faq-${fIdx + 1}`,
+              question: f.question || '',
+              answer: f.answer || '',
+            }))
+          : faqData,
+    }
+  } catch (error) {
+    console.warn('WPGraphQL homePage fetch failed, using fallback home data:', error)
+    return {
+      heroSlides: heroSlidesData,
+      topStats: topStatsData,
+      conceptPillars: conceptPillarsData,
+      processSteps: timelineStepsData,
+      testimonials: testimonialsData,
+      faqs: faqData,
+    }
+  }
+}
+
+/* ==========================================================================
+   ABOUT US PAGE DYNAMIC DATA
+   ========================================================================== */
+export interface AboutPageDynamicData {
+  storyTitle?: string
+  storySubtitle?: string
+  storyParagraphs?: string[]
+  founders?: Array<{
+    name: string
+    photo: string
+    bio: string
+    quote?: string
+  }>
+  pillars?: Array<{
+    num: string
+    title: string
+    description: string
+  }>
+}
+
+export const GET_ABOUT_PAGE_DATA_QUERY = `
+  query GetAboutPageData {
+    page(id: "about", idType: URI) {
+      aboutUsPage {
+        storyTitle
+        storySubtitle
+        storyParagraphs {
+          text
+        }
+        founders {
+          name
+          photo
+          bio
+          quote
+        }
+        pillars {
+          num
+          title
+          description
+        }
+      }
+    }
+  }
+`
+
+export async function getAboutPageDynamicData(): Promise<AboutPageDynamicData> {
+  try {
+    const data = await fetchGraphQL<{ page?: { aboutUsPage?: any } }>(GET_ABOUT_PAGE_DATA_QUERY)
+    const aboutFields = data?.page?.aboutUsPage
+
+    return {
+      storyTitle: aboutFields?.storyTitle || 'Our Story',
+      storySubtitle:
+        aboutFields?.storySubtitle ||
+        'Every strong venture begins with a gap in the market and more importantly, the experience to recognize it.',
+      storyParagraphs:
+        aboutFields?.storyParagraphs && aboutFields.storyParagraphs.length > 0
+          ? aboutFields.storyParagraphs.map((p: any) => p.text).filter(Boolean)
+          : undefined,
+      founders:
+        aboutFields?.founders && aboutFields.founders.length > 0
+          ? aboutFields.founders
+          : undefined,
+      pillars:
+        aboutFields?.pillars && aboutFields.pillars.length > 0
+          ? aboutFields.pillars
+          : undefined,
+    }
+  } catch (error) {
+    console.warn('WPGraphQL aboutUsPage fetch failed, using fallbacks:', error)
+    return {}
+  }
+}
+
+/* ==========================================================================
+   HOW IT WORKS PAGE DYNAMIC DATA
+   ========================================================================== */
+export interface HowItWorksPageDynamicData {
+  heroTitle?: string
+  heroSubtitle?: string
+  steps?: Array<{
+    stepNum: string
+    title: string
+    description: string
+    highlight?: string
+  }>
+}
+
+export const GET_HOW_IT_WORKS_DATA_QUERY = `
+  query GetHowItWorksPageData {
+    page(id: "how-it-works", idType: URI) {
+      howItWorksPage {
+        heroTitle
+        heroSubtitle
+        steps {
+          stepNum
+          title
+          description
+          highlight
+        }
+      }
+    }
+  }
+`
+
+export async function getHowItWorksPageDynamicData(): Promise<HowItWorksPageDynamicData> {
+  try {
+    const data = await fetchGraphQL<{ page?: { howItWorksPage?: any } }>(GET_HOW_IT_WORKS_DATA_QUERY)
+    const hiwFields = data?.page?.howItWorksPage
+
+    return {
+      heroTitle: hiwFields?.heroTitle || 'HOW IT WORKS',
+      heroSubtitle: hiwFields?.heroSubtitle || undefined,
+      steps: hiwFields?.steps && hiwFields.steps.length > 0 ? hiwFields.steps : undefined,
+    }
+  } catch (error) {
+    console.warn('WPGraphQL howItWorksPage fetch failed, using fallbacks:', error)
+    return {}
+  }
+}
+
+/* ==========================================================================
+   SERVICES PAGE DYNAMIC DATA
+   ========================================================================== */
+export interface ServiceItemData {
+  title: string
+  description: string
+  features?: string[]
+}
+
+export interface ServicesPageDynamicData {
+  heroTitle?: string
+  heroSubtitle?: string
+  investorServices?: ServiceItemData[]
+  developerServices?: ServiceItemData[]
+}
+
+export const GET_SERVICES_PAGE_DATA_QUERY = `
+  query GetServicesPageData {
+    page(id: "services", idType: URI) {
+      servicesPage {
+        heroTitle
+        heroSubtitle
+        investorServices {
+          title
+          description
+          features
+        }
+        developerServices {
+          title
+          description
+          features
+        }
+      }
+    }
+  }
+`
+
+export async function getServicesPageDynamicData(): Promise<ServicesPageDynamicData> {
+  try {
+    const data = await fetchGraphQL<{ page?: { servicesPage?: any } }>(GET_SERVICES_PAGE_DATA_QUERY)
+    const servFields = data?.page?.servicesPage
+
+    return {
+      heroTitle: servFields?.heroTitle || 'OUR SERVICES',
+      heroSubtitle: servFields?.heroSubtitle || undefined,
+      investorServices:
+        servFields?.investorServices && servFields.investorServices.length > 0
+          ? servFields.investorServices.map((s: any) => ({
+              title: s.title || '',
+              description: s.description || '',
+              features: typeof s.features === 'string' ? s.features.split('\n').filter(Boolean) : [],
+            }))
+          : undefined,
+      developerServices:
+        servFields?.developerServices && servFields.developerServices.length > 0
+          ? servFields.developerServices.map((s: any) => ({
+              title: s.title || '',
+              description: s.description || '',
+              features: typeof s.features === 'string' ? s.features.split('\n').filter(Boolean) : [],
+            }))
+          : undefined,
+    }
+  } catch (error) {
+    console.warn('WPGraphQL servicesPage fetch failed, using fallbacks:', error)
+    return {}
+  }
+}
+
+/* ==========================================================================
+   CONTACT PAGE DYNAMIC DATA
+   ========================================================================== */
+export interface OfficeLocationData {
+  city: string
+  address: string
+  phone: string
+  email: string
+}
+
+export interface ContactPageDynamicData {
+  heroTitle?: string
+  heroSubtitle?: string
+  offices?: OfficeLocationData[]
+}
+
+export const GET_CONTACT_PAGE_DATA_QUERY = `
+  query GetContactPageData {
+    page(id: "contact", idType: URI) {
+      contactPage {
+        heroTitle
+        heroSubtitle
+        offices {
+          city
+          address
+          phone
+          email
+        }
+      }
+    }
+  }
+`
+
+export async function getContactPageDynamicData(): Promise<ContactPageDynamicData> {
+  try {
+    const data = await fetchGraphQL<{ page?: { contactPage?: any } }>(GET_CONTACT_PAGE_DATA_QUERY)
+    const contactFields = data?.page?.contactPage
+
+    return {
+      heroTitle: contactFields?.heroTitle || 'CONTACT US',
+      heroSubtitle: contactFields?.heroSubtitle || undefined,
+      offices:
+        contactFields?.offices && contactFields.offices.length > 0 ? contactFields.offices : undefined,
+    }
+  } catch (error) {
+    console.warn('WPGraphQL contactPage fetch failed, using fallbacks:', error)
+    return {}
+  }
 }

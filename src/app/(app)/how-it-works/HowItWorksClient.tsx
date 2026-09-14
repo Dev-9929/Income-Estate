@@ -7,6 +7,8 @@ import { Footer } from '@/components/layout/Footer'
 import { PreFooterCta } from '@/components/home/PreFooterCta'
 import { CalculatorModal } from '@/components/modals/CalculatorModal'
 
+import { HowItWorksPageDynamicData } from '@/lib/wordpress'
+
 interface StepDetail {
   num: string
   label: string
@@ -17,7 +19,7 @@ interface StepDetail {
   checklist: string[]
 }
 
-const stepsData: StepDetail[] = [
+const defaultStepsData: StepDetail[] = [
   {
     num: '01',
     label: 'Explore',
@@ -90,9 +92,33 @@ const stepsData: StepDetail[] = [
   },
 ]
 
-export function HowItWorksClient() {
+interface HowItWorksClientProps {
+  howItWorksData?: HowItWorksPageDynamicData
+}
+
+export function HowItWorksClient({ howItWorksData }: HowItWorksClientProps) {
   const [activeStep, setActiveStep] = useState(1)
   const [isCalcOpen, setIsCalcOpen] = useState(false)
+
+  const stepsData: StepDetail[] =
+    howItWorksData?.steps && howItWorksData.steps.length > 0
+      ? howItWorksData.steps.map((st, idx) => {
+          const fallback = defaultStepsData[idx] || defaultStepsData[0]
+          return {
+            num: st.stepNum || `0${idx + 1}`,
+            label: st.title.split(' ')[0] || `Step ${idx + 1}`,
+            badge: `Step 0${idx + 1}`,
+            title: st.title || fallback.title,
+            desc: st.description || fallback.desc,
+            image: fallback.image,
+            checklist: st.highlight
+              ? st.highlight.split('\n').filter(Boolean)
+              : fallback.checklist,
+          }
+        })
+      : defaultStepsData
+
+  const heroTitle = howItWorksData?.heroTitle || 'HOW IT WORKS'
 
   const currentStepData = stepsData[activeStep - 1] || stepsData[0]
 
@@ -103,7 +129,7 @@ export function HowItWorksClient() {
 
       {/* Hero Banner */}
       <section className="how-it-works-hero">
-        <h1 className="how-it-works-hero-title">HOW IT WORKS</h1>
+        <h1 className="how-it-works-hero-title">{heroTitle}</h1>
       </section>
 
       {/* Main Content */}
