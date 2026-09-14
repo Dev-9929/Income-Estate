@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import '../globals.css'
 import '@/styles/income-estate.css'
 import { CinematicIntro } from '@/components/layout/CinematicIntro'
+import { ScrollToTop } from '@/components/layout/ScrollToTop'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'https://income-estate.com'),
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body style={{ fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif" }}>
         <CinematicIntro />
         {children}
+        <ScrollToTop />
       </body>
     </html>
   )

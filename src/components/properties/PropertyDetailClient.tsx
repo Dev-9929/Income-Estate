@@ -193,6 +193,7 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
   const [honeypot, setHoneypot] = useState('')
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [constSlideIdx, setConstSlideIdx] = useState(0)
+  const [mobileConstIdx, setMobileConstIdx] = useState(0)
   const [activeVideoIdx, setActiveVideoIdx] = useState(0)
   const [isPlayingVideo, setIsPlayingVideo] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -973,7 +974,8 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
             </p>
           </div>
 
-          <div className="pd2-const-carousel-wrap">
+          {/* Desktop View: Multi-Image Carousel Track */}
+          <div className="hidden md:block pd2-const-carousel-wrap">
             {totalConst > 4 && (
               <button
                 type="button"
@@ -1021,9 +1023,9 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
             )}
           </div>
 
-          {/* Dots Pagination Navigation */}
+          {/* Desktop Dots Pagination Navigation */}
           {totalConst > 4 && (
-            <div className="pd2-const-dots">
+            <div className="hidden md:flex pd2-const-dots">
               {Array.from({ length: maxConstIndex + 1 }).map((_, dotIdx) => (
                 <button
                   key={dotIdx}
@@ -1035,6 +1037,71 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
               ))}
             </div>
           )}
+
+          {/* Mobile View: Single-Image Touch Carousel */}
+          <div className="block md:hidden mt-2">
+            {totalConst > 0 && (
+              <div className="relative w-full rounded-2xl overflow-hidden shadow-xl border border-black/10 bg-slate-900 h-72">
+                <img
+                  src={constStages[mobileConstIdx]?.image}
+                  alt={`Construction Stage ${mobileConstIdx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+                {constStages[mobileConstIdx]?.overlay && (
+                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/50 to-transparent text-white">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#D4AF6A] bg-black/60 px-3 py-1 rounded border border-[#D4AF6A]/40 backdrop-blur-md">
+                      {constStages[mobileConstIdx].overlay}
+                    </span>
+                  </div>
+                )}
+
+                {/* Left Arrow */}
+                {totalConst > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setMobileConstIdx((prev) => (prev === 0 ? totalConst - 1 : prev - 1))}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/65 text-white flex items-center justify-center backdrop-blur-md border border-white/20 active:scale-95 transition-all shadow-lg"
+                    aria-label="Previous image"
+                  >
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                  </button>
+                )}
+
+                {/* Right Arrow */}
+                {totalConst > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setMobileConstIdx((prev) => (prev === totalConst - 1 ? 0 : prev + 1))}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/65 text-white flex items-center justify-center backdrop-blur-md border border-white/20 active:scale-95 transition-all shadow-lg"
+                    aria-label="Next image"
+                  >
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Mobile Carousel Dots */}
+            {totalConst > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-4">
+                {constStages.map((_, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setMobileConstIdx(idx)}
+                    className={`h-2.5 rounded-full transition-all duration-300 ${
+                      mobileConstIdx === idx ? 'w-7 bg-[#D4AF6A]' : 'w-2.5 bg-black/20'
+                    }`}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

@@ -12553,22 +12553,38 @@ main.container.section-padding {
     line-height: 1.65;
   }
 
-  .pd2-payment-cta {
-    margin-top: 1.25rem;
+  .pd2-payment-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.75rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212, 175, 106, 0.5) rgba(255, 255, 255, 0.05);
+  }
+
+  .pd2-payment-table {
+    width: 100%;
+    min-width: 540px;
+    border-collapse: collapse;
   }
 
   .pd2-payment-table th {
-    font-size: 0.58rem;
-    padding: 0 0 0.75rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 0.85rem 0.85rem;
+    white-space: nowrap;
   }
 
   .pd2-payment-table td {
-    font-size: 0.78rem;
-    padding: 0.85rem 0;
+    font-size: 0.85rem;
+    padding: 1rem 0.85rem;
+    white-space: nowrap;
   }
 
   .pd2-payment-table td:last-child {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
+    padding-left: 1.5rem;
+    white-space: nowrap;
   }
 
   /* --- 9. CONSTRUCTION PROGRESS --- */
@@ -12596,6 +12612,11 @@ main.container.section-padding {
     max-width: 100% !important;
     font-size: 0.82rem;
     line-height: 1.6;
+  }
+
+  .pd2-const-carousel-wrap,
+  .pd2-const-dots {
+    display: none !important;
   }
 
   .pd2-construction-grid {
