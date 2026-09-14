@@ -1086,6 +1086,14 @@ function ie_register_property_page_scf_fields() {
 							'graphql_field_name' => 'percent',
 						),
 						array(
+							'key'                => 'field_pd_payment_plan_amount',
+							'label'              => 'Amount (INR) (e.g. ₹ 27,50,000)',
+							'name'               => 'amount',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'amount',
+						),
+						array(
 							'key'                => 'field_pd_payment_plan_is_highlight',
 							'label'              => 'Highlight Milestone',
 							'name'               => 'is_highlight',

@@ -172,7 +172,7 @@ export function Footer() {
 
             {/* Instagram */}
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/income.estate"
               target="_blank"
               rel="noreferrer"
               className="footer-social-icon"
@@ -185,7 +185,7 @@ export function Footer() {
 
             {/* LinkedIn */}
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/company/income-estate/"
               target="_blank"
               rel="noreferrer"
               className="footer-social-icon"
