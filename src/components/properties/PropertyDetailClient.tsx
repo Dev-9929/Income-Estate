@@ -524,17 +524,28 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
            FACTS STRIP — SPECIFICATIONS & SNAPSHOT
       ============================================================ */}
       <div className="pd2-facts-strip">
-        <div className="pd2-facts-inner">
+        <div
+          className="pd2-facts-inner"
+          style={{ '--fact-count': property.facts.length } as React.CSSProperties}
+        >
           <div className="pd2-fact-lead">
             <span className="pd2-fact-lead-tag">At a Glance</span>
             <h3 className="pd2-fact-lead-title">Key Specifications</h3>
           </div>
-          {property.facts.map((fact, idx) => (
-            <div key={idx} className="pd2-fact">
-              <span className="pd2-fact-val">{fact.val}</span>
-              <span className="pd2-fact-lbl">{fact.lbl}</span>
-            </div>
-          ))}
+          {property.facts.map((fact, idx) => {
+            const rawVal = fact.val ? fact.val.trim() : ''
+            const len = rawVal.length
+            const valClass = len <= 5 ? 'pd2-fact-val-lg' : len <= 11 ? 'pd2-fact-val-md' : 'pd2-fact-val-sm'
+
+            return (
+              <div key={idx} className="pd2-fact">
+                <div className="pd2-fact-val-wrap">
+                  <span className={`pd2-fact-val ${valClass}`}>{rawVal}</span>
+                </div>
+                <span className="pd2-fact-lbl">{fact.lbl}</span>
+              </div>
+            )
+          })}
         </div>
       </div>
 
