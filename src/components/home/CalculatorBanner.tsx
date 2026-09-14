@@ -14,7 +14,7 @@ export function CalculatorBanner({ onOpenCalculator }: CalculatorBannerProps) {
       style={{
         backgroundColor: '#FFFFFF',
         borderTop: '1px solid var(--border-color)',
-        padding: '5rem 0',
+        padding: '4rem 0',
       }}
     >
       <div className="container">

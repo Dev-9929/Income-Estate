@@ -21,7 +21,7 @@ export function ProcessTimeline({ steps = timelineStepsData }: ProcessTimelinePr
         {/* Section Header */}
         <div
           className="section-title-group center text-center"
-          style={{ maxWidth: '800px', margin: '0 auto 5rem auto' }}
+          style={{ maxWidth: '800px', margin: '0 auto 3rem auto' }}
         >
           <span className="editorial-tag">Simple Process</span>
           <h2 className="editorial-title">

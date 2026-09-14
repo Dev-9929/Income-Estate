@@ -1089,7 +1089,7 @@ button {
   background-size: cover;
   background-position: center;
   color: var(--text-light);
-  padding: 6rem 0 2rem 0;
+  padding: 4rem 0 2rem 0;
   font-size: 0.9rem;
   overflow: hidden;
 }
@@ -2197,7 +2197,7 @@ button {
 .comparison-section {
   position: relative;
   background-color: #FFFFFF;
-  padding: 8rem 0;
+  padding: 4.25rem 0;
   overflow: hidden;
 }
 
@@ -2489,7 +2489,7 @@ button {
     radial-gradient(circle at 50% 0%, rgba(212, 175, 106, 0.15) 0%, transparent 55%),
     linear-gradient(135deg, #0B261D 0%, #061A13 50%, #04120D 100%);
   position: relative;
-  padding: 5rem 0 4.5rem 0;
+  padding: 4rem 0;
   overflow: hidden;
   border-top: 1px solid rgba(212, 175, 106, 0.2);
   border-bottom: 1px solid rgba(212, 175, 106, 0.2);
@@ -3581,7 +3581,7 @@ textarea.form-input {
   color: var(--text-light);
   text-align: center;
   overflow: hidden;
-  padding: 8rem 0;
+  padding: 4.25rem 0;
 }
 
 .pre-footer-bg {
@@ -5581,7 +5581,7 @@ main.container.section-padding {
 .services-statement-sec {
   background-color: #FFFFFF;
   border-bottom: 1px solid var(--border-color);
-  padding: 5rem 0;
+  padding: 4rem 0;
 }
 
 .services-statement-grid {
@@ -5608,7 +5608,7 @@ main.container.section-padding {
 /* B2C Section */
 .services-b2c-sec {
   background-color: var(--bg-neutral);
-  padding: 5.5rem 0;
+  padding: 4rem 0;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -5728,7 +5728,7 @@ main.container.section-padding {
 .services-b2b-sec {
   background-color: var(--primary);
   color: #FFFFFF;
-  padding: 5.5rem 0;
+  padding: 4rem 0;
 }
 
 .services-b2b-sec .services-sec-title {
@@ -6740,7 +6740,7 @@ main.container.section-padding {
 .branded-showcase-section {
   background-color: #FFFFFF;
   border-top: 1px solid var(--border-color);
-  padding: 5rem 0 4.5rem 0;
+  padding: 4rem 0;
 }
 
 .section-tag {
@@ -7684,8 +7684,8 @@ main.container.section-padding {
   background-color: #121815;
   color: #FFFFFF;
   border-radius: 4px;
-  padding: 5rem 4rem;
-  margin-top: 6rem;
+  padding: 4rem 3rem;
+  margin-top: 3.5rem;
 }
 
 .nri-flow-title-group {
@@ -7792,9 +7792,9 @@ main.container.section-padding {
 .trust-section {
   background-color: #121815;
   color: #FFFFFF;
-  padding: 5rem 0;
+  padding: 4rem 0;
   border-radius: 8px;
-  margin: 5rem 0 2rem 0;
+  margin: 3.5rem 0 2rem 0;
   position: relative;
   overflow: hidden;
 }
@@ -8013,7 +8013,7 @@ main.container.section-padding {
   background: linear-gradient(180deg, #091A14 0%, #040D0A 100%) !important;
   background-color: #061D15 !important;
   color: #FFFFFF !important;
-  padding: 5rem 0 3rem 0 !important;
+  padding: 4rem 0 2.5rem 0 !important;
   border-top: 1px solid rgba(204, 175, 114, 0.25) !important;
   position: relative !important;
   overflow: hidden !important;
@@ -9037,8 +9037,8 @@ main.container.section-padding {
   background-color: var(--primary);
   color: #FFFFFF;
   border-radius: 4px;
-  padding: 4.5rem 2rem;
-  margin-top: 6rem;
+  padding: 3.5rem 2rem;
+  margin-top: 3.5rem;
   text-align: center;
   max-width: 900px;
   margin-left: auto;
@@ -9194,6 +9194,40 @@ main.container.section-padding {
 
 .pd2-breadcrumb .cur {
   color: var(--accent);
+}
+
+.pd2-breadcrumbs {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6B7280;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+}
+
+.pd2-breadcrumbs a {
+  color: #6B7280;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.pd2-breadcrumbs a:hover {
+  color: var(--accent);
+}
+
+.pd2-breadcrumbs .sep {
+  color: var(--accent);
+  margin: 0 0.15rem;
+  font-size: 0.7rem;
+}
+
+.pd2-breadcrumbs .cur {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .pd2-hero-body {
@@ -9375,7 +9409,7 @@ main.container.section-padding {
 /* ====== EDITORIAL INTRO ====== */
 .pd2-intro {
   background: #FFFFFF;
-  padding: 6rem 0 5rem;
+  padding: 4rem 0;
 }
 
 .pd2-intro-inner {
@@ -9720,7 +9754,7 @@ main.container.section-padding {
 /* ====== GALLERY (EDITORIAL) ====== */
 .pd2-gallery {
   background: #F8F6F0;
-  padding: 6rem 0;
+  padding: 4rem 0;
 }
 
 .pd2-gallery-header {
@@ -10142,15 +10176,18 @@ main.container.section-padding {
   .pd2-overview-modal-box {
     max-height: 92vh;
   }
+
   .pd2-overview-modal-header,
   .pd2-overview-modal-body,
   .pd2-overview-modal-footer {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
   }
+
   .pd2-overview-highlights-grid {
     grid-template-columns: 1fr;
   }
+
   .pd2-lightbox-content {
     padding: 2rem 1rem;
   }
@@ -10235,9 +10272,6 @@ main.container.section-padding {
 /* ====== SPACE & PRICING SECTION ====== */
 .pd2-pricing {
   background: #F8F6F0;
-  padding: 6rem 0;
-  border-top: 1px solid rgba(6, 29, 21, 0.06);
-  border-bottom: 1px solid rgba(6, 29, 21, 0.06);
 }
 
 .pd2-pricing-inner {
@@ -10523,7 +10557,7 @@ main.container.section-padding {
 /* ====== PROPERTY VIDEOS & VIRTUAL TOUR (CLEAN REFERENCE DESIGN) ====== */
 .pd2-vtour-section {
   background: #F8F6F0;
-  padding: 5.5rem 0;
+  padding: 4rem 0;
 }
 
 .pd2-vtour-inner {
@@ -10720,12 +10754,15 @@ main.container.section-padding {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
+
   .pd2-vtour-inner {
     padding: 0 1.25rem;
   }
+
   .pd2-vtour-section {
     padding: 4rem 0;
   }
+
   .pd2-vtour-header {
     margin-bottom: 2rem;
   }
@@ -10734,7 +10771,7 @@ main.container.section-padding {
 /* ====== ROI SECTION ====== */
 .pd2-roi-section {
   background: #FFFFFF;
-  padding: 7rem 0;
+  padding: 4rem 0;
 }
 
 .pd2-roi-inner {
@@ -10919,7 +10956,7 @@ main.container.section-padding {
 /* ====== AMENITIES ====== */
 .pd2-amenities {
   background: var(--bg-neutral);
-  padding: 6.5rem 0;
+  padding: 4rem 0;
 }
 
 .pd2-amenities-inner {
@@ -11061,7 +11098,7 @@ main.container.section-padding {
 /* ====== LOCATION ====== */
 .pd2-location {
   background: #FFFFFF;
-  padding: 6rem 0;
+  padding: 4rem 0;
 }
 
 .pd2-location-inner {
@@ -11143,7 +11180,7 @@ main.container.section-padding {
 .pd2-payment {
   background: var(--primary);
   border-top: 1px solid rgba(212, 175, 106, 0.2);
-  padding: 6rem 0;
+  padding: 4rem 0;
 }
 
 .pd2-payment-inner {
@@ -11268,7 +11305,7 @@ main.container.section-padding {
 /* ====== CONSTRUCTION STATUS ====== */
 .pd2-construction {
   background: #F8F6F0;
-  padding: 6rem 0;
+  padding: 4rem 0;
 }
 
 .pd2-construction-inner {
@@ -11415,7 +11452,7 @@ main.container.section-padding {
 /* ====== ENQUIRE SECTION ====== */
 .pd2-enquire {
   background: var(--bg-neutral);
-  padding: 7rem 0;
+  padding: 4.25rem 0;
   border-top: 1px solid #EAE7E0;
 }
 
@@ -11657,7 +11694,7 @@ main.container.section-padding {
 /* ====== OTHER PROPERTIES ====== */
 .pd2-others {
   background: #F8F6F0;
-  padding: 6rem 0;
+  padding: 4rem 0;
   border-top: 1px solid #EAE7E0;
 }
 
@@ -11754,7 +11791,7 @@ main.container.section-padding {
 /* ====== FAQ ====== */
 .pd2-faq {
   background: #FFFFFF;
-  padding: 6rem 0;
+  padding: 4rem 0;
   border-top: 1px solid #EAE7E0;
 }
 
@@ -12247,7 +12284,7 @@ main.container.section-padding {
 
   /* --- 3. EDITORIAL INTRO --- */
   .pd2-intro {
-    padding: 4rem 0 5rem;
+    padding: 3rem 0;
   }
 
   .pd2-intro-inner {

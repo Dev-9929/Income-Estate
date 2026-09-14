@@ -10,7 +10,7 @@ export function PhilosophySection() {
       style={{
         backgroundColor: '#FAF9F6',
         borderTop: '1px solid #EAE7E0',
-        padding: '6rem 0',
+        padding: '4rem 0',
       }}
     >
       <div className="container philosophy-grid">

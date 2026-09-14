@@ -336,13 +336,7 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
           <div className="pd2-hero-text">
             <div className="pd2-hero-label">{property.heroLabel}</div>
             <h1 className="pd2-hero-name">
-              {property.title}
-              {property.titleAccent && (
-                <>
-                  <br />
-                  <em>{property.titleAccent}</em>
-                </>
-              )}
+              {property.title}{property.titleAccent ? ` ${property.titleAccent}` : ''}
             </h1>
             <div className="pd2-hero-sub">
               <svg viewBox="0 0 24 24" width="14" height="14">
@@ -433,11 +427,36 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
       <section className="pd2-intro">
         <div className="pd2-intro-inner">
           <div className="pd2-intro-left">
+            {/* Breadcrumbs */}
+            {(() => {
+              const activeCategorySlug = categorySlug || 'roi-properties'
+              const getCategoryTitle = (slug: string) => {
+                const cleanSlug = (slug || '').toLowerCase().trim()
+                if (cleanSlug === 'roi-properties') return 'ROI Properties'
+                if (cleanSlug === 'plots') return 'Plot Assets'
+                if (cleanSlug === 'fractions') return 'Fractional Ownership'
+                if (cleanSlug === 'villas') return 'Luxury Villas'
+                if (cleanSlug === 'pre-lease') return 'Pre-Leased Commercial'
+                if (cleanSlug === 'guaranteed-return') return 'Guaranteed Yield'
+                if (cleanSlug === 'residential') return 'Residential Assets'
+                if (cleanSlug === 'commercial') return 'Commercial Assets'
+                return cleanSlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+              }
+              const categoryTitleName = getCategoryTitle(activeCategorySlug)
+
+              return (
+                <nav className="breadcrumbs pd2-breadcrumbs" aria-label="breadcrumb">
+                  <Link href="/">HOME</Link>
+                  <span className="sep">&gt;</span>
+                  <Link href={`/${activeCategorySlug}`}>{categoryTitleName.toUpperCase()}</Link>
+                  <span className="sep">&gt;</span>
+                  <span className="cur">{property.title.toUpperCase()}</span>
+                </nav>
+              )
+            })()}
+
             <div className="pd2-tag-line">{property.overviewTag}</div>
-            <h2 className="pd2-intro-heading">
-              {property.overviewHeading}<br />
-              <em>{property.overviewHeadingAccent}</em>
-            </h2>
+            <h2 className="pd2-intro-heading">{property.overviewHeading}</h2>
             <p className="pd2-intro-text">{property.overviewText1}</p>
             <p className="pd2-intro-text">{property.overviewText2}</p>
 
@@ -1124,8 +1143,7 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
           <div className="pd2-enquire-left">
             <div className="pd2-tag-line">Get in Touch</div>
             <h2 className="pd2-enquire-heading">
-              Ready to Invest<br />
-              in <em>{property.title} {property.titleAccent || ''}?</em>
+              Ready to Invest in {property.title}{property.titleAccent ? ` ${property.titleAccent}` : ''}?
             </h2>
             <p className="pd2-enquire-text">
               Our dedicated investment advisors are available to walk you through yield projections, ownership

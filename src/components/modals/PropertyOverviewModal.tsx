@@ -60,7 +60,7 @@ export function PropertyOverviewModal({
         <div className="pd2-overview-modal-header">
           <div className="pd2-overview-modal-tag">{tag}</div>
           <h2 id="overview-modal-title" className="pd2-overview-modal-title">
-            {title} {titleAccent && <em>{titleAccent}</em>}
+            {title}{titleAccent ? ` ${titleAccent}` : ''}
           </h2>
           <button
             type="button"
