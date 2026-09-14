@@ -3,8 +3,10 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
-import { Search, X, ArrowRight, TrendingUp } from 'lucide-react'
+import Link from 'next/link'
+import { Search, X, ArrowRight, TrendingUp, Loader2, MapPin, Percent, Building } from 'lucide-react'
 import gsap from 'gsap'
+import { SearchResultItem } from '@/lib/search'
 
 interface NavSearchProps {
   isScrolled?: boolean
@@ -33,6 +35,10 @@ export function NavSearch({
   const [isFocused, setIsFocused] = useState(false)
   const [internalMobileOpen, setInternalMobileOpen] = useState(false)
   const [query, setQuery] = useState('')
+  const [debouncedQuery, setDebouncedQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<SearchResultItem[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [hasError, setHasError] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   const desktopInputRef = useRef<HTMLInputElement>(null)
@@ -45,6 +51,51 @@ export function NavSearch({
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // 300ms Debounce effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query.trim())
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [query])
+
+  // Fetch live search results when debounced query changes
+  useEffect(() => {
+    if (!debouncedQuery) {
+      setSearchResults([])
+      setIsLoading(false)
+      setHasError(false)
+      return
+    }
+
+    let isMounted = true
+    setIsLoading(true)
+    setHasError(false)
+
+    fetch(`/api/search?q=${encodeURIComponent(debouncedQuery)}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Search request failed')
+        return res.json()
+      })
+      .then((data) => {
+        if (isMounted) {
+          setSearchResults(data.results || [])
+          setIsLoading(false)
+        }
+      })
+      .catch((err) => {
+        console.warn('Live search fetch error:', err)
+        if (isMounted) {
+          setHasError(true)
+          setIsLoading(false)
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [debouncedQuery])
 
   const mobileOpen = onMobileToggle ? isMobileOpen : internalMobileOpen
 
@@ -65,7 +116,7 @@ export function NavSearch({
   useEffect(() => {
     if (!desktopFormRef.current || isMobileViewport()) return
 
-    const targetWidth = isExpanded ? 360 : 44
+    const targetWidth = isExpanded ? 380 : 44
 
     gsap.to(desktopFormRef.current, {
       width: targetWidth,
@@ -89,7 +140,7 @@ export function NavSearch({
   // Desktop GSAP Stagger Dropdown
   useEffect(() => {
     if (isFocused && desktopDropdownRef.current && !isMobileViewport()) {
-      const items = desktopDropdownRef.current.querySelectorAll('.trending-item')
+      const items = desktopDropdownRef.current.querySelectorAll('.trending-item, .search-result-card')
       gsap.fromTo(
         desktopDropdownRef.current,
         { opacity: 0, y: -8, scale: 0.98 },
@@ -101,7 +152,7 @@ export function NavSearch({
         { opacity: 1, y: 0, duration: 0.2, stagger: 0.03, delay: 0.05, ease: 'power2.out' }
       )
     }
-  }, [isFocused])
+  }, [isFocused, searchResults, isLoading])
 
   // Mobile Drawer GSAP Slide Down & Body Lock
   useEffect(() => {
@@ -144,7 +195,17 @@ export function NavSearch({
 
   const handleSuggestionClick = (suggestion: string) => {
     setQuery(suggestion)
-    router.push(`/properties?search=${encodeURIComponent(suggestion)}`)
+    setDebouncedQuery(suggestion)
+    setIsFocused(true)
+  }
+
+  const handleResultItemClick = (slug: string, category: string) => {
+    const cat =
+      category === 'branded-residences' || category === 'other-properties'
+        ? category
+        : 'roi-properties'
+    const targetUrl = `/${cat}/${slug}`
+    router.push(targetUrl)
     setIsFocused(false)
     setIsHovered(false)
     setMobileOpenState(false)
@@ -199,11 +260,18 @@ export function NavSearch({
             onClick={handleSearchIconClick}
             className="flex-shrink-0 flex items-center justify-center w-7 h-7 bg-transparent border-none p-0 focus:outline-none cursor-pointer"
           >
-            <Search
-              className="w-5 h-5 transition-transform duration-300 group-hover:scale-110"
-              color={isExpanded ? (isDarkScrolled ? '#061D15' : '#CCAF72') : iconColor}
-              strokeWidth={2}
-            />
+            {isLoading ? (
+              <Loader2
+                className="w-5 h-5 animate-spin"
+                color={isExpanded ? (isDarkScrolled ? '#061D15' : '#CCAF72') : iconColor}
+              />
+            ) : (
+              <Search
+                className="w-5 h-5 transition-transform duration-300 group-hover:scale-110"
+                color={isExpanded ? (isDarkScrolled ? '#061D15' : '#CCAF72') : iconColor}
+                strokeWidth={2}
+              />
+            )}
           </button>
 
           {/* Desktop Input */}
@@ -228,6 +296,8 @@ export function NavSearch({
               onClick={(e) => {
                 e.stopPropagation()
                 setQuery('')
+                setDebouncedQuery('')
+                setSearchResults([])
                 desktopInputRef.current?.focus()
               }}
               className={`p-1 rounded-full transition-colors mr-1 ${
@@ -243,7 +313,7 @@ export function NavSearch({
           {isExpanded && query.trim().length > 0 && (
             <button
               type="submit"
-              className="flex-shrink-0 w-7 h-7 rounded-full bg-[#CCAF72] hover:bg-amber-400 text-[#061D15] flex items-center justify-center transition-transform hover:scale-105 shadow-md"
+              className="flex-shrink-0 w-7 h-7 rounded-full bg-[#CCAF72] hover:bg-amber-400 text-[#061D15] flex items-center justify-center transition-transform hover:scale-105 shadow-md cursor-pointer"
               aria-label="Submit search"
             >
               <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -251,44 +321,124 @@ export function NavSearch({
           )}
         </form>
 
-        {/* Desktop Suggestions Dropdown */}
+        {/* Desktop Live Suggestions & Results Dropdown (Locked to Initial Dark Luxury Theme) */}
         {isFocused && (
           <div
             ref={desktopDropdownRef}
-            className={`hidden md:block absolute top-full left-0 mt-3 w-80 md:w-96 rounded-2xl p-4 shadow-2xl border backdrop-blur-2xl z-50 ${
-              isDarkScrolled
-                ? 'bg-white/95 border-slate-200 text-[#061D15]'
-                : 'bg-[#061D15]/95 border-white/15 text-white shadow-[0_16px_40px_rgba(0,0,0,0.6)]'
-            }`}
+            className="hidden md:block absolute top-full left-0 mt-3 w-96 md:w-[440px] rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.95)] border border-[#CCAF72]/30 bg-[#040D0A] text-white z-50 overflow-hidden"
           >
-            <div className="flex items-center gap-2 text-[11px] font-semibold tracking-widest uppercase text-[#CCAF72] mb-2.5 px-1">
-              <TrendingUp className="w-3.5 h-3.5" />
-              <span>Trending Portfolios</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {TRENDING_SEARCHES.map((item) => (
+            {/* Case 1: Loading State */}
+            {isLoading && (
+              <div className="flex items-center justify-center py-6 gap-2 text-xs font-medium text-[#CCAF72]">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Searching curated properties...</span>
+              </div>
+            )}
+
+            {/* Case 2: Live Search Results */}
+            {!isLoading && searchResults.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between text-[11px] font-bold tracking-widest uppercase text-[#CCAF72] mb-3 px-1">
+                  <span>Matched Properties ({searchResults.length})</span>
+                  <span className="text-[10px] font-normal text-white/50">
+                    Ranked by relevance
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-3 max-h-[360px] overflow-y-auto overflow-x-hidden pr-2 nav-search-results-scroll">
+                  {searchResults.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => handleResultItemClick(item.slug, item.category)}
+                      className="search-result-card group flex items-center gap-3.5 p-3.5 rounded-xl cursor-pointer transition-all duration-200 w-full flex-shrink-0 min-w-0 bg-white/5 hover:bg-[#CCAF72]/20 border border-white/10 hover:border-[#CCAF72]/40 shadow-sm"
+                    >
+                      {/* Image Thumbnail */}
+                      <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-slate-800 relative self-center shadow">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+
+                      {/* Content Details */}
+                      <div className="flex-1 min-w-0 flex flex-col justify-center py-0.5">
+                        {/* Badges Row */}
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#CCAF72]/20 text-[#CCAF72] border border-[#CCAF72]/30">
+                            {item.categoryLabel}
+                          </span>
+                          {item.yieldDisplay && (
+                            <span className="text-[10px] font-semibold flex items-center gap-1 px-2 py-0.5 rounded-md text-emerald-400 bg-emerald-950/80 border border-emerald-500/30">
+                              <Percent className="w-2.5 h-2.5" />
+                              {item.yieldDisplay}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Title */}
+                        <h4 className="text-xs md:text-sm font-bold text-white truncate leading-snug group-hover:text-[#CCAF72] transition-colors">
+                          {item.title}
+                        </h4>
+
+                        {/* Location */}
+                        <div className="flex items-center gap-1 text-[11px] text-white/70 mt-1 truncate">
+                          <MapPin className="w-3 h-3 flex-shrink-0 text-[#CCAF72]" />
+                          <span className="truncate">{item.location}</span>
+                        </div>
+                      </div>
+
+                      <ArrowRight className="w-4 h-4 flex-shrink-0 text-white/40 group-hover:text-[#CCAF72] group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                  ))}
+                </div>
+
                 <button
-                  key={item}
                   type="button"
-                  onMouseDown={() => handleSuggestionClick(item)}
-                  className={`trending-item text-xs px-3 py-1.5 rounded-lg transition-all text-left font-normal ${
-                    isDarkScrolled
-                      ? 'bg-slate-100 hover:bg-amber-50 hover:text-amber-800 text-slate-700'
-                      : 'bg-white/10 hover:bg-[#CCAF72]/20 hover:text-[#CCAF72] text-white/80 border border-white/5 hover:border-[#CCAF72]/40'
-                  }`}
+                  onClick={handleSubmit}
+                  className="w-full mt-3 py-2.5 text-center text-xs font-bold uppercase tracking-widest text-[#061D15] bg-[#CCAF72] hover:bg-amber-400 rounded-lg transition-colors shadow"
                 >
-                  {item}
+                  View All Search Results ({searchResults.length})
                 </button>
-              ))}
-            </div>
+              </div>
+            )}
+
+            {/* Case 3: Empty Results */}
+            {!isLoading && debouncedQuery && searchResults.length === 0 && (
+              <div className="py-4 text-center">
+                <p className="text-xs font-medium mb-1 text-amber-200/90">
+                  No properties matched &ldquo;{debouncedQuery}&rdquo;
+                </p>
+                <p className="text-[11px] mb-3 text-white/60">
+                  Try adjusting yield percentages, cities (Goa, Dubai, Jaipur), or select popular portfolios:
+                </p>
+              </div>
+            )}
+
+            {/* Case 4: Trending Portfolios (Shown if empty query or 0 results) */}
+            {(!debouncedQuery || searchResults.length === 0) && (
+              <div>
+                <div className="flex items-center gap-2 text-[11px] font-semibold tracking-widest uppercase text-[#CCAF72] mb-2.5 px-1">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span>Trending Portfolios</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {TRENDING_SEARCHES.map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onMouseDown={() => handleSuggestionClick(item)}
+                      className="trending-item text-xs px-3 py-1.5 rounded-lg transition-all text-left font-normal bg-white/10 hover:bg-[#CCAF72]/20 hover:text-[#CCAF72] text-white/80 border border-white/5 hover:border-[#CCAF72]/40"
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
-
-      {/* =========================================================================
-          MOBILE & TABLET FULL-WIDTH SEARCH PORTAL (< 768px):
-          Mounted directly on document.body at z-[99999] so NOTHING in header can overlap!
-          ========================================================================= */}
       {mobileOpen && mounted && createPortal(
         <div className="fixed inset-0 z-[99999] md:hidden">
           {/* Frosted Dark Backdrop */}
@@ -347,24 +497,114 @@ export function NavSearch({
               </button>
             </div>
 
-            {/* Popular Searches */}
-            <div className="mt-4 pt-3 border-t border-white/10">
-              <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-[#CCAF72] mb-2 px-1">
-                <TrendingUp className="w-3 h-3" />
-                <span>Popular Searches</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {TRENDING_SEARCHES.map((item) => (
+            {/* Mobile / Tablet Live Search Results & Suggestions Content */}
+            <div className="mt-4 pt-3 border-t border-white/10 max-h-[calc(100vh-140px)] overflow-y-auto nav-search-results-scroll pr-1">
+              {/* Case 1: Loading State */}
+              {isLoading && (
+                <div className="flex items-center justify-center py-6 gap-2 text-xs font-medium text-[#CCAF72]">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Searching curated properties...</span>
+                </div>
+              )}
+
+              {/* Case 2: Live Search Results */}
+              {!isLoading && searchResults.length > 0 && (
+                <div className="mb-4">
+                  <div className="flex items-center justify-between text-[11px] font-bold tracking-widest uppercase text-[#CCAF72] mb-3 px-1">
+                    <span>Matched Properties ({searchResults.length})</span>
+                    <span className="text-[10px] font-normal text-white/50">
+                      Ranked by relevance
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-2.5">
+                    {searchResults.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => handleResultItemClick(item.slug, item.category)}
+                        className="search-result-card group flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 w-full flex-shrink-0 min-w-0 bg-white/5 active:bg-[#CCAF72]/20 border border-white/10 shadow-sm"
+                      >
+                        {/* Image Thumbnail */}
+                        <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-slate-800 relative self-center shadow">
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+
+                        {/* Content Details */}
+                        <div className="flex-1 min-w-0 flex flex-col justify-center py-0.5">
+                          <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
+                            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-[#CCAF72]/20 text-[#CCAF72] border border-[#CCAF72]/30">
+                              {item.categoryLabel}
+                            </span>
+                            {item.yieldDisplay && (
+                              <span className="text-[10px] font-semibold flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-emerald-400 bg-emerald-950/80 border border-emerald-500/30">
+                                <Percent className="w-2.5 h-2.5" />
+                                {item.yieldDisplay}
+                              </span>
+                            )}
+                          </div>
+
+                          <h4 className="text-xs font-bold text-white truncate leading-snug">
+                            {item.title}
+                          </h4>
+
+                          <div className="flex items-center gap-1 text-[11px] text-white/70 mt-0.5 truncate">
+                            <MapPin className="w-3 h-3 flex-shrink-0 text-[#CCAF72]" />
+                            <span className="truncate">{item.location}</span>
+                          </div>
+                        </div>
+
+                        <ArrowRight className="w-4 h-4 flex-shrink-0 text-[#CCAF72]" />
+                      </div>
+                    ))}
+                  </div>
+
                   <button
-                    key={item}
                     type="button"
-                    onClick={() => handleSuggestionClick(item)}
-                    className="text-xs px-3 py-1.5 rounded-full bg-white/10 text-white/90 border border-white/10 hover:border-[#CCAF72]/40 active:bg-[#CCAF72]/20 active:text-[#CCAF72] transition-colors"
+                    onClick={handleSubmit}
+                    className="w-full mt-3 py-3 text-center text-xs font-bold uppercase tracking-widest text-[#061D15] bg-[#CCAF72] active:bg-amber-400 rounded-lg transition-colors shadow"
                   >
-                    {item}
+                    View All Search Results ({searchResults.length})
                   </button>
-                ))}
-              </div>
+                </div>
+              )}
+
+              {/* Case 3: Empty Search Results */}
+              {!isLoading && debouncedQuery && searchResults.length === 0 && (
+                <div className="py-4 text-center mb-4">
+                  <p className="text-xs font-medium mb-1 text-amber-200/90">
+                    No properties matched &ldquo;{debouncedQuery}&rdquo;
+                  </p>
+                  <p className="text-[11px] text-white/60">
+                    Try adjusting yield percentages, cities (Goa, Dubai, Jaipur), or select popular portfolios:
+                  </p>
+                </div>
+              )}
+
+              {/* Case 4: Popular Searches / Trending Portfolios */}
+              {(!debouncedQuery || searchResults.length === 0) && (
+                <div>
+                  <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-[#CCAF72] mb-2.5 px-1">
+                    <TrendingUp className="w-3 h-3" />
+                    <span>Popular Searches</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {TRENDING_SEARCHES.map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => handleSuggestionClick(item)}
+                        className="text-xs px-3 py-1.5 rounded-lg bg-white/10 text-white/90 border border-white/10 active:bg-[#CCAF72]/20 active:text-[#CCAF72] transition-colors"
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>,

@@ -12779,3 +12779,27 @@ main.container.section-padding {
     grid-template-rows: repeat(3, 150px);
   }
 }
+
+/* Custom Luxury Dark Scrollbar for Search Dropdown */
+.nav-search-results-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(204, 175, 114, 0.4) rgba(255, 255, 255, 0.05);
+}
+
+.nav-search-results-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.nav-search-results-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 9999px;
+}
+
+.nav-search-results-scroll::-webkit-scrollbar-thumb {
+  background: rgba(204, 175, 114, 0.4);
+  border-radius: 9999px;
+}
+
+.nav-search-results-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(204, 175, 114, 0.8);
+}
