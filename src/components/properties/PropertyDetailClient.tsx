@@ -17,6 +17,32 @@ interface PropertyDetailClientProps {
   categorySlug?: string
 }
 
+function formatGoogleMapEmbedUrl(rawUrl?: string): string {
+  if (!rawUrl) return ''
+  let url = rawUrl.trim()
+
+  // 1. If user pasted raw iframe HTML tag like <iframe src="https://..."></iframe>
+  if (url.includes('<iframe')) {
+    const srcMatch = url.match(/src=["']([^"']+)["']/)
+    if (srcMatch && srcMatch[1]) {
+      url = srcMatch[1]
+    }
+  }
+
+  // 2. If it is already an official embed URL (/maps/embed or contains output=embed)
+  if (url.includes('/maps/embed') || url.includes('output=embed')) {
+    return url
+  }
+
+  // 3. If it is a standard google maps query URL (maps.google.com or google.com/maps)
+  if (url.includes('google.com/maps') || url.includes('maps.google.com')) {
+    return url.includes('?') ? `${url}&output=embed` : `${url}?output=embed`
+  }
+
+  // 4. Fallback: if user pasted plain location query or custom URL
+  return `https://maps.google.com/maps?q=${encodeURIComponent(url)}&output=embed`
+}
+
 function renderAmenityIcon(rawIconType?: string, rawName?: string) {
   const str = `${rawIconType || ''} ${rawName || ''}`.toLowerCase().trim()
 
@@ -949,16 +975,20 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
             </div>
 
             <div className="pd2-map-and-cards">
-              {property.mapEmbedUrl && property.mapEmbedUrl.trim() ? (
-                <div className="pd2-map-wrap">
-                  <iframe
-                    src={property.mapEmbedUrl}
-                    allowFullScreen
-                    loading="lazy"
-                    title={`${property.title} Location Map`}
-                  />
-                </div>
-              ) : null}
+              {(() => {
+                const formattedMapUrl = formatGoogleMapEmbedUrl(property.mapEmbedUrl)
+                if (!formattedMapUrl) return null
+                return (
+                  <div className="pd2-map-wrap">
+                    <iframe
+                      src={formattedMapUrl}
+                      allowFullScreen
+                      loading="lazy"
+                      title={`${property.title} Location Map`}
+                    />
+                  </div>
+                )
+              })()}
 
               {property.nearby && property.nearby.length > 0 ? (
                 <div className="pd2-nearby-stack">

@@ -948,6 +948,8 @@ export const GET_PROPERTY_BY_SLUG_QUERY = `
           name
           dist
         }
+        locationDesc
+        mapEmbedUrl
         paymentPlan {
           milestone
           timeline
