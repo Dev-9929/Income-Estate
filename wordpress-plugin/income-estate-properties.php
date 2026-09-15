@@ -335,8 +335,15 @@ function ie_register_property_page_scf_fields() {
 			'fields'                => array(
 
 				// ==========================================
-				// 1. HERO & KEY INVESTMENT SPECIFICATIONS
+				// TAB 1: HERO & KEY INVESTMENT SPECIFICATIONS
 				// ==========================================
+				array(
+					'key'       => 'tab_hero_specs',
+					'label'     => '📌 Hero & Specs',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_title_accent',
 					'label'              => 'Title Accent',
@@ -430,8 +437,15 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 2. EDITORIAL INTRO & BROCHURE DOWNLOAD
+				// TAB 2: EDITORIAL OVERVIEW & BROCHURE
 				// ==========================================
+				array(
+					'key'       => 'tab_overview_brochure',
+					'label'     => '📌 Overview & Brochure',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_brochure_file',
 					'label'              => 'Brochure PDF Document',
@@ -518,8 +532,15 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 3. READ FULL STORY MODAL CONTENT
+				// TAB 3: READ FULL STORY MODAL CONTENT
 				// ==========================================
+				array(
+					'key'       => 'tab_full_story',
+					'label'     => '📌 Full Story Narrative Modal',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_overview_full_story',
 					'label'              => 'Overview Full Story (Modal Paragraphs)',
@@ -564,8 +585,15 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 4. FACTS STRIP
+				// TAB 4: FACTS STRIP
 				// ==========================================
+				array(
+					'key'       => 'tab_facts',
+					'label'     => '📌 At a Glance Facts',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_facts',
 					'label'              => 'Facts Strip',
@@ -596,8 +624,154 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 5. BENTO VISUAL GALLERY
+				// TAB 5: PROJECT HIGHLIGHTS & IMAGES
 				// ==========================================
+				array(
+					'key'       => 'tab_highlights',
+					'label'     => '📌 Project Highlights & Images',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
+				array(
+					'key'                => 'field_pd_highlights_intro',
+					'label'              => 'Highlights Section Intro Text',
+					'name'               => 'highlights_intro',
+					'type'               => 'text',
+					'instructions'       => 'Subtitle text above highlights (e.g. Institutional grade commercial development engineered for long-term lease yield.)',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'highlightsIntro',
+				),
+				array(
+					'key'                => 'field_pd_roi_front_image',
+					'label'              => '📸 Project Highlights Image (Main Right Banner)',
+					'name'               => 'roi_front_image',
+					'type'               => 'image',
+					'return_format'      => 'array',
+					'preview_size'       => 'medium',
+					'instructions'       => 'Front image displayed next to the Project Highlights checklist. If empty, the checklist will span full width.',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'roiFrontImage',
+				),
+				array(
+					'key'                => 'field_pd_roi_back_image',
+					'label'              => '📸 Project Highlights Image 2 (Background Stack - Optional)',
+					'name'               => 'roi_back_image',
+					'type'               => 'image',
+					'return_format'      => 'array',
+					'preview_size'       => 'medium',
+					'instructions'       => 'Background image stacked behind the front image in Project Highlights',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'roiBackImage',
+				),
+				array(
+					'key'                => 'field_pd_project_highlights',
+					'label'              => 'Project Highlights List (Checkmarks)',
+					'name'               => 'project_highlights',
+					'type'               => 'repeater',
+					'layout'             => 'table',
+					'button_label'       => 'Add Project Highlight',
+					'instructions'       => 'Checklist of core investment advantages shown in the Project Highlights section',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'projectHighlights',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_pd_ph_text',
+							'label'              => 'Highlight Point',
+							'name'               => 'highlight',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'highlight',
+						),
+					),
+				),
+
+				// ==========================================
+				// TAB 6: ROI METRICS & TENANTS
+				// ==========================================
+				array(
+					'key'       => 'tab_roi_metrics',
+					'label'     => '📌 ROI Metrics & Tenants',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
+				array(
+					'key'                => 'field_pd_roi_metrics',
+					'label'              => 'ROI Metrics Grid',
+					'name'               => 'roi_metrics',
+					'type'               => 'repeater',
+					'layout'             => 'table',
+					'button_label'       => 'Add Metric',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'roiMetrics',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_pd_roi_metrics_label',
+							'label'              => 'Label',
+							'name'               => 'label',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'label',
+						),
+						array(
+							'key'                => 'field_pd_roi_metrics_val',
+							'label'              => 'Value',
+							'name'               => 'val',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'val',
+						),
+						array(
+							'key'                => 'field_pd_roi_metrics_is_gold',
+							'label'              => 'Gold Highlight Accent',
+							'name'               => 'is_gold',
+							'type'               => 'true_false',
+							'ui'                 => 1,
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'isGold',
+						),
+					),
+				),
+				array(
+					'key'                => 'field_pd_tenants',
+					'label'              => 'Tenants & Operators',
+					'name'               => 'tenants',
+					'type'               => 'repeater',
+					'layout'             => 'table',
+					'button_label'       => 'Add Tenant',
+					'show_in_graphql'    => 1,
+					'graphql_field_name' => 'tenants',
+					'sub_fields'         => array(
+						array(
+							'key'                => 'field_pd_tenants_name',
+							'label'              => 'Tenant Name',
+							'name'               => 'name',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'name',
+						),
+						array(
+							'key'                => 'field_pd_tenants_detail',
+							'label'              => 'Lease Detail',
+							'name'               => 'detail',
+							'type'               => 'text',
+							'show_in_graphql'    => 1,
+							'graphql_field_name' => 'detail',
+						),
+					),
+				),
+
+				// ==========================================
+				// TAB 7: BENTO VISUAL GALLERY
+				// ==========================================
+				array(
+					'key'       => 'tab_gallery',
+					'label'     => '📌 Bento Visual Gallery',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_gallery',
 					'label'              => 'Bento Visual Gallery',
@@ -646,8 +820,15 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 6. SPACE & PRICING CONFIGURATIONS
+				// TAB 8: SPACE & PRICING CONFIGURATIONS
 				// ==========================================
+				array(
+					'key'       => 'tab_pricing',
+					'label'     => '📌 Space & Pricing Table',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_unit_configurations',
 					'label'              => 'Space & Pricing Configurations',
@@ -699,8 +880,15 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 7. VIRTUAL TOUR & ROUTE VIDEOS (VIDEO SHOWCASE)
+				// TAB 9: VIRTUAL TOUR & ROUTE VIDEOS
 				// ==========================================
+				array(
+					'key'       => 'tab_videos',
+					'label'     => '📌 Virtual Tour & Videos',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_videos',
 					'label'              => 'Virtual Tour & Route Videos',
@@ -834,131 +1022,15 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 8. ROI DEEP DIVE & PROJECT HIGHLIGHTS
+				// TAB 10: AMENITIES
 				// ==========================================
 				array(
-					'key'                => 'field_pd_highlights_intro',
-					'label'              => 'Highlights Section Intro Text',
-					'name'               => 'highlights_intro',
-					'type'               => 'text',
-					'instructions'       => 'Subtitle text above highlights (e.g. Institutional grade commercial development engineered for long-term lease yield.)',
-					'show_in_graphql'    => 1,
-					'graphql_field_name' => 'highlightsIntro',
+					'key'       => 'tab_amenities',
+					'label'     => '📌 Property Amenities',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
 				),
-				array(
-					'key'                => 'field_pd_project_highlights',
-					'label'              => 'Project Highlights List',
-					'name'               => 'project_highlights',
-					'type'               => 'repeater',
-					'layout'             => 'table',
-					'button_label'       => 'Add Project Highlight',
-					'instructions'       => 'Checklist of core investment advantages shown in the ROI section',
-					'show_in_graphql'    => 1,
-					'graphql_field_name' => 'projectHighlights',
-					'sub_fields'         => array(
-						array(
-							'key'                => 'field_pd_ph_text',
-							'label'              => 'Highlight Point',
-							'name'               => 'highlight',
-							'type'               => 'text',
-							'show_in_graphql'    => 1,
-							'graphql_field_name' => 'highlight',
-						),
-					),
-				),
-				array(
-					'key'                => 'field_pd_roi_metrics',
-					'label'              => 'ROI Metrics Grid',
-					'name'               => 'roi_metrics',
-					'type'               => 'repeater',
-					'layout'             => 'table',
-					'button_label'       => 'Add Metric',
-					'show_in_graphql'    => 1,
-					'graphql_field_name' => 'roiMetrics',
-					'sub_fields'         => array(
-						array(
-							'key'                => 'field_pd_roi_metrics_label',
-							'label'              => 'Label',
-							'name'               => 'label',
-							'type'               => 'text',
-							'show_in_graphql'    => 1,
-							'graphql_field_name' => 'label',
-						),
-						array(
-							'key'                => 'field_pd_roi_metrics_val',
-							'label'              => 'Value',
-							'name'               => 'val',
-							'type'               => 'text',
-							'show_in_graphql'    => 1,
-							'graphql_field_name' => 'val',
-						),
-						array(
-							'key'                => 'field_pd_roi_metrics_is_gold',
-							'label'              => 'Gold Highlight Accent',
-							'name'               => 'is_gold',
-							'type'               => 'true_false',
-							'ui'                 => 1,
-							'show_in_graphql'    => 1,
-							'graphql_field_name' => 'isGold',
-						),
-					),
-				),
-				array(
-					'key'                => 'field_pd_roi_front_image',
-					'label'              => 'ROI Section Front Stack Image',
-					'name'               => 'roi_front_image',
-					'type'               => 'image',
-					'return_format'      => 'array',
-					'preview_size'       => 'medium',
-					'show_in_graphql'    => 1,
-					'graphql_field_name' => 'roiFrontImage',
-				),
-				array(
-					'key'                => 'field_pd_roi_back_image',
-					'label'              => 'ROI Section Back Stack Image',
-					'name'               => 'roi_back_image',
-					'type'               => 'image',
-					'return_format'      => 'array',
-					'preview_size'       => 'medium',
-					'show_in_graphql'    => 1,
-					'graphql_field_name' => 'roiBackImage',
-				),
-
-				// ==========================================
-				// 9. TENANTS & OPERATORS
-				// ==========================================
-				array(
-					'key'                => 'field_pd_tenants',
-					'label'              => 'Tenants & Operators',
-					'name'               => 'tenants',
-					'type'               => 'repeater',
-					'layout'             => 'table',
-					'button_label'       => 'Add Tenant',
-					'show_in_graphql'    => 1,
-					'graphql_field_name' => 'tenants',
-					'sub_fields'         => array(
-						array(
-							'key'                => 'field_pd_tenants_name',
-							'label'              => 'Tenant Name',
-							'name'               => 'name',
-							'type'               => 'text',
-							'show_in_graphql'    => 1,
-							'graphql_field_name' => 'name',
-						),
-						array(
-							'key'                => 'field_pd_tenants_detail',
-							'label'              => 'Lease Detail',
-							'name'               => 'detail',
-							'type'               => 'text',
-							'show_in_graphql'    => 1,
-							'graphql_field_name' => 'detail',
-						),
-					),
-				),
-
-				// ==========================================
-				// 10. AMENITIES
-				// ==========================================
 				array(
 					'key'                => 'field_pd_amenities',
 					'label'              => 'Property Amenities',
@@ -999,8 +1071,15 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 11. LOCATION & CONNECTIVITY
+				// TAB 11: LOCATION & CONNECTIVITY
 				// ==========================================
+				array(
+					'key'       => 'tab_location',
+					'label'     => '📌 Micro-Market & Location',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_location_desc',
 					'label'              => 'Location Micro-Market Description',
@@ -1049,8 +1128,15 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 12. STRUCTURED PAYMENT PLAN
+				// TAB 12: STRUCTURED PAYMENT PLAN
 				// ==========================================
+				array(
+					'key'       => 'tab_payment',
+					'label'     => '📌 Payment Milestones',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_payment_plan',
 					'label'              => 'Structured Payment Plan',
@@ -1106,8 +1192,15 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 13. LIVE CONSTRUCTION PROGRESS
+				// TAB 13: LIVE CONSTRUCTION PROGRESS
 				// ==========================================
+				array(
+					'key'       => 'tab_construction',
+					'label'     => '📌 Live Construction Progress',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_construction_stages',
 					'label'              => 'Live Construction Progress',
@@ -1139,8 +1232,15 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 14. PROPERTY FAQS
+				// TAB 14: PROPERTY FAQS
 				// ==========================================
+				array(
+					'key'       => 'tab_faqs',
+					'label'     => '📌 Investment FAQs',
+					'type'      => 'tab',
+					'placement' => 'top',
+					'endpoint'  => 0,
+				),
 				array(
 					'key'                => 'field_pd_faqs',
 					'label'              => 'Property FAQs',
@@ -1172,22 +1272,35 @@ function ie_register_property_page_scf_fields() {
 				),
 
 				// ==========================================
-				// 15. SIMILAR / RELATED PROPERTIES
+				// TAB 15: SIMILAR / RELATED PROPERTIES
 				// ==========================================
+				array(
+					'key'   => 'tab_similar',
+					'label' => '📌 Related Properties',
+					'type'  => 'tab',
+				),
 				array(
 					'key'                => 'field_pd_similar_properties',
 					'label'              => 'Similar / Related Properties',
 					'name'               => 'similar_properties',
-					'type'               => 'relationship',
-					'post_type'          => array( 'property' ),
-					'max'                => 3,
-					'filters'            => array( 'search' ),
-					'return_format'      => 'object',
+					'type'               => 'repeater',
+					'layout'             => 'table',
+					'button_label'       => 'Add Similar Property',
 					'show_in_graphql'    => 1,
 					'graphql_field_name' => 'similarProperties',
 				),
 
 			),
+			'location'              => array(
+				array(
+					array(
+						'param'    => 'post_type',
+						'operator' => '==',
+						'value'    => 'property',
+					),
+				),
+			),
+			'menu_order'            => 1,
 			'location'              => array(
 				array(
 					array(

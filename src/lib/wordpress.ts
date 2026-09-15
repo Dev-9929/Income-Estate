@@ -1008,11 +1008,12 @@ export function mapWPPropertyToPropertyListingItem(node: WPPropertyNode): Proper
 export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): PropertyDetailItem {
   const details = node.propertyDetails
   const page = node.propertyPage
+  const isLiveWP = Boolean(page || details)
   const fallbackDetail = getPropertyDetailBySlug(node.slug) || propertiesDetailData['skyline-arcadia']
   const galleryNodes = details?.galleryImages?.nodes || []
 
   const wpTitle = node.title
-  const rawTitleAccent = page?.titleAccent ?? fallbackDetail.titleAccent ?? ''
+  const rawTitleAccent = page?.titleAccent ?? (isLiveWP ? '' : fallbackDetail.titleAccent ?? '')
   const titleAlreadyContainsAccent =
     rawTitleAccent && wpTitle.toLowerCase().includes(rawTitleAccent.toLowerCase())
 
@@ -1020,52 +1021,64 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
   const galleryItems =
     pageGallery && pageGallery.length > 0
       ? pageGallery.map((g, idx) => ({
-          image: g.image?.node?.sourceUrl || fallbackDetail.gallery[idx % fallbackDetail.gallery.length]?.image || '',
+          image: g.image?.node?.sourceUrl || '',
           label: g.label || `Gallery Image ${idx + 1}`,
           gridClass: g.gridClass || `pd2-gi-${(idx % 6) + 1}`,
-        }))
+        })).filter((item) => Boolean(item.image))
       : galleryNodes.length > 0
       ? galleryNodes.map((img, idx) => ({
-          image: img.sourceUrl || fallbackDetail.gallery[idx % fallbackDetail.gallery.length]?.image || '',
+          image: img.sourceUrl || '',
           label: img.altText || `Gallery Image ${idx + 1}`,
           gridClass: `pd2-gi-${(idx % 6) + 1}`,
-        }))
+        })).filter((item) => Boolean(item.image))
+      : isLiveWP
+      ? []
       : fallbackDetail.gallery
 
   const heroImg =
     page?.heroImage?.node?.sourceUrl ||
     node.featuredImage?.node?.sourceUrl ||
     galleryNodes[0]?.sourceUrl ||
-    fallbackDetail.heroImage
+    (isLiveWP ? '' : fallbackDetail.heroImage)
 
-  const mainImg = page?.mainImage?.node?.sourceUrl || galleryNodes[0]?.sourceUrl || fallbackDetail.mainImage
-  const thumbImg = page?.thumbImage?.node?.sourceUrl || galleryNodes[1]?.sourceUrl || fallbackDetail.thumbImage
-  const roiFrontImg = page?.roiFrontImage?.node?.sourceUrl || fallbackDetail.roiFrontImage
-  const roiBackImg = page?.roiBackImage?.node?.sourceUrl || fallbackDetail.roiBackImage
+  const mainImg = page?.mainImage?.node?.sourceUrl || galleryNodes[0]?.sourceUrl || (isLiveWP ? '' : fallbackDetail.mainImage)
+  const thumbImg = page?.thumbImage?.node?.sourceUrl || galleryNodes[1]?.sourceUrl || (isLiveWP ? '' : fallbackDetail.thumbImage)
+  const roiFrontImg = page?.roiFrontImage?.node?.sourceUrl || (isLiveWP ? '' : fallbackDetail.roiFrontImage)
+  const roiBackImg = page?.roiBackImage?.node?.sourceUrl || (isLiveWP ? '' : fallbackDetail.roiBackImage)
 
   const factsItems =
     page?.facts && page.facts.length > 0
-      ? page.facts.map((f) => ({ val: f.val || '', lbl: f.lbl || '' }))
+      ? page.facts.map((f) => ({ val: f.val || '', lbl: f.lbl || '' })).filter((f) => Boolean(f.val || f.lbl))
+      : isLiveWP
+      ? []
       : fallbackDetail.facts
 
   const roiMetricsItems =
     page?.roiMetrics && page.roiMetrics.length > 0
       ? page.roiMetrics.map((m) => ({ label: m.label || '', val: m.val || '', isGold: Boolean(m.isGold) }))
+      : isLiveWP
+      ? []
       : fallbackDetail.roiMetrics
 
   const tenantsItems =
     page?.tenants && page.tenants.length > 0
       ? page.tenants.map((t) => ({ name: t.name || '', detail: t.detail || '' }))
+      : isLiveWP
+      ? []
       : fallbackDetail.tenants
 
   const amenitiesItems =
     page?.amenities && page.amenities.length > 0
-      ? page.amenities.map((a) => ({ name: a.name || '', iconType: a.iconType || a.name || 'lease' }))
+      ? page.amenities.map((a) => ({ name: a.name || '', iconType: a.iconType || a.name || 'lease' })).filter((a) => Boolean(a.name))
+      : isLiveWP
+      ? []
       : fallbackDetail.amenities
 
   const nearbyItems =
     page?.nearby && page.nearby.length > 0
-      ? page.nearby.map((n) => ({ name: n.name || '', dist: n.dist || '' }))
+      ? page.nearby.map((n) => ({ name: n.name || '', dist: n.dist || '' })).filter((n) => Boolean(n.name || n.dist))
+      : isLiveWP
+      ? []
       : fallbackDetail.nearby
 
   const paymentPlanItems =
@@ -1076,7 +1089,9 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
           percent: p.percent || '',
           amount: p.amount || '',
           isHighlight: Boolean(p.isHighlight),
-        }))
+        })).filter((p) => Boolean(p.milestone || p.timeline || p.percent || p.amount))
+      : isLiveWP
+      ? []
       : fallbackDetail.paymentPlan
 
   const constructionStagesItems =
@@ -1084,12 +1099,16 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
       ? page.constructionStages.map((cs) => ({
           image: cs.image?.node?.sourceUrl || '',
           overlay: cs.overlay || '',
-        }))
+        })).filter((cs) => Boolean(cs.image))
+      : isLiveWP
+      ? []
       : fallbackDetail.constructionStages
 
   const faqsItems =
     page?.faqs && page.faqs.length > 0
-      ? page.faqs.map((faq) => ({ question: faq.question || '', answer: faq.answer || '' }))
+      ? page.faqs.map((faq) => ({ question: faq.question || '', answer: faq.answer || '' })).filter((f) => Boolean(f.question || f.answer))
+      : isLiveWP
+      ? []
       : fallbackDetail.faqs
 
   const unitConfigurationsItems =
@@ -1099,7 +1118,9 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
           size: u.size || '',
           price: u.price || '',
           paymentPlan: u.paymentPlan || '',
-        }))
+        })).filter((u) => Boolean(u.type || u.size || u.price))
+      : isLiveWP
+      ? []
       : fallbackDetail.unitConfigurations
 
   const videosItems =
@@ -1118,62 +1139,72 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
             title: w.title || '',
             desc: w.desc || '',
           })),
-        }))
+        })).filter((v) => Boolean(v.videoUrl || v.title))
+      : isLiveWP
+      ? []
       : fallbackDetail.videos
 
   const overviewFullStoryItems =
     page?.overviewFullStory && page.overviewFullStory.length > 0
       ? page.overviewFullStory.map((s) => s.paragraph || '').filter(Boolean)
+      : isLiveWP
+      ? []
       : fallbackDetail.overviewFullStory
 
   const overviewHighlightsItems =
     page?.overviewHighlights && page.overviewHighlights.length > 0
       ? page.overviewHighlights.map((h) => h.highlight || '').filter(Boolean)
+      : isLiveWP
+      ? []
       : fallbackDetail.overviewHighlights
 
   const projectHighlightsItems =
     page?.projectHighlights && page.projectHighlights.length > 0
       ? page.projectHighlights.map((h) => h.highlight || '').filter(Boolean)
+      : isLiveWP
+      ? []
       : fallbackDetail.projectHighlights
 
   const brochureUrl =
     page?.brochureFile?.node?.mediaItemUrl ||
     page?.brochureFile?.node?.sourceUrl ||
     page?.brochureUrl ||
-    fallbackDetail.brochureUrl
+    (isLiveWP ? '' : fallbackDetail.brochureUrl)
+
+  const defaultBase = isLiveWP ? {} : fallbackDetail
 
   return {
-    ...fallbackDetail,
+    ...defaultBase,
     id: node.databaseId ? String(node.databaseId) : node.id,
     slug: node.slug,
     title: wpTitle,
     titleAccent: titleAlreadyContainsAccent ? '' : rawTitleAccent,
-    heroLabel: page?.heroLabel || fallbackDetail.heroLabel,
-    propertyType: page?.propertyType || fallbackDetail.propertyType,
-    possession: page?.possession || fallbackDetail.possession,
-    projectScope: page?.projectScope || fallbackDetail.projectScope,
-    sizeArea: page?.sizeArea || fallbackDetail.sizeArea,
-    location: details?.location || fallbackDetail.location,
+    heroLabel: page?.heroLabel ?? (isLiveWP ? '' : fallbackDetail.heroLabel),
+    propertyType: page?.propertyType ?? (isLiveWP ? '' : fallbackDetail.propertyType),
+    possession: page?.possession ?? (isLiveWP ? '' : fallbackDetail.possession),
+    projectScope: page?.projectScope ?? (isLiveWP ? '' : fallbackDetail.projectScope),
+    sizeArea: page?.sizeArea ?? (isLiveWP ? '' : fallbackDetail.sizeArea),
+    location: details?.location ?? (isLiveWP ? '' : fallbackDetail.location),
     heroImage: heroImg,
     mainImage: mainImg,
     thumbImage: thumbImg,
     roiFrontImage: roiFrontImg,
     roiBackImage: roiBackImg,
     brochureUrl,
-    priceStarting: page?.priceStarting || details?.priceDisplay || fallbackDetail.priceStarting,
-    rentalYield: page?.rentalYield || details?.annualRoi || fallbackDetail.rentalYield,
-    targetIrr: page?.targetIrr || fallbackDetail.targetIrr,
-    overviewTag: page?.overviewTag || fallbackDetail.overviewTag,
-    overviewHeading: page?.overviewHeading || fallbackDetail.overviewHeading,
-    overviewHeadingAccent: page?.overviewHeadingAccent || fallbackDetail.overviewHeadingAccent,
-    overviewText1: page?.overviewText1 || fallbackDetail.overviewText1,
-    overviewText2: page?.overviewText2 || fallbackDetail.overviewText2,
+    priceStarting: page?.priceStarting || details?.priceDisplay || (isLiveWP ? '' : fallbackDetail.priceStarting),
+    rentalYield: page?.rentalYield || details?.annualRoi || (isLiveWP ? '' : fallbackDetail.rentalYield),
+    targetIrr: page?.targetIrr || (isLiveWP ? '' : fallbackDetail.targetIrr),
+    overviewTag: page?.overviewTag || (isLiveWP ? '' : fallbackDetail.overviewTag),
+    overviewHeading: page?.overviewHeading || (isLiveWP ? '' : fallbackDetail.overviewHeading),
+    overviewHeadingAccent: page?.overviewHeadingAccent || (isLiveWP ? '' : fallbackDetail.overviewHeadingAccent),
+    overviewText1: page?.overviewText1 || (isLiveWP ? '' : fallbackDetail.overviewText1),
+    overviewText2: page?.overviewText2 || (isLiveWP ? '' : fallbackDetail.overviewText2),
     overviewFullStory: overviewFullStoryItems,
     overviewHighlights: overviewHighlightsItems,
-    highlightsIntro: page?.highlightsIntro || fallbackDetail.highlightsIntro,
+    highlightsIntro: page?.highlightsIntro || (isLiveWP ? '' : fallbackDetail.highlightsIntro),
     projectHighlights: projectHighlightsItems,
-    locationDesc: page?.locationDesc || fallbackDetail.locationDesc,
-    mapEmbedUrl: page?.mapEmbedUrl || fallbackDetail.mapEmbedUrl,
+    locationDesc: page?.locationDesc || (isLiveWP ? '' : fallbackDetail.locationDesc),
+    mapEmbedUrl: page?.mapEmbedUrl || (isLiveWP ? '' : fallbackDetail.mapEmbedUrl),
     facts: factsItems,
     gallery: galleryItems,
     unitConfigurations: unitConfigurationsItems,
@@ -1185,6 +1216,7 @@ export function mapWPPropertyToPropertyDetailItem(node: WPPropertyNode): Propert
     paymentPlan: paymentPlanItems,
     constructionStages: constructionStagesItems,
     faqs: faqsItems,
+    similarProperties: fallbackDetail.similarProperties || [],
   }
 }
 

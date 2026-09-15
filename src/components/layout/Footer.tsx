@@ -22,7 +22,7 @@ export function Footer() {
               <img
                 src="/assets/wordpress_media/new-site-logo.svg"
                 alt="Income Estate Footer Logo"
-                style={{ height: '38px', width: 'auto', filter: 'none' }}
+                style={{ height: '60px', width: 'auto', filter: 'none' }}
               />
             </div>
             <p

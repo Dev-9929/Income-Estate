@@ -9196,6 +9196,29 @@ main.container.section-padding {
   color: var(--accent);
 }
 
+.pd2-breadcrumbs-bar {
+  background: #FAFAFA;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.pd2-breadcrumbs-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+
+.pd2-breadcrumbs-inner .pd2-breadcrumbs {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .pd2-breadcrumbs-inner {
+    padding: 0 1.5rem;
+  }
+}
+
 .pd2-breadcrumbs {
   font-size: 0.72rem;
   font-weight: 600;

@@ -422,156 +422,182 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
       </section>
 
       {/* ============================================================
-           EDITORIAL INTRO — IMAGE + TEXT
+           DEDICATED BREADCRUMBS BAR (Below Hero Banner)
       ============================================================ */}
-      <section className="pd2-intro">
-        <div className="pd2-intro-inner">
-          <div className="pd2-intro-left">
-            {/* Breadcrumbs */}
-            {(() => {
-              const activeCategorySlug = categorySlug || 'roi-properties'
-              const getCategoryTitle = (slug: string) => {
-                const cleanSlug = (slug || '').toLowerCase().trim()
-                if (cleanSlug === 'roi-properties') return 'ROI Properties'
-                if (cleanSlug === 'plots') return 'Plot Assets'
-                if (cleanSlug === 'fractions') return 'Fractional Ownership'
-                if (cleanSlug === 'villas') return 'Luxury Villas'
-                if (cleanSlug === 'pre-lease') return 'Pre-Leased Commercial'
-                if (cleanSlug === 'guaranteed-return') return 'Guaranteed Yield'
-                if (cleanSlug === 'residential') return 'Residential Assets'
-                if (cleanSlug === 'commercial') return 'Commercial Assets'
-                return cleanSlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
-              }
-              const categoryTitleName = getCategoryTitle(activeCategorySlug)
+      <section className="pd2-breadcrumbs-bar">
+        <div className="pd2-breadcrumbs-inner">
+          {(() => {
+            const activeCategorySlug = categorySlug || 'roi-properties'
+            const getCategoryTitle = (slug: string) => {
+              const cleanSlug = (slug || '').toLowerCase().trim()
+              if (cleanSlug === 'roi-properties') return 'ROI Properties'
+              if (cleanSlug === 'plots') return 'Plot Assets'
+              if (cleanSlug === 'fractions') return 'Fractional Ownership'
+              if (cleanSlug === 'villas') return 'Luxury Villas'
+              if (cleanSlug === 'pre-lease') return 'Pre-Leased Commercial'
+              if (cleanSlug === 'guaranteed-return') return 'Guaranteed Yield'
+              if (cleanSlug === 'residential') return 'Residential Assets'
+              if (cleanSlug === 'commercial') return 'Commercial Assets'
+              return cleanSlug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+            }
+            const categoryTitleName = getCategoryTitle(activeCategorySlug)
 
-              return (
-                <nav className="breadcrumbs pd2-breadcrumbs" aria-label="breadcrumb">
-                  <Link href="/">HOME</Link>
-                  <span className="sep">&gt;</span>
-                  <Link href={`/${activeCategorySlug}`}>{categoryTitleName.toUpperCase()}</Link>
-                  <span className="sep">&gt;</span>
-                  <span className="cur">{property.title.toUpperCase()}</span>
-                </nav>
-              )
-            })()}
-
-            <div className="pd2-tag-line">{property.overviewTag}</div>
-            <h2 className="pd2-intro-heading">{property.overviewHeading}</h2>
-            <p className="pd2-intro-text">{property.overviewText1}</p>
-            <p className="pd2-intro-text">{property.overviewText2}</p>
-
-            {/* Conditional "Read More..." link (shows if content > 500 chars/words or has full story) */}
-            {(() => {
-              const fullStory = property.overviewFullStory || []
-              const allText = [
-                ...fullStory,
-                property.overviewText1,
-                property.overviewText2,
-              ]
-                .filter(Boolean)
-                .join(' ')
-
-              const totalWords = allText.trim().split(/\s+/).filter(Boolean).length
-              const totalChars = allText.length
-
-              // Condition: Show Read More only if content exceeds 250 threshold or has extended story
-              const shouldShowReadMore =
-                totalChars > 250 || totalWords > 50 || fullStory.length > 1
-
-              if (!shouldShowReadMore) return null
-
-              return (
-                <div>
-                  <button
-                    type="button"
-                    className="pd2-readmore-link"
-                    onClick={() => setIsOverviewOpen(true)}
-                  >
-                    Read More...
-                  </button>
-                </div>
-              )
-            })()}
-
-            <div className="pd2-intro-actions">
-              <a
-                href={property.brochureUrl || '#enquire'}
-                download={property.brochureUrl ? `${property.slug}-brochure.pdf` : undefined}
-                className="pd2-btn-dark"
-              >
-                <span>Download Brochure</span>
-                <svg
-                  viewBox="0 0 24 24"
-                  width="14"
-                  height="14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-              </a>
-              <a href="#gallery" className="pd2-btn-ghost">View Gallery</a>
-            </div>
-          </div>
-
-          <div className="pd2-intro-right">
-            <div className="pd2-intro-price-tag">
-              <span className="amt">{property.priceStarting}</span>
-              <span className="lbl">Starts From</span>
-            </div>
-            <img
-              className="pd2-intro-img-main"
-              src={property.mainImage}
-              alt={`${property.title} Interior View`}
-            />
-            <img
-              className="pd2-intro-img-thumb"
-              src={property.thumbImage}
-              alt={`${property.title} Detail`}
-            />
-          </div>
+            return (
+              <nav className="breadcrumbs pd2-breadcrumbs" aria-label="breadcrumb">
+                <Link href="/">HOME</Link>
+                <span className="sep">&gt;</span>
+                <Link href={`/${activeCategorySlug}`}>{categoryTitleName.toUpperCase()}</Link>
+                <span className="sep">&gt;</span>
+                <span className="cur">{property.title.toUpperCase()}</span>
+              </nav>
+            )
+          })()}
         </div>
       </section>
 
       {/* ============================================================
+           EDITORIAL INTRO — IMAGE + TEXT
+      ============================================================ */}
+      {Boolean(
+        (property.overviewHeading && property.overviewHeading.trim()) ||
+          (property.overviewText1 && property.overviewText1.trim()) ||
+          (property.overviewText2 && property.overviewText2.trim()) ||
+          (property.mainImage && property.mainImage.trim())
+      ) && (
+        <section className="pd2-intro">
+          <div className="pd2-intro-inner">
+            <div className="pd2-intro-left">
+              {property.overviewTag ? <div className="pd2-tag-line">{property.overviewTag}</div> : null}
+              {property.overviewHeading ? <h2 className="pd2-intro-heading">{property.overviewHeading}</h2> : null}
+              {property.overviewText1 ? <p className="pd2-intro-text">{property.overviewText1}</p> : null}
+              {property.overviewText2 ? <p className="pd2-intro-text">{property.overviewText2}</p> : null}
+
+              {/* Conditional "Read More..." link (shows if content > 500 chars/words or has full story) */}
+              {(() => {
+                const fullStory = property.overviewFullStory || []
+                const allText = [
+                  ...fullStory,
+                  property.overviewText1,
+                  property.overviewText2,
+                ]
+                  .filter(Boolean)
+                  .join(' ')
+
+                const totalWords = allText.trim().split(/\s+/).filter(Boolean).length
+                const totalChars = allText.length
+
+                // Condition: Show Read More only if content exceeds 250 threshold or has extended story
+                const shouldShowReadMore =
+                  totalChars > 250 || totalWords > 50 || fullStory.length > 1
+
+                if (!shouldShowReadMore) return null
+
+                return (
+                  <div>
+                    <button
+                      type="button"
+                      className="pd2-readmore-link"
+                      onClick={() => setIsOverviewOpen(true)}
+                    >
+                      Read More...
+                    </button>
+                  </div>
+                )
+              })()}
+
+              <div className="pd2-intro-actions">
+                {property.brochureUrl && property.brochureUrl.trim() ? (
+                  <a
+                    href={property.brochureUrl}
+                    download={`${property.slug}-brochure.pdf`}
+                    className="pd2-btn-dark"
+                  >
+                    <span>Download Brochure</span>
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="14"
+                      height="14"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                  </a>
+                ) : null}
+                {property.gallery && property.gallery.length > 0 ? (
+                  <a href="#gallery" className="pd2-btn-ghost">View Gallery</a>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="pd2-intro-right">
+              {property.priceStarting ? (
+                <div className="pd2-intro-price-tag">
+                  <span className="amt">{property.priceStarting}</span>
+                  <span className="lbl">Starts From</span>
+                </div>
+              ) : null}
+              {property.mainImage ? (
+                <img
+                  className="pd2-intro-img-main"
+                  src={property.mainImage}
+                  alt={`${property.title} Interior View`}
+                />
+              ) : null}
+              {property.thumbImage ? (
+                <img
+                  className="pd2-intro-img-thumb"
+                  src={property.thumbImage}
+                  alt={`${property.title} Detail`}
+                />
+              ) : null}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ============================================================
            FACTS STRIP — SPECIFICATIONS & SNAPSHOT
       ============================================================ */}
-      <div className="pd2-facts-strip">
-        <div
-          className="pd2-facts-inner"
-          style={{ '--fact-count': property.facts.length } as React.CSSProperties}
-        >
-          <div className="pd2-fact-lead">
-            <span className="pd2-fact-lead-tag">At a Glance</span>
-            <h3 className="pd2-fact-lead-title">Key Specifications</h3>
-          </div>
-          {property.facts.map((fact, idx) => {
-            const rawVal = fact.val ? fact.val.trim() : ''
-            const len = rawVal.length
-            const valClass = len <= 5 ? 'pd2-fact-val-lg' : len <= 11 ? 'pd2-fact-val-md' : 'pd2-fact-val-sm'
+      {Boolean(property.facts && property.facts.length > 0) && (
+        <div className="pd2-facts-strip">
+          <div
+            className="pd2-facts-inner"
+            style={{ '--fact-count': property.facts.length } as React.CSSProperties}
+          >
+            <div className="pd2-fact-lead">
+              <span className="pd2-fact-lead-tag">At a Glance</span>
+              <h3 className="pd2-fact-lead-title">Key Specifications</h3>
+            </div>
+            {property.facts.map((fact, idx) => {
+              const rawVal = fact.val ? fact.val.trim() : ''
+              const len = rawVal.length
+              const valClass = len <= 5 ? 'pd2-fact-val-lg' : len <= 11 ? 'pd2-fact-val-md' : 'pd2-fact-val-sm'
 
-            return (
-              <div key={idx} className="pd2-fact">
-                <div className="pd2-fact-val-wrap">
-                  <span className={`pd2-fact-val ${valClass}`}>{rawVal}</span>
+              return (
+                <div key={idx} className="pd2-fact">
+                  <div className="pd2-fact-val-wrap">
+                    <span className={`pd2-fact-val ${valClass}`}>{rawVal}</span>
+                  </div>
+                  <span className="pd2-fact-lbl">{fact.lbl}</span>
                 </div>
-                <span className="pd2-fact-lbl">{fact.lbl}</span>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ============================================================
            GALLERY — EDITORIAL BENTO GRID
       ============================================================ */}
-      <section className="pd2-gallery" id="gallery">
+      {Boolean(property.gallery && property.gallery.length > 0) && (
+        <section className="pd2-gallery" id="gallery">
         <div className="pd2-gallery-header">
           <div>
             <div className="pd2-tag-line">Visual Tour</div>
@@ -608,6 +634,7 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
           ))}
         </div>
       </section>
+      )}
 
       {/* ============================================================
            SPACE & PRICING (UNIT CONFIGURATIONS)
@@ -798,201 +825,239 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
       {/* ============================================================
            PROJECT HIGHLIGHTS SECTION
       ============================================================ */}
-      <section className="pd2-roi-section pd2-highlights-section" id="highlights">
-        <div className="pd2-roi-inner">
-          <div className="pd2-roi-left">
-            <div className="pd2-tag-line">Key Advantages</div>
-            <h2 className="pd2-intro-heading pd2-highlights-heading">
-              Project Highlights
-            </h2>
-            <p className="pd2-intro-text" style={{ marginTop: '1.25rem' }}>
-              {property.highlightsIntro ||
-                `${property.title} delivers structured value, premium connectivity, and an exceptional lifestyle backed by verified legal ownership and institutional development standards.`}
-            </p>
+      {Boolean(
+        (property.projectHighlights && property.projectHighlights.length > 0) ||
+          (property.overviewHighlights && property.overviewHighlights.length > 0) ||
+          (property.highlightsIntro && property.highlightsIntro.trim())
+      ) && (
+        <section className="pd2-roi-section pd2-highlights-section" id="highlights">
+          {(() => {
+            const hasImages = Boolean(property.roiFrontImage || property.roiBackImage)
+            return (
+              <div
+                className="pd2-roi-inner"
+                style={{
+                  gridTemplateColumns: hasImages ? '1fr 1fr' : '1fr',
+                  gap: hasImages ? '6rem' : '0',
+                }}
+              >
+                <div className="pd2-roi-left" style={{ maxWidth: hasImages ? 'none' : '100%' }}>
+                  <div className="pd2-tag-line">Key Advantages</div>
+                  <h2 className="pd2-intro-heading pd2-highlights-heading">
+                    Project Highlights
+                  </h2>
+                  <p className="pd2-intro-text" style={{ marginTop: '1.25rem' }}>
+                    {property.highlightsIntro ||
+                      `${property.title} delivers structured value, premium connectivity, and an exceptional lifestyle backed by verified legal ownership and institutional development standards.`}
+                  </p>
 
-            <div className="pd2-highlights-list">
-              {(property.projectHighlights || property.overviewHighlights || []).map((highlight, idx) => (
-                <div key={idx} className="pd2-highlight-row">
-                  <span className="pd2-highlight-check" aria-hidden="true">
-                    <svg
-                      viewBox="0 0 24 24"
-                      width="18"
-                      height="18"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </span>
-                  <span className="pd2-highlight-text">{highlight}</span>
+                  <div className="pd2-highlights-list">
+                    {(property.projectHighlights || property.overviewHighlights || []).map((highlight, idx) => (
+                      <div key={idx} className="pd2-highlight-row">
+                        <span className="pd2-highlight-check" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            width="18"
+                            height="18"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </span>
+                        <span className="pd2-highlight-text">{highlight}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          <div className="pd2-roi-right">
-            <div className="pd2-roi-img-stack">
-              <img
-                className="pd2-roi-img-front"
-                src={property.roiFrontImage}
-                alt={`${property.title} Architecture`}
-              />
-              <img
-                className="pd2-roi-img-back"
-                src={property.roiBackImage}
-                alt={`${property.title} Grounds Overview`}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+                {hasImages && (
+                  <div className="pd2-roi-right">
+                    <div className="pd2-roi-img-stack">
+                      {property.roiFrontImage ? (
+                        <img
+                          className="pd2-roi-img-front"
+                          src={property.roiFrontImage}
+                          alt={`${property.title} Architecture`}
+                        />
+                      ) : null}
+                      {property.roiBackImage ? (
+                        <img
+                          className="pd2-roi-img-back"
+                          src={property.roiBackImage}
+                          alt={`${property.title} Grounds Overview`}
+                        />
+                      ) : null}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })()}
+        </section>
+      )}
 
       {/* ============================================================
            AMENITIES — HOVER GRID
       ============================================================ */}
-      <section className="pd2-amenities" id="amenities">
-        <div className="pd2-amenities-inner">
-          <div className="pd2-amenities-header">
-            <div>
-              <div className="pd2-tag-line">Property Features</div>
-              <h2 className="pd2-amenities-heading">Premium Amenities</h2>
-            </div>
-            <p className="pd2-amenities-desc">
-              Curated world-class features and lifestyle privileges crafted for discerning residents and high-yield investors.
-            </p>
-          </div>
-
-          <div className="pd2-amenities-grid">
-            {property.amenities.map((amenity, idx) => (
-              <div key={idx} className="pd2-amenity">
-                <div className="pd2-amenity-icon" aria-hidden="true">
-                  {renderAmenityIcon(amenity.iconType, amenity.name)}
-                </div>
-                <span className="pd2-amenity-name">{amenity.name}</span>
+      {Boolean(property.amenities && property.amenities.length > 0) && (
+        <section className="pd2-amenities" id="amenities">
+          <div className="pd2-amenities-inner">
+            <div className="pd2-amenities-header">
+              <div>
+                <div className="pd2-tag-line">Property Features</div>
+                <h2 className="pd2-amenities-heading">Premium Amenities</h2>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================
-           LOCATION — CARDS + MAP
-      ============================================================ */}
-      <section className="pd2-location">
-        <div className="pd2-location-inner">
-          <div className="pd2-location-top">
-            <div>
-              <div className="pd2-tag-line">Micro-Market</div>
-              <h2 className="pd2-location-heading">Prime Location,<br />Strategic Connectivity</h2>
-            </div>
-            <p className="pd2-location-desc">{property.locationDesc}</p>
-          </div>
-
-          <div className="pd2-map-and-cards">
-            <div className="pd2-map-wrap">
-              <iframe
-                src={property.mapEmbedUrl}
-                allowFullScreen
-                loading="lazy"
-                title={`${property.title} Location Map`}
-              />
+              <p className="pd2-amenities-desc">
+                Curated world-class features and lifestyle privileges crafted for discerning residents and high-yield investors.
+              </p>
             </div>
 
-            <div className="pd2-nearby-stack">
-              {property.nearby.map((place, idx) => (
-                <div key={idx} className="pd2-nearby-item">
-                  <div className="pd2-nearby-name">{place.name}</div>
-                  <div className="pd2-nearby-dist">{place.dist}</div>
+            <div className="pd2-amenities-grid">
+              {property.amenities.map((amenity, idx) => (
+                <div key={idx} className="pd2-amenity">
+                  <div className="pd2-amenity-icon" aria-hidden="true">
+                    {renderAmenityIcon(amenity.iconType, amenity.name)}
+                  </div>
+                  <span className="pd2-amenity-name">{amenity.name}</span>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* ============================================================
+           LOCATION — CARDS + MAP
+      ============================================================ */}
+      {Boolean(
+        (property.mapEmbedUrl && property.mapEmbedUrl.trim()) ||
+          (property.nearby && property.nearby.length > 0) ||
+          (property.locationDesc && property.locationDesc.trim())
+      ) && (
+        <section className="pd2-location">
+          <div className="pd2-location-inner">
+            <div className="pd2-location-top">
+              <div>
+                <div className="pd2-tag-line">Micro-Market</div>
+                <h2 className="pd2-location-heading">Prime Location,<br />Strategic Connectivity</h2>
+              </div>
+              {property.locationDesc ? <p className="pd2-location-desc">{property.locationDesc}</p> : null}
+            </div>
+
+            <div className="pd2-map-and-cards">
+              {property.mapEmbedUrl && property.mapEmbedUrl.trim() ? (
+                <div className="pd2-map-wrap">
+                  <iframe
+                    src={property.mapEmbedUrl}
+                    allowFullScreen
+                    loading="lazy"
+                    title={`${property.title} Location Map`}
+                  />
+                </div>
+              ) : null}
+
+              {property.nearby && property.nearby.length > 0 ? (
+                <div className="pd2-nearby-stack">
+                  {property.nearby.map((place, idx) => (
+                    <div key={idx} className="pd2-nearby-item">
+                      <div className="pd2-nearby-name">{place.name}</div>
+                      <div className="pd2-nearby-dist">{place.dist}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ============================================================
            PAYMENT PLAN — DARK TABLE
       ============================================================ */}
-      <section className="pd2-payment">
-        <div className="pd2-payment-inner">
-          <div className="pd2-payment-left">
-            <div className="pd2-tag-line" style={{ color: 'rgba(255,255,255,0.45)' }}>Flexible Milestones</div>
-            <h2 className="pd2-payment-heading">Structured<br />Payment Plan</h2>
-            <p className="pd2-payment-desc">
-              A clear, milestone-linked payment schedule that aligns with the project&apos;s delivery timeline — no
-              hidden costs, no surprises.
-            </p>
-            <a href="#enquire" className="pd2-payment-cta">
-              Download Brochure
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-                <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z" />
-              </svg>
-            </a>
-          </div>
+      {Boolean(property.paymentPlan && property.paymentPlan.length > 0) && (
+        <section className="pd2-payment">
+          <div className="pd2-payment-inner">
+            <div className="pd2-payment-left">
+              <div className="pd2-tag-line" style={{ color: 'rgba(255,255,255,0.45)' }}>Flexible Milestones</div>
+              <h2 className="pd2-payment-heading">Structured<br />Payment Plan</h2>
+              <p className="pd2-payment-desc">
+                A clear, milestone-linked payment schedule that aligns with the project&apos;s delivery timeline — no
+                hidden costs, no surprises.
+              </p>
+              <a href="#enquire" className="pd2-payment-cta">
+                Download Brochure
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+                  <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z" />
+                </svg>
+              </a>
+            </div>
 
-          <div className="pd2-payment-table-scroll">
-            {(() => {
-              const hasAmount = property.paymentPlan.some((item) => Boolean(item.amount))
-              const hasPercent = property.paymentPlan.some((item) => Boolean(item.percent))
+            <div className="pd2-payment-table-scroll">
+              {(() => {
+                const hasAmount = property.paymentPlan.some((item) => Boolean(item.amount))
+                const hasPercent = property.paymentPlan.some((item) => Boolean(item.percent))
 
-              return (
-                <table className="pd2-payment-table">
-                  <thead>
-                    <tr>
-                      <th>Milestone</th>
-                      <th>Timeline</th>
-                      {hasPercent && <th style={{ textAlign: hasAmount ? 'center' : 'right' }}>%</th>}
-                      {hasAmount && <th style={{ textAlign: 'right' }}>Amount (INR)</th>}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {property.paymentPlan.map((item, idx) => (
-                      <tr key={idx} className={item.isHighlight ? 'first-row' : ''}>
-                        <td>{item.milestone}</td>
-                        <td>{item.timeline}</td>
-                        {hasPercent && (
-                          <td
-                            style={{
-                              textAlign: hasAmount ? 'center' : 'right',
-                              fontFamily: hasAmount ? 'inherit' : 'var(--font-serif)',
-                              fontSize: hasAmount ? '0.95rem' : '1.35rem',
-                              fontWeight: 600,
-                              color: hasAmount ? 'rgba(255,255,255,0.85)' : 'var(--accent)',
-                            }}
-                          >
-                            {item.percent || '—'}
-                          </td>
-                        )}
-                        {hasAmount && (
-                          <td
-                            style={{
-                              textAlign: 'right',
-                              fontFamily: 'var(--font-serif)',
-                              fontSize: '1.35rem',
-                              fontWeight: 600,
-                              color: 'var(--accent)',
-                            }}
-                          >
-                            {item.amount || '—'}
-                          </td>
-                        )}
+                return (
+                  <table className="pd2-payment-table">
+                    <thead>
+                      <tr>
+                        <th>Milestone</th>
+                        <th>Timeline</th>
+                        {hasPercent && <th style={{ textAlign: hasAmount ? 'center' : 'right' }}>%</th>}
+                        {hasAmount && <th style={{ textAlign: 'right' }}>Amount (INR)</th>}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )
-            })()}
+                    </thead>
+                    <tbody>
+                      {property.paymentPlan.map((item, idx) => (
+                        <tr key={idx} className={item.isHighlight ? 'first-row' : ''}>
+                          <td>{item.milestone}</td>
+                          <td>{item.timeline}</td>
+                          {hasPercent && (
+                            <td
+                              style={{
+                                textAlign: hasAmount ? 'center' : 'right',
+                                fontFamily: hasAmount ? 'inherit' : 'var(--font-serif)',
+                                fontSize: hasAmount ? '0.95rem' : '1.35rem',
+                                fontWeight: 600,
+                                color: hasAmount ? 'rgba(255,255,255,0.85)' : 'var(--accent)',
+                              }}
+                            >
+                              {item.percent || '—'}
+                            </td>
+                          )}
+                          {hasAmount && (
+                            <td
+                              style={{
+                                textAlign: 'right',
+                                fontFamily: 'var(--font-serif)',
+                                fontSize: '1.35rem',
+                                fontWeight: 600,
+                                color: 'var(--accent)',
+                              }}
+                            >
+                              {item.amount || '—'}
+                            </td>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )
+              })()}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ============================================================
            CONSTRUCTION STATUS
       ============================================================ */}
-      <section className="pd2-construction">
+      {Boolean(constStages && constStages.length > 0) && (
+        <section className="pd2-construction">
         <div className="pd2-construction-inner">
           <div className="pd2-construction-header">
             <div>
@@ -1134,6 +1199,7 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
           </div>
         </div>
       </section>
+      )}
 
       {/* ============================================================
            ENQUIRY SECTION — FULL WIDTH EDITORIAL
@@ -1302,52 +1368,56 @@ export function PropertyDetailClient({ property, categorySlug = 'roi-properties'
       {/* ============================================================
            OTHER PROPERTIES
       ============================================================ */}
-      <section className="pd2-others">
-        <div className="pd2-others-inner">
-          <div className="pd2-others-head">
-            <div>
-              <div className="pd2-tag-line">Our Portfolio</div>
-              <h2 className="pd2-others-title">Similar Opportunities</h2>
+      {Boolean(property.similarProperties && property.similarProperties.length > 0) && (
+        <section className="pd2-others">
+          <div className="pd2-others-inner">
+            <div className="pd2-others-head">
+              <div>
+                <div className="pd2-tag-line">Our Portfolio</div>
+                <h2 className="pd2-others-title">Similar Opportunities</h2>
+              </div>
+              <Link href={`/${categorySlug}`} className="pd2-see-all">View All Properties</Link>
             </div>
-            <Link href={`/${categorySlug}`} className="pd2-see-all">View All Properties</Link>
-          </div>
 
-          <div className="pd2-others-grid">
-            {property.similarProperties.map((other, idx) => (
-              <Link href={`/${categorySlug}/${other.slug}`} key={idx} className="pd2-other-card">
-                <div className="pd2-other-card-img">
-                  <img src={other.image} alt={other.title} />
-                </div>
-                <div className="pd2-other-card-body">
-                  <div className="pd2-other-card-name">{other.title}</div>
-                  <div className="pd2-other-card-price">{other.price}</div>
-                </div>
-              </Link>
-            ))}
+            <div className="pd2-others-grid">
+              {property.similarProperties.map((other, idx) => (
+                <Link href={`/${categorySlug}/${other.slug}`} key={idx} className="pd2-other-card">
+                  <div className="pd2-other-card-img">
+                    <img src={other.image} alt={other.title} />
+                  </div>
+                  <div className="pd2-other-card-body">
+                    <div className="pd2-other-card-name">{other.title}</div>
+                    <div className="pd2-other-card-price">{other.price}</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ============================================================
            FAQ (Unified Global Section)
       ============================================================ */}
-      <FaqSection
-        tag="Answers"
-        title={
-          <>
-            Investment<br />
-            <em>FAQs</em>
-          </>
-        }
-        description={`Everything you need to know about fractional co-ownership, returns, and NRI compliance at ${property.title}.`}
-        faqs={property.faqs.map((faq, idx) => ({
-          id: `prop-faq-${idx}`,
-          question: faq.question,
-          answer: faq.answer,
-        }))}
-        id="faq"
-        backgroundColor="#FFFFFF"
-      />
+      {Boolean(property.faqs && property.faqs.length > 0) && (
+        <FaqSection
+          tag="Answers"
+          title={
+            <>
+              Investment<br />
+              <em>FAQs</em>
+            </>
+          }
+          description={`Everything you need to know about fractional co-ownership, returns, and NRI compliance at ${property.title}.`}
+          faqs={property.faqs.map((faq, idx) => ({
+            id: `prop-faq-${idx}`,
+            question: faq.question,
+            answer: faq.answer,
+          }))}
+          id="faq"
+          backgroundColor="#FFFFFF"
+        />
+      )}
 
 
 
